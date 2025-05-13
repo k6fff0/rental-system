@@ -18,6 +18,7 @@ class MaintenanceRequest extends Model
         'image',
         'status',
         'assigned_worker_id',
+        'technician_id', // ✅ تأكدنا نضيفه هنا
         'start_notes',
         'end_notes',
         'note',
@@ -26,6 +27,11 @@ class MaintenanceRequest extends Model
     ];
 
     // 🔗 العلاقات
+    public function category()
+    {
+        return $this->belongsTo(\App\Models\MaintenanceCategory::class);
+    }
+
     public function building()
     {
         return $this->belongsTo(Building::class);
@@ -49,5 +55,10 @@ class MaintenanceRequest extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function technician()
+    {
+        return $this->belongsTo(User::class, 'technician_id'); // ✅ العلاقة الجديدة
     }
 }

@@ -9,18 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::table('units', function (Blueprint $table) {
-        $table->enum('status', ['available', 'occupied', 'maintenance'])->default('available');
-    });
-}
+    public function up(): void
+    {
+        Schema::table('units', function (Blueprint $table) {
+            $table->enum('status', ['available', 'occupied', 'maintenance', 'cleaning'])
+                  ->default('available')
+                  ->after('type');
+        });
+    }
 
-public function down()
-{
-    Schema::table('units', function (Blueprint $table) {
-        $table->dropColumn('status');
-    });
-}
-
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('units', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
+    }
 };

@@ -13,15 +13,9 @@ class ContractController extends Controller
 {
     public function index()
     {
-        $contracts = Contract::latest()->paginate(10);
+        $contracts = Contract::with(['tenant', 'unit'])->latest()->paginate(10);
 
-        // تحويل التواريخ إلى كائنات Carbon
-        $contracts->getCollection()->transform(function ($contract) {
-            $contract->start_date = Carbon::parse($contract->start_date);
-            $contract->end_date = Carbon::parse($contract->end_date);
-            return $contract;
-        });
-
+        // إحصائيات العقود
         $activeContractsCount = Contract::where('end_date', '>', now()->addDays(30))->count();
         $expiringSoonCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])->count();
 
@@ -38,12 +32,12 @@ class ContractController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tenant_id' => 'required|exists:tenants,id',
-            'unit_id' => 'required|exists:units,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'rent_amount' => 'required|numeric',
-            'notes' => 'nullable|string',
+            'tenant_id'     => 'required|exists:tenants,id',
+            'unit_id'       => 'required|exists:units,id',
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after:start_date',
+            'rent_amount'   => 'required|numeric',
+            'notes'         => 'nullable|string',
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
@@ -60,25 +54,26 @@ class ContractController extends Controller
 
     public function show(Contract $contract)
     {
+        $contract->load(['tenant', 'unit']);
         return view('admin.contracts.show', compact('contract'));
     }
 
     public function edit(Contract $contract)
     {
         $tenants = Tenant::all();
-        $units = Unit::all();
+        $units   = Unit::all();
         return view('admin.contracts.edit', compact('contract', 'tenants', 'units'));
     }
 
     public function update(Request $request, Contract $contract)
     {
         $request->validate([
-            'tenant_id' => 'required|exists:tenants,id',
-            'unit_id' => 'required|exists:units,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'rent_amount' => 'required|numeric',
-            'notes' => 'nullable|string',
+            'tenant_id'     => 'required|exists:tenants,id',
+            'unit_id'       => 'required|exists:units,id',
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after:start_date',
+            'rent_amount'   => 'required|numeric',
+            'notes'         => 'nullable|string',
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
@@ -105,5 +100,15 @@ class ContractController extends Controller
         $contract->delete();
 
         return redirect()->route('admin.contracts.index')->with('success', __('messages.contract_deleted_successfully'));
+    }
+
+    // ✅ إنهاء العقد دون حذفه (تحديث تاريخ الانتهاء)
+    public function end(Contract $contract)
+    {
+        $contract->update([
+            'end_date' => now()->format('Y-m-d'),
+        ]);
+
+        return back()->with('success', __('messages.contract_ended_successfully'));
     }
 }

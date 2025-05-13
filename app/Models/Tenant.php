@@ -9,7 +9,9 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    // ✅ الأعمدة المسموح بملئها
+    /**
+     * الحقول القابلة للتعبئة
+     */
     protected $fillable = [
         'unit_id',
         'name',
@@ -19,23 +21,36 @@ class Tenant extends Model
         'move_in_date',
         'notes',
         'user_id',
+        'debt',
+        'tenant_status',
     ];
 
-    // ✅ العلاقة مع الوحدة
+    /**
+     * علاقة المستأجر بالوحدة
+     * المستأجر ينتمي إلى وحدة واحدة (أو null)
+     */
     public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
 
-    // ✅ العلاقة مع العقود
+    /**
+     * علاقة المستأجر بالعقود
+     */
     public function contracts()
     {
         return $this->hasMany(Contract::class);
     }
 
-    // ✅ العلاقة مع المستخدم
+    /**
+     * علاقة المستأجر بالمستخدم (الحساب المرتبط)
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+	public function additionalUnits()
+{
+    return $this->belongsToMany(Unit::class, 'tenant_unit');
+}
 }

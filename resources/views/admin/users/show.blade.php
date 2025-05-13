@@ -1,67 +1,75 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
+    <div class="bg-white p-6 rounded-lg shadow border">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            {{-- صورة المستخدم --}}
+            <img src="{{ asset($user->photo_url ?? 'storage/users/default-avatar.png') }}"
+                 class="w-24 h-24 rounded-full object-cover border-2 shadow"
+                 onerror="this.src='{{ asset('storage/users/default-avatar.png') }}'">
 
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">
-        {{ __('messages.edit_user') }}: {{ $user->name }}
-    </h1>
+            <div class="flex-1">
+                {{-- الاسم والإيميل --}}
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ $user->name }}</h2>
+                <p class="text-gray-600 mb-1"><i class="fas fa-envelope text-gray-400 mr-1"></i> {{ $user->email }}</p>
 
-    <div class="bg-white rounded-lg shadow p-6 space-y-6">
+                {{-- الحالة --}}
+                <p class="text-sm mt-2">
+                    <span class="inline-block px-3 py-1 rounded-full text-white text-xs
+                        {{ $user->is_active ? 'bg-green-600' : 'bg-gray-500' }}">
+                        {{ $user->is_active ? __('messages.active') : __('messages.inactive') }}
+                    </span>
+                </p>
 
-        {{-- عرض المجموعات --}}
-        <div>
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">{{ __('messages.roles') }}</h2>
-            @if($user->roles->isEmpty())
-                <p class="text-gray-500">{{ __('messages.no_role_assigned') }}</p>
-            @else
-                <ul class="list-disc pl-5 text-sm text-gray-800">
-                    @foreach($user->roles as $role)
-                        <li>{{ __('roles.' . $role->name) ?? $role->name }}</li>
-                    @endforeach
-                </ul>
-            @endif
+                {{-- الرول --}}
+                <p class="mt-4 text-sm">
+                    <strong>{{ __('messages.roles') }}:</strong>
+                    {{ $user->roles->pluck('name')->join(', ') ?: __('messages.no_role_assigned') }}
+                </p>
+
+               @php
+    $permissions = $user->getAllPermissions()->pluck('name');
+@endphp
+
+@if($permissions->isNotEmpty())
+    <div class="mt-4" x-data="{ expanded: false }">
+        <strong class="text-sm">{{ __('messages.permissions') }}:</strong>
+
+        <div class="flex flex-wrap gap-2 mt-2">
+            <template x-for="(perm, index) in {{ $permissions }}" :key="index">
+                <span
+                    x-show="expanded || index < 6"
+                    class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs"
+                    x-text="perm"></span>
+            </template>
         </div>
 
-        {{-- الصلاحيات اليدوية --}}
-        <div>
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">{{ __('messages.direct_permissions') }}</h2>
-            @if($user->permissions->isEmpty())
-                <p class="text-gray-500">{{ __('messages.none') }}</p>
-            @else
-                <ul class="list-disc pl-5 text-sm text-gray-800">
-                    @foreach($user->permissions as $permission)
-                        <li>{{ __('permissions.' . $permission->name) ?? $permission->name }}</li>
-                    @endforeach
-                </ul>
-            @endif
+        @if($permissions->count() > 6)
+            <button type="button"
+                    @click="expanded = !expanded"
+                    class="mt-3 text-blue-600 hover:underline text-sm">
+                <span x-show="!expanded">{{ __('messages.show_all_permissions') }}</span>
+                <span x-show="expanded">{{ __('messages.hide_permissions') }}</span>
+            </button>
+        @endif
+    </div>
+@endif
+
+            </div>
         </div>
 
-        {{-- جميع الصلاحيات (بما فيها من المجموعات) --}}
-        <div>
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">{{ __('messages.all_permissions') }}</h2>
-            @php
-                $allPermissions = $user->getAllPermissions();
-            @endphp
-            @if($allPermissions->isEmpty())
-                <p class="text-gray-500">{{ __('messages.none') }}</p>
-            @else
-                <ul class="list-disc pl-5 text-sm text-gray-800">
-                    @foreach($allPermissions as $permission)
-                        <li>{{ __('permissions.' . $permission->name) ?? $permission->name }}</li>
-                    @endforeach
-                </ul>
-            @endif
-        </div>
-
-        {{-- زر رجوع --}}
-        <div class="pt-4">
+        {{-- زر العودة --}}
+        <div class="mt-6 text-end">
             <a href="{{ route('admin.users.index') }}"
-               class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded text-sm font-semibold">
-                {{ __('messages.back') }}
+               class="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm">
+                ← {{ __('messages.back') }}
             </a>
         </div>
     </div>
-
 </div>
+
+@push('styles')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+@endpush
 @endsection

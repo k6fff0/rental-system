@@ -76,7 +76,12 @@
                 @endforeach
             </div>
         </div>
-
+<form method="POST" enctype="multipart/form-data" ... >
+<div class="mb-4">
+    <label for="photo" class="block text-sm font-medium text-gray-700">{{ __('messages.user_photo') }}</label>
+    <input type="file" name="photo" id="photo"
+           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+</div>
         {{-- الأزرار --}}
         <div class="flex justify-end">
             <a href="{{ route('admin.users.index') }}"

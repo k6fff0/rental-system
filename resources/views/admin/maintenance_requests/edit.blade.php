@@ -53,16 +53,17 @@
 
         {{-- تعيين الفني --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.assigned_worker') }}</label>
-            <select name="assigned_worker_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                <option value="">{{ __('messages.select_worker') }}</option>
-                @foreach($workers as $worker)
-                    <option value="{{ $worker->id }}" {{ $request->assigned_worker_id == $worker->id ? 'selected' : '' }}>
-                        {{ $worker->name }} ({{ $worker->specialty }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    <label class="block text-sm font-medium text-gray-700">{{ __('messages.technician') }}</label>
+    <select name="technician_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+        <option value="">{{ __('messages.select_technician') }}</option>
+        @foreach($technicians as $technician)
+            <option value="{{ $technician->id }}" {{ $request->technician_id == $technician->id ? 'selected' : '' }}>
+                {{ $technician->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+		
 
         {{-- الحالة --}}
         <div>

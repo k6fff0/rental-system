@@ -2,29 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
     use HasFactory;
 
-    // ✅ الحقول المسموح إدخالها
     protected $fillable = [
         'building_id',
         'unit_number',
         'floor',
         'type',
+        'status',
+        'notes',
+        'rent_price',
     ];
 
-    // ✅ علاقة الوحدة بالمبنى (كل وحدة تتبع مبنى)
+    // ✅ العلاقة مع المبنى
     public function building()
     {
         return $this->belongsTo(Building::class);
     }
-	public function contracts()
+
+    // ✅ العلاقة مع العقود
+    public function contracts()
     {
-    return $this->hasMany(Contract::class);
+        return $this->hasMany(Contract::class);
     }
 
+    // ✅ accessor لحالة الغرفة
+    public function getStatusLabelAttribute()
+    {
+        return $this->status;
+    }
 }

@@ -36,13 +36,28 @@
             </select>
         </div>
 
-        {{-- نوع البلاغ --}}
+        {{-- نوع العطل --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.type') }}</label>
-            <select name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                <option value="">{{ __('messages.select_type') }}</option>
-                @foreach(['كهرباء', 'سباكة', 'تكييف', 'صبغ', 'نجارة', 'أخرى'] as $type)
-                    <option value="{{ $type }}" {{ old('type') == $type ? 'selected' : '' }}>{{ $type }}</option>
+            <label class="block text-sm font-medium text-gray-700">{{ __('messages.category') }}</label>
+            <select name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+                <option value="">{{ __('messages.select_category') }}</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ __('maintenance_categories.' . $category->slug) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- اسم الفني --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">{{ __('messages.technician') }}</label>
+            <select name="technician_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+                <option value="">{{ __('messages.select_technician') }}</option>
+                @foreach($technicians as $technician)
+                    <option value="{{ $technician->id }}" {{ old('technician_id') == $technician->id ? 'selected' : '' }}>
+                        {{ $technician->name }}
+                    </option>
                 @endforeach
             </select>
         </div>

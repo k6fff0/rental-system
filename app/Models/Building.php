@@ -9,10 +9,13 @@ class Building extends Model
 {
     use HasFactory;
 
+    /**
+     * الحقول القابلة للتعبئة
+     */
     protected $fillable = [
         'name',
         'address',
-        'number_of_units', // لو العمود موجود فعلاً
+        'number_of_units',            // اختياري: لو العمود فعلاً موجود في قاعدة البيانات
         'owner_name',
         'owner_nationality',
         'owner_id_number',
@@ -24,12 +27,18 @@ class Building extends Model
         'internet_lines',
     ];
 
+    /**
+     * تحويل بعض الحقول تلقائياً إلى Array عند القراءة
+     */
     protected $casts = [
         'electric_meters' => 'array',
-        'internet_lines' => 'array',
+        'internet_lines'  => 'array',
     ];
 
-    // علاقة المبنى بالوحدات
+    /**
+     * علاقة المبنى بالوحدات
+     * كل مبنى يحتوي على وحدات متعددة
+     */
     public function units()
     {
         return $this->hasMany(Unit::class);

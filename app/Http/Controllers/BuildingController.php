@@ -10,9 +10,22 @@ class BuildingController extends Controller
     /**
      * Display a listing of the buildings.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $buildings = Building::all();
+        $query = Building::query();
+
+        // فلتر بالاسم
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // فلتر بالـ ID من القائمة
+        if ($request->filled('building_id')) {
+            $query->where('id', $request->building_id);
+        }
+
+        $buildings = $query->withCount('units')->get();
+
         return view('admin.buildings.index', compact('buildings'));
     }
 

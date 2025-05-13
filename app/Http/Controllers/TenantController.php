@@ -5,81 +5,149 @@ namespace App\Http\Controllers;
 use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Building;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class TenantController extends Controller
 {
-    // ✅ عرض كل المستأجرين
-    public function index()
-    {
-        $tenants = Tenant::with(['unit', 'user'])->paginate(10);
-        return view('admin.tenants.index', compact('tenants'));
+    public function index(Request $request)
+{
+    $query = Tenant::query()->with('unit');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('id_number', 'like', "%$search%")
+              ->orWhere('phone', 'like', "%$search%")
+              ->orWhereHas('unit', fn($q2) => $q2->where('unit_number', 'like', "%$search%"));
+        });
     }
 
-    // ✅ صفحة إضافة مستأجر
+    $tenants = $query->paginate(15);
+
+    return view('admin.tenants.index', compact('tenants'));
+}
+
+
     public function create()
     {
-        $units = Unit::all();
-        return view('admin.tenants.create', compact('units'));
+        $buildings = Building::select('id', 'name')->get();
+        return view('admin.tenants.create', compact('buildings'));
     }
 
-    // ✅ حفظ المستأجر الجديد
     public function store(Request $request)
     {
         $request->validate([
-            'unit_id' => 'required|exists:units,id',
+            'unit_id' => 'nullable|exists:units,id',
+            'tenant_status' => 'required|string|in:active,not_present,abroad,legal_issue',
             'name' => 'required|string|max:100',
             'phone' => 'nullable|string|max:20',
             'id_number' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:100',
+            'email' => 'required|email|max:100|unique:users,email',
             'move_in_date' => 'nullable|date',
+            'password' => 'required|string|min:6',
         ]);
 
-        Tenant::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'tenant',
+        ]);
 
-        return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+        $tenant = Tenant::create([
+            'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+            'tenant_status' => $request->tenant_status,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'id_number' => $request->id_number,
+            'email' => $request->email,
+            'move_in_date' => $request->move_in_date,
+            'notes' => $request->notes,
+            'debt' => $request->debt ?? 0,
+            'user_id' => $user->id,
+        ]);
+
+        if ($tenant->unit_id) {
+            Unit::where('id', $tenant->unit_id)->update(['status' => 'occupied']);
+        }
+
+        return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر وإنشاء الحساب بنجاح');
     }
 
-    // ✅ صفحة تعديل مستأجر
     public function edit(Tenant $tenant)
     {
-        $units = Unit::all();
-        return view('admin.tenants.edit', compact('tenant', 'units'));
+        $buildings = Building::select('id', 'name')->get();
+        $buildingId = optional($tenant->unit)->building_id;
+        $units = $buildingId
+            ? Unit::where('building_id', $buildingId)->select('id', 'unit_number')->get()
+            : collect();
+
+        return view('admin.tenants.edit', compact('tenant', 'buildings', 'units'));
     }
 
-    // ✅ تحديث بيانات المستأجر
     public function update(Request $request, Tenant $tenant)
     {
         $request->validate([
-            'unit_id' => 'required|exists:units,id',
+            'tenant_status' => 'required|string|in:active,not_present,abroad,legal_issue',
+            'unit_id' => 'nullable|exists:units,id',
             'name' => 'required|string|max:100',
             'phone' => 'nullable|string|max:20',
             'id_number' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:100',
             'move_in_date' => 'nullable|date',
+            'notes' => 'nullable|string|max:500',
+            'debt' => 'nullable|numeric|min:0',
         ]);
 
-        $tenant->update($request->all());
+        if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
+            Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
+        }
+
+        $tenant->update([
+            'tenant_status' => $request->tenant_status,
+            'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'id_number' => $request->id_number,
+            'email' => $request->email,
+            'move_in_date' => $request->move_in_date,
+            'notes' => $request->notes,
+            'debt' => $request->debt ?? 0,
+        ]);
+
+        if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
+            Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
+        }
 
         return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
     }
 
-    // ✅ حذف مستأجر
     public function destroy(Tenant $tenant)
     {
+        if ($tenant->unit_id) {
+            Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
+        }
+
         $tenant->delete();
         return redirect()->route('admin.tenants.index')->with('success', 'تم حذف المستأجر');
     }
 
-    // ✅ عرض صفحة ربط المستأجر بحساب
+    public function show(Tenant $tenant)
+    {
+        $tenant->load(['unit', 'additionalUnits', 'user']);
+        return view('admin.tenants.show', compact('tenant'));
+    }
+
     public function linkUser(Tenant $tenant)
     {
         $users = User::whereDoesntHave('tenant')->where('role', 'tenant')->get();
-        return view('tenants.link', compact('tenant', 'users'));
+        return view('admin.tenants.link', compact('tenant', 'users'));
     }
 
-    // ✅ ربط المستأجر بمستخدم موجود
     public function attachUser(Request $request, Tenant $tenant)
     {
         $request->validate([
@@ -92,7 +160,6 @@ class TenantController extends Controller
         return redirect()->route('admin.tenants.index')->with('success', 'تم ربط المستأجر بالمستخدم بنجاح');
     }
 
-    // ✅ إنشاء حساب جديد وربطه بالمستأجر
     public function createUser(Request $request, Tenant $tenant)
     {
         $request->validate([
@@ -111,5 +178,17 @@ class TenantController extends Controller
         $tenant->save();
 
         return redirect()->route('admin.tenants.index')->with('success', 'تم إنشاء حساب وربطه بالمستأجر بنجاح');
+    }
+
+    public function unlinkUnit(Tenant $tenant)
+    {
+        if ($tenant->unit_id) {
+            Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
+        }
+
+        $tenant->unit_id = null;
+        $tenant->save();
+
+        return redirect()->route('admin.tenants.index')->with('success', 'تم إلغاء ربط الوحدة بنجاح');
     }
 }

@@ -13,11 +13,35 @@ class UserController extends Controller
     /**
      * عرض قائمة المستخدمين.
      */
-    public function index()
-    {
-        $users = User::with('roles')->get();
-        return view('admin.users.index', compact('users'));
+    public function index(Request $request)
+{
+    $query = User::with('roles');
+
+    if ($request->filled('role_id')) {
+        $query->whereHas('roles', function ($q) use ($request) {
+            $q->where('id', $request->role_id);
+        });
     }
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
+
+    $users = $query->paginate(10);
+    $roles = Role::all();
+
+    return view('admin.users.index', compact('users', 'roles'));
+}
+public function show($id)
+{
+    $user = \App\Models\User::findOrFail($id);
+    return view('admin.users.show', compact('user'));
+}
+
 
     /**
      * عرض نموذج إنشاء مستخدم.
@@ -35,12 +59,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'nullable|exists:roles,name',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email',
+            'password'     => 'required|string|min:6|confirmed',
+            'role'         => 'nullable|exists:roles,name',
+            'permissions'  => 'array',
+            'permissions.*'=> 'exists:permissions,id',
+            'photo'        => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         $user = User::create([
@@ -48,6 +73,16 @@ class UserController extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
+
+        if ($request->hasFile('photo')) {
+    $photoPath = $request->file('photo')->store('users', 'public');
+    $user->photo_url = 'storage/' . $photoPath;
+    $user->save();
+} else {
+    // لو معندوش صورة، نحط له صورة افتراضية
+    $user->photo_url = 'storage/users/default-avatar.png';
+    $user->save();
+}
 
         if ($request->filled('role')) {
             $user->assignRole($request->role);
@@ -79,10 +114,28 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->validate([
-            'role' => 'nullable|exists:roles,name',
-            'permissions' => 'array',
-            'permissions.*' => 'exists:permissions,id',
+            'name'         => 'nullable|string|max:255',
+            'email'        => 'nullable|email|unique:users,email,' . $user->id,
+            'role'         => 'nullable|exists:roles,name',
+            'permissions'  => 'array',
+            'permissions.*'=> 'exists:permissions,id',
+            'photo'        => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
+
+        if ($request->filled('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->filled('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('users', 'public');
+            $user->photo_url = 'storage/' . $photoPath;
+        }
+
+        $user->save();
 
         if ($request->filled('role')) {
             $user->syncRoles([$request->role]);

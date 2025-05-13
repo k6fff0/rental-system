@@ -30,7 +30,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    // ✅ هنا مكانها الصحيح
+
+
     'providers' => [
         /*
         |--------------------------------------------------------------------------
@@ -59,6 +60,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+		
+
 
         /*
         |--------------------------------------------------------------------------
@@ -80,6 +83,7 @@ return [
         App\Providers\NotificationServiceProvider::class, // ✅ أضفته هنا
 
     ],
+	
 
 ];
 
