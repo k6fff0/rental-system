@@ -13,7 +13,7 @@ class Unit extends Model
         'building_id',
         'unit_number',
         'floor',
-        'type',
+        'unit_type',
         'status',
         'notes',
         'rent_price',
@@ -26,14 +26,24 @@ class Unit extends Model
     }
 
     // ✅ العلاقة مع العقود
-    public function contracts()
-    {
-        return $this->hasMany(Contract::class);
-    }
+   public function latestContract()
+{
+    return $this->hasOne(Contract::class)->latestOfMany(); // Laravel 8+
+}
 
     // ✅ accessor لحالة الغرفة
     public function getStatusLabelAttribute()
     {
         return $this->status;
     }
+	
+    public function latestTenant()
+{
+       return $this->latestContract?->tenant;
+}
+public function contracts()
+{
+    return $this->hasMany(\App\Models\Contract::class);
+}
+
 }

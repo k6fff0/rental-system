@@ -34,9 +34,10 @@ class Contract extends Model
      * علاقة العقد بالمستأجر
      */
     public function tenant()
-    {
-        return $this->belongsTo(Tenant::class);
-    }
+{
+    return $this->belongsTo(\App\Models\Tenant::class);
+}
+
 
     /**
      * علاقة العقد بالوحدة

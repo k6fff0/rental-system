@@ -24,6 +24,14 @@ class Tenant extends Model
         'debt',
         'tenant_status',
     ];
+public const STATUSES = [
+    'active',
+    'late_payer',
+    'has_debt',
+    'absent',
+    'abroad',
+    'legal_issue',
+];
 
     /**
      * علاقة المستأجر بالوحدة

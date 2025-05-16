@@ -2,38 +2,56 @@
 
 @section('content')
 <div class="p-4 sm:p-6">
-{{-- 🔍 فلتر البحث الذكي --}}
-<div class="mb-6 bg-white p-4 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-4">
-    {{-- اختيار المبنى --}}
+    {{-- 🔍 فلتر البحث الذكي --}}
+<div class="mb-6 bg-white p-4 rounded-lg shadow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    
+    {{-- 🏢 اختيار المبنى --}}
     <div class="relative">
-    <label class="block text-sm text-gray-700 mb-1">{{ __('messages.building') }}</label>
-    <select id="buildingSelect"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 {{ app()->getLocale() == 'ar' ? 'pr-10' : 'pl-10' }} bg-white"
-        style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: none;">
-        <option value="">{{ __('messages.all_buildings') }}</option>
-        @foreach ($buildings as $building)
-            <option value="{{ $building->id }}" {{ request('building_id') == $building->id ? 'selected' : '' }}>
-                {{ $building->name }}
-            </option>
-        @endforeach
-    </select>
-
-    {{-- SVG السهم اليدوي --}}
-    <div class="pointer-events-none absolute inset-y-0 flex items-center {{ app()->getLocale() == 'ar' ? 'right-0 mr-3' : 'left-0 ml-3' }}">
-        <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
+        <label class="block text-sm text-gray-700 mb-1">{{ __('messages.building') }}</label>
+        <select id="buildingSelect"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 {{ app()->getLocale() == 'ar' ? 'pr-10' : 'pl-10' }} bg-white"
+            style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: none;">
+            <option value="">{{ __('messages.all_buildings') }}</option>
+            @foreach ($buildings as $building)
+                <option value="{{ $building->id }}" {{ request('building_id') == $building->id ? 'selected' : '' }}>
+                    {{ $building->name }}
+                </option>
+            @endforeach
+        </select>
+        {{-- SVG السهم --}}
+        <div class="pointer-events-none absolute inset-y-0 flex items-center {{ app()->getLocale() == 'ar' ? 'right-0 mr-3' : 'left-0 ml-3' }}">
+            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
     </div>
-</div>
-    {{-- بحث برقم الغرفة --}}
+{{-- 🏷️ اختيار نوع الوحدة --}}
+    <div class="relative">
+        <label class="block text-sm text-gray-700 mb-1">{{ __('messages.unit_type') }}</label>
+        <select id="unitTypeSelect"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 {{ app()->getLocale() == 'ar' ? 'pr-10' : 'pl-10' }} bg-white"
+            style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: none;">
+            <option value="">{{ __('messages.all_unit_types') }}</option>
+            @foreach ($unitTypes as $type)
+                <option value="{{ $type }}" {{ request('unit_type') == $type ? 'selected' : '' }}>
+                    {{ __('messages.' . $type) }}
+                </option>
+            @endforeach
+        </select>
+        {{-- SVG السهم --}}
+        <div class="pointer-events-none absolute inset-y-0 flex items-center {{ app()->getLocale() == 'ar' ? 'right-0 mr-3' : 'left-0 ml-3' }}">
+            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+    </div>
+    {{-- 🔎 بحث برقم الغرفة --}}
     <div class="relative">
         <label class="block text-sm text-gray-700 mb-1">{{ __('messages.search_unit') }}</label>
         <input type="text" id="unitSearchInput" value="{{ request('search') }}" placeholder="{{ __('messages.unit_number') }}"
                class="form-input w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
     </div>
 </div>
-
-
     {{-- بطاقات الفلاتر --}}
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
         @php
@@ -92,7 +110,7 @@
                     <tr>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.building') }}</th>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_number') }}</th>
-                        <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.floor') }}</th>
+                        <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_type') }}</th>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.rent_price') }}</th>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.status') }}</th>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.tenant') }}</th>
@@ -112,9 +130,11 @@
                             <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">{{ $unit->unit_number }}</span>
                         </td>
                         
-                        {{-- الطابق --}}
+                        {{-- نوع الغرفة --}}
                         <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-                            <span class="text-sm text-gray-500">{{ $unit->floor }} {{ __('messages.floor') }}</span>
+                            <span class="text-sm text-gray-900 font-medium">
+                                {{ __('messages.' . $unit->unit_type) }}
+                            </span>
                         </td>
                         
                         {{-- سعر الإيجار --}}
@@ -138,6 +158,7 @@
                                 {{ __('messages.' . $unit->status_label) }}
                             </span>
                         </td>
+						
                         
                         {{-- اسم المستأجر (عرض للشاشات الكبيرة فقط) --}}
                         <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
@@ -162,7 +183,7 @@
                                 </div>
                                 
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500">{{ $unit->floor }} {{ __('messages.floor') }}</span>
+                                    <span class="text-sm font-medium">{{ __('messages.' . $unit->unit_type) }}</span>
                                     <span class="text-sm font-medium">{{ number_format($unit->rent_price) }} {{ __('messages.currency') }}</span>
                                 </div>
                                 
@@ -188,34 +209,59 @@
                             </div>
                         </td>
                         
-                        {{-- الإجراءات (تظهر في جميع الأحجام) --}}
                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex {{ app()->getLocale() === 'ar' ? 'justify-end' : 'justify-start' }} sm:justify-center gap-1 sm:gap-2">
-                                @if($unit->status_label === 'available' || $unit->status_label === 'booked')
-                                <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-50" title="{{ __('messages.rent_unit') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                </a>
-                                @endif
-                                
-                                <a href="{{ route('admin.units.edit', $unit->id) }}" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50" title="{{ __('messages.edit') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </a>
-                                
-                                <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('{{ __('messages.confirm_delete') }}')" class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50" title="{{ __('messages.delete') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+    <div class="flex {{ app()->getLocale() === 'ar' ? 'justify-end' : 'justify-start' }} sm:justify-center gap-1 sm:gap-2">
+
+        {{-- 🟢 زر التأجير أو مساحة فاضية --}}
+        <div class="w-8 h-8 flex items-center justify-center">
+            @if($unit->status_label === 'available' || $unit->status_label === 'booked')
+                <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}"
+                   class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-50"
+                   title="{{ __('messages.rent_unit') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </a>
+            @else
+                <div class="w-5 h-5"></div>
+            @endif
+        </div>
+
+        {{-- 🔵 زر التعديل --}}
+        <a href="{{ route('admin.units.edit', $unit->id) }}"
+           class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
+           title="{{ __('messages.edit') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+        </a>
+
+        {{-- 👁️ زر العرض --}}
+        <a href="{{ route('admin.units.show', $unit->id) }}"
+           class="text-gray-600 hover:text-gray-900 p-1 rounded-full hover:bg-gray-100"
+           title="{{ __('messages.view') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+            </svg>
+        </a>
+
+        {{-- 🔴 زر الحذف --}}
+        <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" onclick="return confirm('{{ __('messages.confirm_delete') }}')"
+                    class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50"
+                    title="{{ __('messages.delete') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+        </form>
+
+    </div>
+</td>
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -262,6 +308,15 @@
             window.location.href = `?building_id=${buildingId}&search=${encodeURIComponent(search)}`;
         }, 600);
     });
+	// فلتر نوع الوحدة
+document.getElementById('unitTypeSelect').addEventListener('change', function () {
+    const buildingId = document.getElementById('buildingSelect').value;
+    const search = document.getElementById('unitSearchInput').value;
+    const unitType = this.value;
+    window.location.href = `?building_id=${buildingId}&search=${encodeURIComponent(search)}&unit_type=${unitType}`;
+});
+
+
 </script>
 
 <style>
@@ -285,6 +340,20 @@
         /* تحسين البطاقات */
         .grid-cols-2 > div {
             padding: 0.75rem;
+        }
+        
+        /* تحسين عرض بطاقات الوحدات */
+        .unit-card-mobile {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* تحسين النصوص للغة العربية */
+        [dir="rtl"] .unit-card-mobile {
+            text-align: right;
         }
     }
 </style>

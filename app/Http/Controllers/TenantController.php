@@ -38,45 +38,45 @@ class TenantController extends Controller
         return view('admin.tenants.create', compact('buildings'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'unit_id' => 'nullable|exists:units,id',
-            'tenant_status' => 'required|string|in:active,not_present,abroad,legal_issue',
-            'name' => 'required|string|max:100',
-            'phone' => 'nullable|string|max:20',
-            'id_number' => 'nullable|string|max:50',
-            'email' => 'required|email|max:100|unique:users,email',
-            'move_in_date' => 'nullable|date',
-            'password' => 'required|string|min:6',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'unit_id' => 'nullable|exists:units,id',
+        'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+        'name' => 'required|string|max:100',
+        'phone' => 'nullable|string|max:20',
+        'id_number' => 'nullable|string|max:50',
+        'email' => 'required|email|max:100|unique:users,email',
+        'notes' => 'nullable|string|max:500',
+        'debt' => 'nullable|numeric|min:0',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'tenant',
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make('default1234'), // كلمة سر افتراضية
+        'role' => 'tenant',
+    ]);
 
-        $tenant = Tenant::create([
-            'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
-            'tenant_status' => $request->tenant_status,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'id_number' => $request->id_number,
-            'email' => $request->email,
-            'move_in_date' => $request->move_in_date,
-            'notes' => $request->notes,
-            'debt' => $request->debt ?? 0,
-            'user_id' => $user->id,
-        ]);
+    $tenant = Tenant::create([
+        'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+        'tenant_status' => $request->tenant_status,
+        'name' => $request->name,
+        'phone' => $request->phone,
+        'id_number' => $request->id_number,
+        'email' => $request->email,
+        'notes' => $request->notes,
+        'debt' => $request->debt ?? 0,
+        'user_id' => $user->id,
+    ]);
 
-        if ($tenant->unit_id) {
-            Unit::where('id', $tenant->unit_id)->update(['status' => 'occupied']);
-        }
-
-        return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر وإنشاء الحساب بنجاح');
+    if ($tenant->unit_id) {
+        Unit::where('id', $tenant->unit_id)->update(['status' => 'occupied']);
     }
+
+    return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر وإنشاء الحساب بنجاح');
+}
+
 
     public function edit(Tenant $tenant)
     {
@@ -89,42 +89,43 @@ class TenantController extends Controller
         return view('admin.tenants.edit', compact('tenant', 'buildings', 'units'));
     }
 
-    public function update(Request $request, Tenant $tenant)
-    {
-        $request->validate([
-            'tenant_status' => 'required|string|in:active,not_present,abroad,legal_issue',
-            'unit_id' => 'nullable|exists:units,id',
-            'name' => 'required|string|max:100',
-            'phone' => 'nullable|string|max:20',
-            'id_number' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:100',
-            'move_in_date' => 'nullable|date',
-            'notes' => 'nullable|string|max:500',
-            'debt' => 'nullable|numeric|min:0',
-        ]);
+   public function update(Request $request, Tenant $tenant)
+{
+    $request->validate([
+        'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+        'unit_id' => 'nullable|exists:units,id',
+        'name' => 'required|string|max:100',
+        'phone' => 'nullable|string|max:20',
+        'id_number' => 'nullable|string|max:50',
+        'email' => 'nullable|email|max:100',
+        'move_in_date' => 'nullable|date',
+        'notes' => 'nullable|string|max:500',
+        'debt' => 'nullable|numeric|min:0',
+    ]);
 
-        if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
-            Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
-        }
-
-        $tenant->update([
-            'tenant_status' => $request->tenant_status,
-            'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'id_number' => $request->id_number,
-            'email' => $request->email,
-            'move_in_date' => $request->move_in_date,
-            'notes' => $request->notes,
-            'debt' => $request->debt ?? 0,
-        ]);
-
-        if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
-            Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
-        }
-
-        return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
+    if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
+        Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
     }
+
+    $tenant->update([
+        'tenant_status' => $request->tenant_status,
+        'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+        'name' => $request->name,
+        'phone' => $request->phone,
+        'id_number' => $request->id_number,
+        'email' => $request->email,
+        'move_in_date' => $request->move_in_date,
+        'notes' => $request->notes,
+        'debt' => $request->debt ?? 0,
+    ]);
+
+    if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
+        Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
+    }
+
+    return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
+}
+
 
     public function destroy(Tenant $tenant)
     {
@@ -146,6 +147,11 @@ class TenantController extends Controller
     {
         $users = User::whereDoesntHave('tenant')->where('role', 'tenant')->get();
         return view('admin.tenants.link', compact('tenant', 'users'));
+    }
+     public function getTenantData($id)
+    {
+    $tenant = Tenant::select('id', 'name', 'id_number', 'phone', 'email')->findOrFail($id);
+    return response()->json($tenant);
     }
 
     public function attachUser(Request $request, Tenant $tenant)

@@ -16,73 +16,64 @@
         </div>
 
         {{-- الحالة --}}
-<div class="mb-4">
-    <label for="tenant_status" class="block text-sm font-medium text-gray-700">{{ __('messages.tenant_status') }}</label>
-    <select name="tenant_status" id="tenant_status" required
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-        <option value="active" {{ old('tenant_status') == 'active' ? 'selected' : '' }}>{{ __('messages.tenant_status_active') }}</option>
-        <option value="late_payer" {{ old('tenant_status') == 'late_payer' ? 'selected' : '' }}>{{ __('messages.tenant_status_late_payer') }}</option>
-        <option value="has_debt" {{ old('tenant_status') == 'has_debt' ? 'selected' : '' }}>{{ __('messages.tenant_status_has_debt') }}</option>
-        <option value="absent" {{ old('tenant_status') == 'absent' ? 'selected' : '' }}>{{ __('messages.tenant_status_absent') }}</option>
-        <option value="abroad" {{ old('tenant_status') == 'abroad' ? 'selected' : '' }}>{{ __('messages.tenant_status_abroad') }}</option>
-        <option value="legal_issue" {{ old('tenant_status') == 'legal_issue' ? 'selected' : '' }}>{{ __('messages.tenant_status_legal_issue') }}</option>
-    </select>
-</div>
-
-
-        {{-- المبنى --}}
         <div class="mb-4">
-            <label for="building_id" class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
-            <select name="building_id" id="building_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                <option value="">{{ __('messages.select_building') }}</option>
-                @foreach ($buildings as $building)
-                    <option value="{{ $building->id }}" {{ old('building_id') == $building->id ? 'selected' : '' }}>
-                        {{ $building->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- الوحدة --}}
-        <div class="mb-4" id="unit_container">
-            <label for="unit_id" class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
-            <select name="unit_id" id="unit_id"
+            <label for="tenant_status" class="block text-sm font-medium text-gray-700">{{ __('messages.tenant_status') }}</label>
+            <select name="tenant_status" id="tenant_status" required
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                <option value="">{{ __('messages.select_unit') }}</option>
+                <option value="active" {{ old('tenant_status') == 'active' ? 'selected' : '' }}>{{ __('messages.tenant_status_active') }}</option>
+                <option value="late_payer" {{ old('tenant_status') == 'late_payer' ? 'selected' : '' }}>{{ __('messages.tenant_status_late_payer') }}</option>
+                <option value="has_debt" {{ old('tenant_status') == 'has_debt' ? 'selected' : '' }}>{{ __('messages.tenant_status_has_debt') }}</option>
+                <option value="absent" {{ old('tenant_status') == 'absent' ? 'selected' : '' }}>{{ __('messages.tenant_status_absent') }}</option>
+                <option value="abroad" {{ old('tenant_status') == 'abroad' ? 'selected' : '' }}>{{ __('messages.tenant_status_abroad') }}</option>
+                <option value="legal_issue" {{ old('tenant_status') == 'legal_issue' ? 'selected' : '' }}>{{ __('messages.tenant_status_legal_issue') }}</option>
             </select>
         </div>
 
-        {{-- باقي الحقول --}}
+        {{-- رقم الهوية --}}
         <div class="mb-4">
             <label for="id_number" class="block text-sm font-medium text-gray-700">{{ __('messages.id_number') }}</label>
             <input type="text" name="id_number" id="id_number" value="{{ old('id_number') }}"
                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
         </div>
 
+        {{-- رقم الجوال --}}
         <div class="mb-4">
-            <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('messages.phone') }}</label>
-            <input type="text" name="phone" id="phone" value="{{ old('phone') }}"
-                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+         <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('messages.phone') }}</label>
+         <input type="tel" name="phone" id="phone" value="{{ old('phone') }}"
+           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
         </div>
 
+        {{-- رقم إضافي --}}
+        <div class="mb-4" x-data="{ showExtra: false }">
+            <template x-if="showExtra">
+                <div>
+                    <label for="secondary_phone" class="block text-sm font-medium text-gray-700">{{ __('messages.secondary_phone') }}</label>
+                    <input type="text" name="secondary_phone" id="secondary_phone" value="{{ old('secondary_phone') }}"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+                </div>
+            </template>
+
+            <button type="button" @click="showExtra = true" x-show="!showExtra"
+                    class="mt-2 text-blue-600 hover:underline text-sm">
+                + {{ __('messages.add_another_phone') }}
+            </button>
+        </div>
+
+        {{-- الإيميل --}}
         <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-gray-700">{{ __('messages.email') }}</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}" required
+            <input type="email" name="email" id="email" value="{{ old('email') }}"
                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
         </div>
 
-        <div class="mb-4">
-            <label for="password" class="block text-sm font-medium text-gray-700">{{ __('messages.password') }}</label>
-            <input type="password" name="password" id="password" required
-                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-        </div>
-
+        {{-- الملاحظات --}}
         <div class="mb-4">
             <label for="notes" class="block text-sm font-medium text-gray-700">{{ __('messages.notes') }}</label>
             <textarea name="notes" id="notes" rows="3"
                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">{{ old('notes') }}</textarea>
         </div>
 
+        {{-- المديونية --}}
         <div class="mb-4">
             <label for="debt" class="block text-sm font-medium text-gray-700">{{ __('messages.debt') }}</label>
             <input type="number" name="debt" id="debt" step="0.01" min="0" value="{{ old('debt', 0) }}"
@@ -102,38 +93,69 @@
         </div>
     </form>
 </div>
+@endsection
 
-@push('scripts')
-<script>
-    function updateUnits(buildingId) {
-        const unitSelect = document.getElementById('unit_id');
-        unitSelect.innerHTML = `<option value="">@js(__('messages.select_unit'))</option>`;
-        console.log('🔄 Fetching units for building:', buildingId);
-
-        fetch(`{{ url('/api/units-by-building') }}/${buildingId}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log('✅ Available units:', data);
-                data.forEach(unit => {
-                    const option = document.createElement('option');
-                    option.value = unit.id;
-                    option.textContent = unit.unit_number;
-                    unitSelect.appendChild(option);
-                });
-            });
+@push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/css/intlTelInput.css" />
+<style>
+    .iti {
+        width: 100%;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const buildingSelect = document.getElementById('building_id');
-        buildingSelect.addEventListener('change', function () {
-            updateUnits(this.value);
-        });
+    .iti__flag-container {
+        padding: 0 10px;
+    }
 
-        const initialBuildingId = buildingSelect.value;
-        if (initialBuildingId) {
-            updateUnits(initialBuildingId);
-        }
-    });
-</script>
+    .iti__selected-flag {
+        padding: 0 10px 0 15px;
+    }
+
+    /* الوضع الطبيعي (LTR) يكون الهنت ع اليمين والعلم على الشمال */
+    [dir="ltr"] .iti--allow-dropdown input {
+        text-align: right !important;
+        padding-right: 60px !important;
+        padding-left: 15px !important;
+    }
+
+    /* الوضع في العربي (RTL) الهنت شمال والعلم يمين */
+    [dir="rtl"] .iti--allow-dropdown input {
+        text-align: left !important;
+        padding-left: 60px !important;
+        padding-right: 15px !important;
+    }
+</style>
 @endpush
-@endsection
+
+
+@push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/intlTelInput.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector("#phone");
+            
+            if (input) {
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "auto",
+                    geoIpLookup: function(callback) {
+                        fetch('https://ipapi.co/json/')
+                            .then(res => res.json())
+                            .then(data => callback(data.country_code))
+                            .catch(() => callback("ae"));
+                    },
+                    preferredCountries: ["ae", "sa", "eg", "kw", "qa", "bh", "om"],
+                    separateDialCode: true,
+                    hiddenInput: "full_phone",
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/18.1.1/js/utils.js"
+                });
+
+                // Handle form submission
+                input.closest('form').addEventListener('submit', function(e) {
+                    const phoneInput = document.querySelector("#phone");
+                    if (phoneInput.value) {
+                        phoneInput.value = iti.getNumber();
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

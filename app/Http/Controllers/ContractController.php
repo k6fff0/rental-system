@@ -5,17 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Contract;
 use App\Models\Tenant;
 use App\Models\Unit;
+use App\Models\Building;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
 
 class ContractController extends Controller
 {
     public function index()
     {
         $contracts = Contract::with(['tenant', 'unit'])->latest()->paginate(10);
-
-        // إحصائيات العقود
         $activeContractsCount = Contract::where('end_date', '>', now()->addDays(30))->count();
         $expiringSoonCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])->count();
 
@@ -26,7 +24,9 @@ class ContractController extends Controller
     {
         $tenants = Tenant::all();
         $units = Unit::all();
-        return view('admin.contracts.create', compact('tenants', 'units'));
+        $buildings = Building::all();
+
+        return view('admin.contracts.create', compact('tenants', 'units', 'buildings'));
     }
 
     public function store(Request $request)
@@ -41,7 +41,14 @@ class ContractController extends Controller
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->only(['tenant_id', 'unit_id', 'start_date', 'end_date', 'rent_amount', 'notes']);
+        $data = $request->only([
+            'tenant_id',
+            'unit_id',
+            'start_date',
+            'end_date',
+            'rent_amount',
+            'notes',
+        ]);
 
         if ($request->hasFile('contract_file')) {
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
@@ -61,8 +68,10 @@ class ContractController extends Controller
     public function edit(Contract $contract)
     {
         $tenants = Tenant::all();
-        $units   = Unit::all();
-        return view('admin.contracts.edit', compact('contract', 'tenants', 'units'));
+        $units = Unit::where('building_id', $contract->unit->building_id ?? null)->get();
+        $buildings = Building::all();
+
+        return view('admin.contracts.edit', compact('contract', 'tenants', 'units', 'buildings'));
     }
 
     public function update(Request $request, Contract $contract)
@@ -77,7 +86,14 @@ class ContractController extends Controller
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->only(['tenant_id', 'unit_id', 'start_date', 'end_date', 'rent_amount', 'notes']);
+        $data = $request->only([
+            'tenant_id',
+            'unit_id',
+            'start_date',
+            'end_date',
+            'rent_amount',
+            'notes',
+        ]);
 
         if ($request->hasFile('contract_file')) {
             if ($contract->contract_file) {
@@ -102,7 +118,6 @@ class ContractController extends Controller
         return redirect()->route('admin.contracts.index')->with('success', __('messages.contract_deleted_successfully'));
     }
 
-    // ✅ إنهاء العقد دون حذفه (تحديث تاريخ الانتهاء)
     public function end(Contract $contract)
     {
         $contract->update([
@@ -110,5 +125,11 @@ class ContractController extends Controller
         ]);
 
         return back()->with('success', __('messages.contract_ended_successfully'));
+    }
+
+    // ✅ API: جلب الوحدات الخاصة بمبنى معين
+    public function getUnitsByBuilding($buildingId)
+    {
+        return Unit::where('building_id', $buildingId)->get(['id', 'unit_number']);
     }
 }
