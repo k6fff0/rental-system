@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-bind:class="{ 'dark': darkMode }">
 <head>
+    <style>[x-cloak] { display: none !important; }</style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -9,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+	<script src="//unpkg.com/alpinejs" defer></script>
+
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -106,9 +109,27 @@
             @yield('content')
         </main>
     </div>
+	<div id="globalModal" x-data="{ show: false, html: '' }" x-cloak>
+    <div x-show="show"
+         class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+         x-transition.opacity>
+        <div @click.away="show = false"
+             class="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 max-w-3xl w-full mx-4 sm:mx-0 rounded-lg shadow-lg p-6 relative z-50 overflow-y-auto max-h-[90vh]"
+             x-transition>
+            <button @click="show = false"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 8.586l4.95-4.95 1.414 1.414L11.414 10l4.95 4.95-1.414 1.414L10 11.414l-4.95 4.95-1.414-1.414L8.586 10 3.636 5.05l1.414-1.414L10 8.586z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            <div x-html="html"></div>
+        </div>
+    </div>
+</div>
+
+
 
     {{-- ✅ السكريبتات --}}
     @stack('scripts')
-    <script src="https://unpkg.com/alpinejs" defer></script>
 </body>
 </html>

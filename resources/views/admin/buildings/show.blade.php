@@ -16,9 +16,18 @@
     <div class="bg-white p-6 rounded-lg shadow space-y-6">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-gray-700">
-
             <div><strong>اسم المبنى:</strong> {{ $building->name }}</div>
             <div><strong>العنوان:</strong> {{ $building->address }}</div>
+
+            <div>
+                <strong>رابط الموقع:</strong>
+                @if ($building->location_url)
+                    <a href="{{ $building->location_url }}" target="_blank" class="text-blue-600 hover:underline">عرض على الخريطة</a>
+                @else
+                    -
+                @endif
+            </div>
+
             <div><strong>اسم المالك:</strong> {{ $building->owner_name ?? '-' }}</div>
             <div><strong>الجنسية:</strong> {{ $building->owner_nationality ?? '-' }}</div>
             <div><strong>رقم الهوية:</strong> {{ $building->owner_id_number ?? '-' }}</div>
@@ -31,7 +40,7 @@
         {{-- عدادات الكهرباء --}}
         <div>
             <strong class="block mb-2 text-sm text-gray-700">أرقام عدادات الكهرباء:</strong>
-            @if(!empty($building->electric_meters))
+            @if (!empty($building->electric_meters) && count($building->electric_meters))
                 <ul class="list-disc list-inside text-sm text-gray-600">
                     @foreach ($building->electric_meters as $meter)
                         <li>{{ $meter }}</li>
@@ -44,11 +53,14 @@
 
         {{-- خطوط الإنترنت --}}
         <div>
-            <strong class="block mb-2 text-sm text-gray-700">أرقام خطوط الإنترنت:</strong>
-            @if(!empty($building->internet_lines))
-                <ul class="list-disc list-inside text-sm text-gray-600">
+            <strong class="block mb-2 text-sm text-gray-700">خطوط الإنترنت:</strong>
+            @if (!empty($building->internet_lines) && count($building->internet_lines))
+                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
                     @foreach ($building->internet_lines as $line)
-                        <li>{{ $line }}</li>
+                        <li>
+                            <span class="text-gray-700">الرقم:</span> {{ $line['line'] ?? '-' }} <br>
+                            <span class="text-gray-700">المالك:</span> {{ $line['owner'] ?? '-' }}
+                        </li>
                     @endforeach
                 </ul>
             @else

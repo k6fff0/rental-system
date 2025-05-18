@@ -26,9 +26,9 @@ class Unit extends Model
     }
 
     // ✅ العلاقة مع العقود
-   public function latestContract()
+  public function latestContract()
 {
-    return $this->hasOne(Contract::class)->latestOfMany(); // Laravel 8+
+    return $this->hasOne(Contract::class)->latestOfMany('start_date'); // أو latestOfMany() لو مش عندك start_date
 }
 
     // ✅ accessor لحالة الغرفة

@@ -55,7 +55,7 @@ class UnitController extends Controller
             'unit_type'    => 'required|string|in:' . implode(',', UnitType::values()),
             'status'       => 'required|in:available,occupied,booked,maintenance,cleaning',
             'notes'        => 'nullable|string|max:1000',
-            'rent_price'   => 'nullable|numeric|min:0',
+            'rent_price'   => 'required|numeric|min:0',
         ]);
 
         Unit::create($request->only([

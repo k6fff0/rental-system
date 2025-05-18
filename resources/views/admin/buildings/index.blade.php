@@ -59,7 +59,7 @@
                         <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->name }}</td>
                         <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->address }}</td>
                         <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->units->count() }}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3">					
                             <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}"> 
                                <a href="{{ route('admin.buildings.show', $building->id) }}"
                                    class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">

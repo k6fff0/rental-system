@@ -19,6 +19,7 @@ return [
 
     // لوحة التحكم
     'admin_dashboard' => 'لوحة تحكم الإدارة',
+    'technicians_list' => 'الفنيين',
 
     // المباني
     'buildings' => 'المباني',
@@ -641,6 +642,38 @@ return [
 'secondary_phone' => 'رقم جوال إضافي',
 'add_another_phone' => 'أضف رقم جوال اخر',
 'choose_building' => 'اختر مبنى',
+'enter_unit_number' => 'أدخل رقم الوحدة',
+'call' => 'اتصال',
+'all_technicians' => 'جميع الفنيين',
+'no_technician' => 'لا يوجد فني',
+'technician' => 'الفني',
+'requests_table' => 'جدول الطلبات',
+'total_requests' => 'إجمالي الطلبات',
+'items' => 'عناصر',
+'select_technician' => 'اختر الفني',
+'technicians_list' => 'قائمة الفنيين',
+'technician_profile' => 'ملف الفني',
+'specialty' => 'التخصص',
+'status' => 'الحالة',
+'status_available' => 'متاح',
+'status_busy' => 'مشغول',
+'status_unavailable' => 'غير متاح',
+'notes' => 'ملاحظات',
+'no_technicians_found' => 'لا يوجد فنيين حتى الآن',
+'actions' => 'إجراءات',
+'name' => 'الاسم',
+'email' => 'البريد الإلكتروني',
+'phone' => 'رقم الهاتف',
+'show' => 'عرض',
+'back_to_list' => 'العودة للقائمة',
+
+
+
+
+
+
+
+
 
 
 

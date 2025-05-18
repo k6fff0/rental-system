@@ -7,7 +7,7 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ContractController;
-use App\Http\Controllers\PaymentController;
+//use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaintenanceWorkerController;
 use App\Http\Controllers\Admin\MaintenanceRequestController;
 use App\Http\Controllers\ExpenseController;
@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\TechnicianController;
 use App\Http\Controllers\PdfTestController;
 
 use Illuminate\Support\Facades\App;
@@ -39,6 +40,13 @@ Route::redirect('/admin', '/admin/dashboard');
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    // ✅ الفنيين
+    Route::get('technicians', [TechnicianController::class, 'index'])->name('technicians.index');
+    Route::get('technicians/{id}', [TechnicianController::class, 'show'])->name('technicians.show');
+	Route::get('technicians/{id}/edit', [\App\Http\Controllers\Admin\TechnicianController::class, 'edit'])->name('technicians.edit');
+    Route::put('technicians/{id}', [\App\Http\Controllers\Admin\TechnicianController::class, 'update'])->name('technicians.update');
+
+
     // ✅ API للمستأجر
     Route::get('/api/tenant/{id}', [TenantController::class, 'getTenantData']);
 
@@ -58,12 +66,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('tenants/{tenant}/link-user', [TenantController::class, 'linkUser'])->name('tenants.link-user');
     Route::post('tenants/{tenant}/attach-user', [TenantController::class, 'attachUser'])->name('tenants.attach-user');
     Route::post('tenants/{tenant}/create-user', [TenantController::class, 'createUser'])->name('tenants.create-user');
-    Route::get('tenants/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
 
     // ✅ العقود والدفع والصيانة
     Route::resource('contracts', ContractController::class);
     Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
-    Route::resource('payments', PaymentController::class);
+    //Route::resource('payments', PaymentController::class);
     Route::resource('maintenance-workers', MaintenanceWorkerController::class);
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');

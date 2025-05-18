@@ -13,12 +13,12 @@ class MaintenanceRequest extends Model
         'building_id',
         'unit_id',
         'tenant_id',
-        'type',
+        'category_id', // ✅ مضاف جديد
         'description',
         'image',
         'status',
         'assigned_worker_id',
-        'technician_id', // ✅ تأكدنا نضيفه هنا
+        'technician_id',
         'start_notes',
         'end_notes',
         'note',
@@ -29,7 +29,11 @@ class MaintenanceRequest extends Model
     // 🔗 العلاقات
     public function category()
     {
-        return $this->belongsTo(\App\Models\MaintenanceCategory::class);
+        return $this->belongsTo(MaintenanceCategory::class);
+    }
+    public function getCategorySlugAttribute()
+    {
+    return $this->category?->slug ?? 'other';
     }
 
     public function building()
@@ -59,6 +63,6 @@ class MaintenanceRequest extends Model
 
     public function technician()
     {
-        return $this->belongsTo(User::class, 'technician_id'); // ✅ العلاقة الجديدة
+        return $this->belongsTo(User::class, 'technician_id');
     }
 }

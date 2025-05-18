@@ -38,10 +38,9 @@ class TenantController extends Controller
         return view('admin.tenants.create', compact('buildings'));
     }
 
-   public function store(Request $request)
+ public function store(Request $request)
 {
     $request->validate([
-        'unit_id' => 'nullable|exists:units,id',
         'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
         'name' => 'required|string|max:100',
         'phone' => 'nullable|string|max:20',
@@ -51,15 +50,16 @@ class TenantController extends Controller
         'debt' => 'nullable|numeric|min:0',
     ]);
 
+    // ✅ إنشاء المستخدم المرتبط بالمستأجر
     $user = User::create([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => Hash::make('default1234'), // كلمة سر افتراضية
+        'password' => Hash::make('default1234'), // ممكن تغير الباسورد لاحقًا
         'role' => 'tenant',
     ]);
 
+    // ✅ إنشاء المستأجر
     $tenant = Tenant::create([
-        'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
         'tenant_status' => $request->tenant_status,
         'name' => $request->name,
         'phone' => $request->phone,
@@ -70,14 +70,8 @@ class TenantController extends Controller
         'user_id' => $user->id,
     ]);
 
-    if ($tenant->unit_id) {
-        Unit::where('id', $tenant->unit_id)->update(['status' => 'occupied']);
-    }
-
     return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر وإنشاء الحساب بنجاح');
 }
-
-
     public function edit(Tenant $tenant)
     {
         $buildings = Building::select('id', 'name')->get();
@@ -103,10 +97,12 @@ class TenantController extends Controller
         'debt' => 'nullable|numeric|min:0',
     ]);
 
+    // ✅ لو غير الوحدة القديمة، نرجع حالتها متاحة
     if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
         Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
     }
 
+    // ✅ تحديث بيانات المستأجر
     $tenant->update([
         'tenant_status' => $request->tenant_status,
         'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
@@ -119,13 +115,13 @@ class TenantController extends Controller
         'debt' => $request->debt ?? 0,
     ]);
 
+    // ✅ لو فعّلنا المستأجر وربطناه بوحدة نحدث حالة الوحدة
     if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
         Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
     }
 
     return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
 }
-
 
     public function destroy(Tenant $tenant)
     {
@@ -138,10 +134,14 @@ class TenantController extends Controller
     }
 
     public function show(Tenant $tenant)
-    {
-        $tenant->load(['unit', 'additionalUnits', 'user']);
+{
+    if (request()->ajax()) {
         return view('admin.tenants.show', compact('tenant'));
     }
+
+    return view('admin.tenants.show', compact('tenant'));
+}
+
 
     public function linkUser(Tenant $tenant)
     {

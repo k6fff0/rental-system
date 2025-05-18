@@ -41,6 +41,10 @@ public const STATUSES = [
     {
         return $this->belongsTo(Unit::class);
     }
+public function latestContract()
+{
+    return $this->hasOne(Contract::class)->latestOfMany('start_date');
+}
 
     /**
      * علاقة المستأجر بالعقود

@@ -33,7 +33,7 @@
                     <label for="building_id" class="block text-sm font-medium text-gray-700 mb-1">
                         {{ __('messages.building') }} <span class="text-red-500">*</span>
                     </label>
-                    <select name="building_id" id="building_id" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+                    <select name="building_id" id="building_id" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" required>
                         @foreach ($buildings as $building)
                             <option value="{{ $building->id }}">{{ $building->name }}</option>
                         @endforeach
@@ -45,7 +45,9 @@
                     <label for="unit_number" class="block text-sm font-medium text-gray-700 mb-1">
                         {{ __('messages.unit_number') }} <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="unit_number" id="unit_number" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" required>
+                    <input type="text" name="unit_number" id="unit_number"
+                           class="w-full border border-gray-300 rounded-xl shadow-sm py-2.5 px-4 transition duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="{{ __('messages.enter_unit_number') }}" required>
                 </div>
             </div>
 
@@ -78,36 +80,37 @@
                 {{-- السعر --}}
                 <div>
                     <label for="rent_price" class="block text-sm font-medium text-gray-700 mb-1">
-                        {{ __('messages.rent_price') }}
+                        {{ __('messages.rent_price') }} <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="rent_price" id="rent_price" step="0.01" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3" value="{{ old('rent_price') }}">
+                    <input type="number" name="rent_price" id="rent_price" step="0.01" required
+                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                           value="{{ old('rent_price') }}"> 
                 </div>
             </div>
 
-            {{-- الحالة --}}
+            {{-- ✅ الحالة بالألوان --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">
                     {{ __('messages.status') }}
-                    <span class="text-gray-400 text-xs block mt-1">
-                        {{ __('messages.status_hint') }}
-                    </span>
+                    <span class="text-gray-400 text-xs block mt-1">{{ __('messages.status_hint') }}</span>
                 </label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     @php
                         $statuses = [
-                            'available' => 'status_available',
-                            'occupied' => 'status_occupied',
-                            'booked' => 'status_booked',
-                            'maintenance' => 'status_maintenance',
-                            'cleaning' => 'status_cleaning',
+                            'available' => ['label' => 'status_available', 'bg' => 'bg-green-200', 'text' => 'text-green-800'],
+                            'occupied' => ['label' => 'status_occupied', 'bg' => 'bg-red-200', 'text' => 'text-red-800'],
+                            'booked' => ['label' => 'status_booked', 'bg' => 'bg-purple-200', 'text' => 'text-purple-800'],
+                            'maintenance' => ['label' => 'status_maintenance', 'bg' => 'bg-yellow-200', 'text' => 'text-yellow-800'],
+                            'cleaning' => ['label' => 'status_cleaning', 'bg' => 'bg-indigo-200', 'text' => 'text-indigo-800'],
                         ];
                     @endphp
 
-                    @foreach ($statuses as $value => $label)
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="status" value="{{ $value }}" class="h-4 w-4 text-{{ $value === 'available' ? 'green' : ($value === 'occupied' ? 'red' : ($value === 'booked' ? 'purple' : ($value === 'maintenance' ? 'yellow' : 'indigo'))) }}-500"
-                                {{ old('status') === $value ? 'checked' : '' }}>
-                            <span class="ml-2 text-gray-700">{{ __('messages.' . $label) }}</span>
+                    @foreach ($statuses as $value => $style)
+                        <label class="flex items-center px-4 py-2 rounded-md cursor-pointer {{ $style['bg'] }} {{ $style['text'] }} font-medium shadow-sm">
+                            <input type="radio" name="status" value="{{ $value }}"
+                                   class="form-radio focus:ring-0 text-current mr-2"
+                                   {{ old('status') === $value ? 'checked' : '' }}>
+                            {{ __('messages.' . $style['label']) }}
                         </label>
                     @endforeach
                 </div>
@@ -118,7 +121,8 @@
                 <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">
                     {{ __('messages.notes') }}
                 </label>
-                <textarea name="notes" id="notes" rows="3" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">{{ old('notes') }}</textarea>
+                <textarea name="notes" id="notes" rows="3"
+                          class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">{{ old('notes') }}</textarea>
             </div>
 
             {{-- الأزرار --}}

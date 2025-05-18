@@ -21,6 +21,7 @@ return [
 
     // Dashboard
     'admin_dashboard' => 'Admin Dashboard',
+    'technicians_list' => 'Technicians',
 
     // Buildings
     'buildings' => 'Buildings',
@@ -625,6 +626,36 @@ return [
 'secondary_phone' => 'Secondary phone',
 'add_another_phone' => 'Add another number',
 'choose_building' => 'Choose a building',
+'enter_unit_number' => 'Enter the unit number',
+'call' => 'Call',
+'all_technicians' => 'All Technicians',
+'no_technician' => 'No Technician',
+'items' => 'Items',
+'category' => 'Category',
+'technician' => 'Technician',
+'requests_table' => 'Requests Table',
+'total_requests' => 'Total Requests',
+'select_technician' => 'Select technician',
+'technicians_list' => 'Technicians List',
+'technician_profile' => 'Technician Profile',
+'specialty' => 'Specialty',
+'status' => 'Status',
+'status_available' => 'Available',
+'status_busy' => 'Busy',
+'status_unavailable' => 'Unavailable',
+'notes' => 'Notes',
+'no_technicians_found' => 'No technicians found yet',
+'actions' => 'Actions',
+'name' => 'Name',
+'email' => 'Email',
+'phone' => 'Phone',
+'show' => 'Show',
+'back_to_list' => 'Back to list',
+
+
+
+
+
 
 
 

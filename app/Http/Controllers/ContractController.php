@@ -54,9 +54,13 @@ class ContractController extends Controller
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
         }
 
-        Contract::create($data);
+        $contract = Contract::create($data);
 
-        return redirect()->route('admin.contracts.index')->with('success', __('messages.contract_created_successfully'));
+        // ✅ تحديث حالة الوحدة تلقائياً
+        $contract->unit->update(['status' => 'occupied']);
+
+        return redirect()->route('admin.contracts.index')
+                         ->with('success', __('messages.contract_created_successfully'));
     }
 
     public function show(Contract $contract)
@@ -104,7 +108,11 @@ class ContractController extends Controller
 
         $contract->update($data);
 
-        return redirect()->route('admin.contracts.index')->with('success', __('messages.contract_updated_successfully'));
+        // ✅ تحديث حالة الوحدة بعد التعديل
+        $contract->unit->update(['status' => 'occupied']);
+
+        return redirect()->route('admin.contracts.index')
+                         ->with('success', __('messages.contract_updated_successfully'));
     }
 
     public function destroy(Contract $contract)
@@ -115,16 +123,22 @@ class ContractController extends Controller
 
         $contract->delete();
 
-        return redirect()->route('admin.contracts.index')->with('success', __('messages.contract_deleted_successfully'));
+        return redirect()->route('admin.contracts.index')
+                         ->with('success', __('messages.contract_deleted_successfully'));
     }
 
     public function end(Contract $contract)
-    {
-        $contract->update([
-            'end_date' => now()->format('Y-m-d'),
-        ]);
+   {
+    $contract->update([
+        'end_date' => now()->format('Y-m-d'),
+    ]);
 
-        return back()->with('success', __('messages.contract_ended_successfully'));
+    // ✅ ترجع حالة الوحدة إلى متاحة
+    $contract->unit()->update([
+        'status' => 'available',
+    ]);
+
+    return back()->with('success', __('messages.contract_ended_successfully'));
     }
 
     // ✅ API: جلب الوحدات الخاصة بمبنى معين

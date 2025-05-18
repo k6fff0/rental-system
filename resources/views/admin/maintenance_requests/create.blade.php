@@ -13,7 +13,7 @@
         {{-- المبنى --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
-            <select name="building_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+            <select name="building_id" id="buildingSelect" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
                 <option value="">{{ __('messages.select_building') }}</option>
                 @foreach($buildings as $building)
                     <option value="{{ $building->id }}" {{ old('building_id') == $building->id ? 'selected' : '' }}>
@@ -26,11 +26,11 @@
         {{-- الوحدة --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
-            <select name="unit_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+            <select name="unit_id" id="unitSelect" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
                 <option value="">{{ __('messages.select_unit') }}</option>
                 @foreach($units as $unit)
-                    <option value="{{ $unit->id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
-                        {{ $unit->name }}
+                    <option value="{{ $unit->id }}" data-building="{{ $unit->building_id }}" {{ old('unit_id') == $unit->id ? 'selected' : '' }}>
+                        {{ $unit->unit_number }} - {{ $unit->unit_type }}
                     </option>
                 @endforeach
             </select>
@@ -84,4 +84,34 @@
     </form>
 
 </div>
+
+{{-- 🔄 سكريبت فلترة الوحدات بناءً على المبنى --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buildingSelect = document.getElementById('buildingSelect');
+        const unitSelect = document.getElementById('unitSelect');
+
+        function filterUnits() {
+            const selectedBuilding = buildingSelect.value;
+            Array.from(unitSelect.options).forEach(option => {
+                const buildingId = option.getAttribute('data-building');
+                if (!buildingId || !selectedBuilding) {
+                    option.style.display = '';
+                    return;
+                }
+
+                if (buildingId === selectedBuilding) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+
+        buildingSelect.addEventListener('change', filterUnits);
+
+        // ✅ شغّل الفلترة عند تحميل الصفحة
+        filterUnits();
+    });
+</script>
 @endsection

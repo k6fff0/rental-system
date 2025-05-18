@@ -48,5 +48,10 @@ class User extends Authenticatable
 {
     return $this->hasOne(Tenant::class);
 }
+public function technicianProfile()
+{
+    return $this->hasOne(TechnicianProfile::class);
+}
+
 
 }
