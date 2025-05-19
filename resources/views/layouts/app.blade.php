@@ -10,8 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-	<script src="//unpkg.com/alpinejs" defer></script>
-
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -38,15 +37,56 @@
                 </button>
 
                 {{-- 👤 الحساب --}}
+@auth
+    @php
+        $user = auth()->user();
+        $hasSuperAdmin = false;
+
+        try {
+            $hasSuperAdmin = $user && $user->hasPermissionTo('super-admin');
+        } catch (\Throwable $e) {
+            $hasSuperAdmin = false;
+        }
+    @endphp
+
+    <div x-data="{ open: false }" class="relative" @click.away="open = false">
+        <button @click="open = !open"
+                class="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
+                 stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M5.121 17.804A9 9 0 1118.88 6.197M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-sm font-medium hidden sm:inline">{{ $user->name }}</span>
+        </button>
+
+        <div x-show="open"
+             class="absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-[9999]"
+             x-transition>
+            <div class="py-1 text-sm">
                 <a href="{{ route('profile.edit') }}"
-                   class="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
-                         stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M5.121 17.804A9 9 0 1118.88 6.197M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    <span class="text-sm font-medium hidden sm:inline">{{ Auth::user()->name }}</span>
+                   class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                    🧑 {{ __('Profile') }}
                 </a>
+
+                @if ($hasSuperAdmin && Route::has('admin.system.owner'))
+                    <a href="{{ route('admin.system.owner') }}"
+                       class="block px-4 py-2 text-red-700 dark:text-red-400 font-semibold hover:bg-gray-100 dark:hover:bg-gray-600">
+                        🛡️ لوحة مالك النظام
+                    </a>
+                @endif
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600">
+                        🔓 {{ __('Logout') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+@endauth
 
                 {{-- 🌐 اللغة --}}
                 <div x-data="{ open: false }" class="relative" @click.away="open = false">
@@ -92,7 +132,6 @@
 
         {{-- ✅ محتوى الصفحة --}}
         <main class="py-6">
-            {{-- ✅ Flash Messages with Auto-hide --}}
             @if (session('success'))
                 <div x-data="{ show: true }" 
                      x-show="show" 
@@ -109,25 +148,25 @@
             @yield('content')
         </main>
     </div>
-	<div id="globalModal" x-data="{ show: false, html: '' }" x-cloak>
-    <div x-show="show"
-         class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-         x-transition.opacity>
-        <div @click.away="show = false"
-             class="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 max-w-3xl w-full mx-4 sm:mx-0 rounded-lg shadow-lg p-6 relative z-50 overflow-y-auto max-h-[90vh]"
-             x-transition>
-            <button @click="show = false"
-                    class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 8.586l4.95-4.95 1.414 1.414L11.414 10l4.95 4.95-1.414 1.414L10 11.414l-4.95 4.95-1.414-1.414L8.586 10 3.636 5.05l1.414-1.414L10 8.586z" clip-rule="evenodd" />
-                </svg>
-            </button>
-            <div x-html="html"></div>
+
+    {{-- ✅ مودال عام --}}
+    <div id="globalModal" x-data="{ show: false, html: '' }" x-cloak>
+        <div x-show="show"
+             class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+             x-transition.opacity>
+            <div @click.away="show = false"
+                 class="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 max-w-3xl w-full mx-4 sm:mx-0 rounded-lg shadow-lg p-6 relative z-50 overflow-y-auto max-h-[90vh]"
+                 x-transition>
+                <button @click="show = false"
+                        class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 8.586l4.95-4.95 1.414 1.414L11.414 10l4.95 4.95-1.414 1.414L10 11.414l-4.95 4.95-1.414-1.414L8.586 10 3.636 5.05l1.414-1.414L10 8.586z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div x-html="html"></div>
+            </div>
         </div>
     </div>
-</div>
-
-
 
     {{-- ✅ السكريبتات --}}
     @stack('scripts')

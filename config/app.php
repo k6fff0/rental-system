@@ -62,6 +62,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 		
 
+		
+
 
         /*
         |--------------------------------------------------------------------------
@@ -81,6 +83,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\NotificationServiceProvider::class, // ✅ أضفته هنا
+		App\Providers\MiddlewarePriorityProvider::class,
 
     ],
 	

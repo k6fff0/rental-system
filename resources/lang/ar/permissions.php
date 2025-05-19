@@ -58,4 +58,12 @@ return [
     'delete roles' => 'حذف مجموعة',
     'view permissions' => 'عرض الصلاحيات',
     'edit permissions' => 'تعديل الصلاحيات',
+	 'edit-posts' => 'تعديل المنشورات',
+    'create users' => 'إنشاء مستخدمين',
+    'delete users' => 'حذف مستخدمين',
+    'create permissions' => 'إنشاء صلاحيات',
+    'delete permissions' => 'حذف صلاحيات',
+    'super-admin' => 'صلاحية مالك النظام',
+    'view technicians' => 'عرض الفنيين',
+    'view dashboard' => 'عرض لوحة التحكم',
 ];

@@ -6,7 +6,7 @@
         ['route' => 'admin.tenants.index', 'label' => __('messages.tenants'), 'icon' => 'heroicon-o-users'],
         ['route' => 'admin.contracts.index', 'label' => __('messages.contracts'), 'icon' => 'heroicon-o-document-text'],
         ['route' => 'admin.maintenance_requests.index', 'label' => __('messages.maintenance'), 'icon' => 'heroicon-o-wrench-screwdriver'],
-        ['route' => 'admin.technicians.index', 'label' => __('messages.technicians_list'), 'icon' => 'heroicon-o-user-group'],
+        ['route' => 'admin.technicians.index', 'label' => __('messages.technicians_department'), 'icon' => 'heroicon-o-user-group'],
         ['route' => 'admin.expenses.index', 'label' => __('messages.expenses'), 'icon' => 'heroicon-o-receipt-percent'],
         ['route' => 'admin.users.index', 'label' => __('messages.users'), 'icon' => 'heroicon-o-user-circle'],
         ['route' => 'admin.role_manager.index', 'label' => __('messages.permissions'), 'icon' => 'heroicon-o-shield-check'],

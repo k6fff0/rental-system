@@ -9,6 +9,14 @@ use App\Enums\UnitType;
 
 class UnitController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view units')->only(['index', 'show']);
+    $this->middleware('permission:create units')->only(['create', 'store']);
+    $this->middleware('permission:edit units')->only(['edit', 'update']);
+    $this->middleware('permission:delete units')->only(['destroy']);
+}
+
     // ✅ عرض كل الوحدات
     public function index(Request $request)
     {

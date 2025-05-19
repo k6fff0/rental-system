@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ContractController extends Controller
 {
+	
+public function __construct()
+{
+    $this->middleware('permission:view contracts')->only(['index', 'show']);
+    $this->middleware('permission:create contracts')->only(['create', 'store']);
+    $this->middleware('permission:edit contracts')->only(['edit', 'update']);
+    $this->middleware('permission:delete contracts')->only(['destroy']);
+}
+
     public function index()
     {
         $contracts = Contract::with(['tenant', 'unit'])->latest()->paginate(10);

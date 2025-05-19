@@ -9,6 +9,14 @@ use App\Models\TechnicianProfile;
 
 class TechnicianController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view technicians')->only(['index', 'show']);
+    $this->middleware('permission:create technicians')->only(['create', 'store']);
+    $this->middleware('permission:edit technicians')->only(['edit', 'update']);
+    $this->middleware('permission:delete technicians')->only(['destroy']);
+}
+
     public function index()
     {
         $technicians = User::role('technician')->with('technicianProfile')->get();

@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,15 @@ class AppServiceProvider extends ServiceProvider
                 'unreadNotificationsCount' => $user?->unreadNotifications()->count() ?? 0,
                 'recentNotifications' => $user?->notifications()->take(5)->get() ?? collect()
             ]);
+        });
+
+        // ✅ ربط أي صلاحية جديدة تلقائيًا برول super-admin
+        Permission::created(function ($permission) {
+            $superAdmin = Role::where('name', 'super-admin')->first();
+
+            if ($superAdmin && !$superAdmin->hasPermissionTo($permission->name)) {
+                $superAdmin->givePermissionTo($permission);
+            }
         });
     }
 }

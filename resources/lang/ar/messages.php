@@ -19,7 +19,8 @@ return [
 
     // لوحة التحكم
     'admin_dashboard' => 'لوحة تحكم الإدارة',
-    'technicians_list' => 'الفنيين',
+    'technicians_department' => 'قسم الفنيين ',
+    'technicians_list' => 'قائمة الفنيين ',
 
     // المباني
     'buildings' => 'المباني',
@@ -375,7 +376,6 @@ return [
     'no_notes' => 'لا توجد ملاحظات',
     'available' => 'متاحة',
 'occupied' => 'مشغولة',
-'maintenance' => 'تحت الصيانة',
 'cleaning' => 'بانتظار التنظيف',
 'unknown' => 'غير معروفة',
 
@@ -651,7 +651,6 @@ return [
 'total_requests' => 'إجمالي الطلبات',
 'items' => 'عناصر',
 'select_technician' => 'اختر الفني',
-'technicians_list' => 'قائمة الفنيين',
 'technician_profile' => 'ملف الفني',
 'specialty' => 'التخصص',
 'status' => 'الحالة',
@@ -666,6 +665,14 @@ return [
 'phone' => 'رقم الهاتف',
 'show' => 'عرض',
 'back_to_list' => 'العودة للقائمة',
+'unauthorized_title' => '403 - لا تملك صلاحية',
+    'unauthorized_access' => 'وصول ممنوع!',
+    'unauthorized_description' => 'عذرًا، ليس لديك الصلاحيات الكافية للوصول إلى هذه الصفحة. إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع المسؤول.',
+    'go_back' => 'العودة للخلف',
+    'home_page' => 'الصفحة الرئيسية',
+    'need_admin_access' => 'تحتاج إلى صلاحيات إدارية؟',
+    'contact_admin' => 'اتصل بمسؤول النظام',
+
 
 
 

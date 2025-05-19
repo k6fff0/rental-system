@@ -10,12 +10,20 @@ use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view users')->only(['index', 'show']);
+    $this->middleware('permission:create users')->only(['create', 'store']);
+    $this->middleware('permission:edit users')->only(['edit', 'update']);
+    $this->middleware('permission:delete users')->only(['destroy']);
+}
+
     /**
      * عرض قائمة المستخدمين.
      */
-    public function index(Request $request)
+   public function index(Request $request)
 {
-    $query = User::with('roles');
+    $query = User::with('roles')->where('is_hidden', false);
 
     if ($request->filled('role_id')) {
         $query->whereHas('roles', function ($q) use ($request) {
@@ -31,11 +39,12 @@ class UserController extends Controller
         });
     }
 
-    $users = $query->paginate(10);
+    $users = $query->paginate(12); // زودنا شوية عدد العرض
     $roles = Role::all();
 
     return view('admin.users.index', compact('users', 'roles'));
 }
+
 public function show($id)
 {
     $user = \App\Models\User::findOrFail($id);

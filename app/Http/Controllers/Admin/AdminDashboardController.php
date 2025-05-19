@@ -17,6 +17,11 @@ use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view dashboard')->only(['index', 'show']);
+}
+
     public function index()
     {
         $now = Carbon::now();
@@ -24,7 +29,7 @@ class AdminDashboardController extends Controller
         $currentYear = $now->year;
 
         // 1. عدد المستخدمين
-        $usersCount = User::count();
+        $usersCount = \App\Models\User::where('is_hidden', false)->count();
 
         // 2. عدد المباني
         $buildingsCount = Building::count();

@@ -30,6 +30,7 @@
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 <option value="">{{ __('messages.no_role') }}</option>
                 @foreach ($roles as $role)
+                    @continue($role->name === 'سوبر يوزر')
                     <option value="{{ $role->name }}"
                         {{ $user->roles->contains('name', $role->name) ? 'selected' : '' }}>
                         {{ $role->name }}
@@ -52,6 +53,8 @@
                 @endphp
 
                 @foreach ($permissions as $permission)
+                    @continue($permission->name === 'super-admin')
+
                     @php
                         $isFromRole = $rolePermissions->contains($permission->id);
                         $isDirect = $user->permissions->contains($permission->id);

@@ -1,5 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@vite(['resources/css/app.css', 'resources/js/app.js'])
 
+/* 🔥 إخفاء الأسهم الافتراضية من كل select */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none !important; /* إزالة أي سهم من المتصفح */
+}
+
+/* 💅 دعم RTL و LTR في padding عشان السهم اليدوي يبان كويس */
+html[dir="rtl"] select {
+    padding-right: 2.5rem;
+}
+
+html[dir="ltr"] select {
+    padding-left: 2.5rem;
+}

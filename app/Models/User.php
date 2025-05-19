@@ -44,14 +44,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-	public function tenant()
-{
-    return $this->hasOne(Tenant::class);
-}
-public function technicianProfile()
-{
-    return $this->hasOne(TechnicianProfile::class);
-}
 
+    public function tenant()
+    {
+        return $this->hasOne(Tenant::class);
+    }
+
+    public function technicianProfile()
+    {
+        return $this->hasOne(TechnicianProfile::class);
+    }
+
+  
 
 }

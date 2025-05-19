@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class PermissionSeeder extends Seeder
 {
@@ -69,8 +71,21 @@ class PermissionSeeder extends Seeder
             'edit permissions',
         ];
 
+        // إنشاء الصلاحيات
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
+        }
+
+        // اسم الرول حسب الموجود عندك
+        $adminRole = Role::firstOrCreate(['name' => "Admin's"]);
+
+        // ربط الصلاحيات بالرول
+        $adminRole->syncPermissions($permissions);
+
+        // ربط الرول باليوزر رقم 1
+        $adminUser = User::find(10);
+        if ($adminUser && !$adminUser->hasRole("Admin's")) {
+            $adminUser->assignRole("Admin's");
         }
     }
 }

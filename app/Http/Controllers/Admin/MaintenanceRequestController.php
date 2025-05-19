@@ -17,6 +17,14 @@ use DB;
 
 class MaintenanceRequestController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view maintenance requests')->only(['index', 'show']);
+    $this->middleware('permission:create maintenance requests')->only(['create', 'store']);
+    $this->middleware('permission:edit maintenance requests')->only(['edit', 'update']);
+    $this->middleware('permission:delete maintenance requests')->only(['destroy']);
+}
+
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 10);

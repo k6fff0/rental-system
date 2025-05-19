@@ -11,6 +11,12 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view profile')->only(['index', 'show', 'edit']);
+    $this->middleware('permission:edit profile')->only(['edit', 'update']);
+}
+
     /**
      * Display the user's profile form.
      */

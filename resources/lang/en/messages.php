@@ -21,7 +21,7 @@ return [
 
     // Dashboard
     'admin_dashboard' => 'Admin Dashboard',
-    'technicians_list' => 'Technicians',
+    'technicians_department' => 'Technicians',
 
     // Buildings
     'buildings' => 'Buildings',
@@ -359,7 +359,6 @@ return [
     'no_notes' => 'No notes available',
     'available' => 'Available',
 'occupied' => 'Occupied',
-'maintenance' => 'Under Maintenance',
 'cleaning' => 'Awaiting Cleaning',
 'unknown' => 'Unknown',
 
@@ -651,6 +650,14 @@ return [
 'phone' => 'Phone',
 'show' => 'Show',
 'back_to_list' => 'Back to list',
+'unauthorized_title' => '403 - Unauthorized',
+    'unauthorized_access' => 'Access Denied!',
+    'unauthorized_description' => 'Sorry, you do not have the required permissions to access this page. If you believe this is a mistake, please contact the administrator.',
+    'go_back' => 'Go Back',
+    'home_page' => 'Home Page',
+    'need_admin_access' => 'Need admin access?',
+    'contact_admin' => 'Contact System Administrator',
+
 
 
 

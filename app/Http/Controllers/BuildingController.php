@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Building;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class BuildingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view buildings')->only(['index', 'show']);
+        $this->middleware('permission:create buildings')->only(['create', 'store']);
+        $this->middleware('permission:edit buildings')->only(['edit', 'update']);
+        $this->middleware('permission:delete buildings')->only(['destroy']);
+    }
+
     public function index(Request $request)
     {
         $query = Building::query();

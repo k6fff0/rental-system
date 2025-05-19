@@ -58,4 +58,12 @@ return [
     'delete roles' => 'Delete Role',
     'view permissions' => 'View Permissions',
     'edit permissions' => 'Edit Permissions',
+	 'edit-posts' => 'Edit Posts',
+    'create users' => 'Create Users',
+    'delete users' => 'Delete Users',
+    'create permissions' => 'Create Permissions',
+    'delete permissions' => 'Delete Permissions',
+    'super-admin' => 'Super Admin',
+    'view technicians' => 'View Technicians',
+    'view dashboard' => 'View Dashboard'
 ];

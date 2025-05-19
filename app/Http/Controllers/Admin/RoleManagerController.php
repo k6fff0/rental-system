@@ -9,6 +9,14 @@ use Spatie\Permission\Models\Permission;
 
 class RoleManagerController extends Controller
 {
+	public function __construct()
+{
+    $this->middleware('permission:view roles')->only(['index', 'show']);
+    $this->middleware('permission:create roles')->only(['create', 'store']);
+    $this->middleware('permission:edit roles')->only(['edit', 'update']);
+    $this->middleware('permission:delete roles')->only(['destroy']);
+}
+
     /**
      * عرض كل المجموعات.
      */

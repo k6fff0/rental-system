@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
 {
+	
+
     public function index()
     {
         $expenses = Expense::latest()->get();

@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Hash;
 
 class TenantController extends Controller
 {
+	
+	public function __construct()
+{
+    $this->middleware('permission:view tenants')->only(['index', 'show']);
+    $this->middleware('permission:create tenants')->only(['create', 'store']);
+    $this->middleware('permission:edit tenants')->only(['edit', 'update']);
+    $this->middleware('permission:delete tenants')->only(['destroy']);
+}
+
     public function index(Request $request)
 {
     $query = Tenant::query()->with('unit');

@@ -8,10 +8,10 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ContractController;
 //use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\MaintenanceWorkerController;
+//use App\Http\Controllers\MaintenanceWorkerController;
 use App\Http\Controllers\Admin\MaintenanceRequestController;
 use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\InventoryItemController;
+//use App\Http\Controllers\InventoryItemController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\UserController;
@@ -37,7 +37,7 @@ Route::get('/', function () {
 
 Route::redirect('/admin', '/admin/dashboard');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // ✅ الفنيين
@@ -71,13 +71,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('contracts', ContractController::class);
     Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
     //Route::resource('payments', PaymentController::class);
-    Route::resource('maintenance-workers', MaintenanceWorkerController::class);
+    //Route::resource('maintenance-workers', MaintenanceWorkerController::class);
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
 
     // ✅ المصروفات والمخزون
     Route::resource('expenses', ExpenseController::class);
-    Route::resource('inventory-items', InventoryItemController::class);
+    //Route::resource('inventory-items', InventoryItemController::class);
 
     // ✅ المستخدمين والصلاحيات
     Route::resource('users', UserController::class);
@@ -105,5 +105,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware(['auth', 'permission:super-admin'])->group(function () {
+    Route::get('/admin/system-owner', [\App\Http\Controllers\Admin\SystemOwnerController::class, 'index'])
+         ->name('admin.system.owner');
+});
+
 
 require __DIR__.'/auth.php';
