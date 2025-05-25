@@ -3,19 +3,19 @@
 @section('content')
 <div class="mx-4 py-4 sm:mx-auto max-w-7xl" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
-    {{-- ✅ العنوان وزر الإضافة --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ __('messages.tenants_list') }}</h1>
-        <div class="flex gap-2 w-full sm:w-auto">
-            <a href="{{ route('admin.tenants.create') }}"
-               class="flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 text-center flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                {{ __('messages.add_tenant') }}
-            </a>
-        </div>
+    {{-- ✅ زر الإضافة --}}
+    <div class="mb-6 flex justify-end">
+        <a href="{{ route('admin.tenants.create') }}"
+           class="fixed bottom-6 right-6 sm:static z-10 bg-green-600 hover:bg-green-700 text-white p-3 sm:px-4 sm:py-2 rounded-full sm:rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span class="hidden sm:inline">{{ __('messages.add_tenant') }}</span>
+        </a>
     </div>
+
+    {{-- ✅ العنوان --}}
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-6">{{ __('messages.tenants_list') }}</h1>
 
     {{-- ✅ فلتر البحث --}}
     <div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
@@ -54,6 +54,7 @@
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">{{ __('messages.id_number') }}</th>
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.phone') }}</th>
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">{{ __('messages.unit_number') }}</th>
+                            <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">{{ __('messages.created_at') }}</th>
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('messages.status') }}</th>
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">{{ __('messages.has_debt') }}</th>
                             <th class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">{{ __('messages.has_account') }}</th>
@@ -80,30 +81,22 @@
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                                     {{ $tenant->id_number ?? '-' }}
                                 </td>
-                               <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                                 <div class="flex items-center gap-2">
-                                   {{-- ✅ عرض الرقم دائماً --}}
-                                   <span>{{ $tenant->phone ?? '-' }}</span>
-
-                                   {{-- ✅ فقط على الشاشات الصغيرة: أيقونة اتصال --}}
-                                 <a href="tel:{{ $tenant->phone }}" class="sm:hidden text-green-600 hover:text-green-800" title="{{ __('messages.call') }}">
-                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                   </svg>
-                                 </a>
-
-                                      {{-- ✅ فقط على الشاشات المتوسطة وفوق: زر منقط (ديكور فقط، ما عليهش رابط) --}}
-                                  <div class="hidden sm:inline-block text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                   <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                              </div>
-                              </div>
-                              </td>
-
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                    <div class="flex items-center gap-2">
+                                        {{ $tenant->phone ?? '-' }}
+                                        <a href="tel:{{ $tenant->phone }}" class="sm:hidden text-green-600 hover:text-green-800" title="{{ __('messages.call') }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
                                     {{ $tenant->unit?->unit_number ?? '-' }}
+                                </td>
+                                <!-- إضافة خلية تاريخ الإضافة -->
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
+                                    {{ $tenant->created_at->format('Y-m-d') }}
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $colors[$status] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">
@@ -127,48 +120,64 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
-    <div class="relative" x-data="{ open: false }">
-        <button @click="open = !open" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-        </button>
-        <div x-show="open" @click.away="open = false"
-             x-transition
-             class="absolute z-10 {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-             style="display: none;">
-            <div class="py-1">
-                <a href="tel:{{ $tenant->phone }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 sm:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    {{ __('messages.call') }}
-                </a>
-
-                <a href="{{ route('admin.tenants.show', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    {{ __('messages.view') }}
-                </a>
-                <a href="{{ route('admin.tenants.edit', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    {{ __('messages.edit') }}
-                </a>
-                @if (!$tenant->user)
-                    <a href="{{ route('admin.tenants.link-user', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        {{ __('messages.link_to_account') }}
-                    </a>
-                @endif
-                <form action="{{ route('admin.tenants.destroy', $tenant->id) }}" method="POST" class="block">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('{{ __('messages.confirm_delete') }}')"
-                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        {{ __('messages.delete') }}
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</td>
-
+                                    <div class="relative" x-data="{ open: false }">
+                                        <button @click="open = !open" class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                        </button>
+                                        <div x-show="open" @click.away="open = false"
+                                             x-transition:enter="transition ease-out duration-100"
+                                             x-transition:enter-start="transform opacity-0 scale-95"
+                                             x-transition:enter-end="transform opacity-100 scale-100"
+                                             x-transition:leave="transition ease-in duration-75"
+                                             x-transition:leave-start="transform opacity-100 scale-100"
+                                             x-transition:leave-end="transform opacity-0 scale-95"
+                                             class="absolute z-50 {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                             style="display: none;">
+                                            <div class="py-1">
+                                                <a href="tel:{{ $tenant->phone }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 sm:hidden">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                    </svg>
+                                                    {{ __('messages.call') }}
+                                                </a>
+                                                <a href="{{ route('admin.tenants.show', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                    </svg>
+                                                    {{ __('messages.view') }}
+                                                </a>
+                                                <a href="{{ route('admin.tenants.edit', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                    {{ __('messages.edit') }}
+                                                </a>
+                                                @if (!$tenant->user)
+                                                    <a href="{{ route('admin.tenants.link-user', $tenant->id) }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                        </svg>
+                                                        {{ __('messages.link_to_account') }}
+                                                    </a>
+                                                @endif
+                                                <form action="{{ route('admin.tenants.destroy', $tenant->id) }}" method="POST" class="block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" onclick="return confirm('{{ __('messages.confirm_delete') }}')"
+                                                            class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        {{ __('messages.delete') }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

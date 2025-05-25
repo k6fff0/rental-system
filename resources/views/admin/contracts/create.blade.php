@@ -3,207 +3,245 @@
 @section('content')
 <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
-    {{-- 🧾 العنوان --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    {{-- 🌸 العنوان مع تأثيرات جميلة --}}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div class="{{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 me-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 me-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                {{ __('messages.add_contract') }}
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500">
+                    {{ __('messages.add_contract') }}
+                </span>
             </h1>
-            <p class="text-sm text-gray-500">{{ __('messages.fill_contract_details') }}</p>
-        </div>
-
-        {{-- 🖨️ الطباعة / التصدير --}}
-        <div class="flex gap-3 w-full md:w-auto">
-            <button type="button" onclick="window.print()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded text-sm font-medium flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                {{ __('messages.print') }}
-            </button>
-            <button type="button" id="exportPdf" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded text-sm font-medium flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                </svg>
-                {{ __('messages.export_pdf') }}
-            </button>
+            <p class="text-sm text-gray-500 mt-1">{{ __('messages.fill_contract_details') }}</p>
         </div>
     </div>
 
-    {{-- 📄 نموذج العقد --}}
+    {{-- 🌺 نموذج العقد بتصميم أنيق --}}
     <form action="{{ route('admin.contracts.store') }}" method="POST" enctype="multipart/form-data" id="contractForm"
-          class="bg-white shadow rounded-lg p-6">
+          class="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100">
         @csrf
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {{-- المستأجر --}}
-            <div>
-                <label for="tenant_id" class="block text-sm font-medium text-gray-700">{{ __('messages.tenant') }}</label>
-                <select name="tenant_id" id="tenant_id" required
-                        class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    <option value="">{{ __('messages.choose_tenant') }}</option>
-                    @foreach ($tenants as $tenant)
-                        <option value="{{ $tenant->id }}" {{ old('tenant_id') == $tenant->id ? 'selected' : '' }}>{{ $tenant->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- المبنى --}}
-            <div>
-                <label for="building_id" class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
-                <select name="building_id" id="building_id" required
-                        class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    <option value="">{{ __('messages.choose_building') }}</option>
-                    @foreach ($buildings as $building)
-                        <option value="{{ $building->id }}" {{ old('building_id') == $building->id ? 'selected' : '' }}>{{ $building->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- الوحدة --}}
-            <div>
-                <label for="unit_id" class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
-                <select name="unit_id" id="unit_id" required
-                        class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    <option value="">{{ __('messages.choose_unit') }}</option>
-                </select>
-            </div>
-            {{-- مبلغ الإيجار --}}
-            <div>
-                <label for="rent_amount" class="block text-sm font-medium text-gray-700">{{ __('messages.rent_amount') }}</label>
-                <input type="number" name="rent_amount" id="rent_amount" value="{{ old('rent_amount') }}" step="0.01" required
-                       class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-            </div>
-            {{-- التاريخ من وإلى --}}
-            <div>
-                <label for="start_date" class="block text-sm font-medium text-gray-700">{{ __('messages.start_date') }}</label>
-                <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" required
-                       class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-            </div>
-
-            <div>
-                <label for="end_date" class="block text-sm font-medium text-gray-700">{{ __('messages.end_date') }}</label>
-                <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" required
-                       class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-            </div>
-            {{-- ملف العقد --}}
-            <div>
-                <label for="contract_file" class="block text-sm font-medium text-gray-700">{{ __('messages.contract_file') }}</label>
-                <input type="file" name="contract_file" id="contract_file"
-                       class="mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-            </div>
-
-            {{-- الملاحظات --}}
-            <div class="md:col-span-2">
-                <label for="notes" class="block text-sm font-medium text-gray-700">{{ __('messages.notes') }}</label>
-                <textarea name="notes" id="notes" rows="3"
-                          class="mt-1 w-full border-gray-300 rounded-md shadow-sm sm:text-sm">{{ old('notes') }}</textarea>
+        {{-- 🌿 قسم البحث عن المستأجر --}}
+        <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
+            <div class="mb-4">
+                <label for="tenant_search" class="block text-sm font-medium text-gray-700 mb-2">
+                    <span class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        {{ __('messages.tenant_search') }}
+                    </span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="tenant_search" name="tenant_search" autocomplete="off"
+                           placeholder="{{ __('messages.search_placeholder') }}"
+                           class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border">
+                    <input type="hidden" id="tenant_id" name="tenant_id">
+                    <div id="tenant_results"
+                         class="absolute z-10 bg-white border border-gray-200 w-full rounded-lg mt-1 hidden max-h-60 overflow-y-auto text-sm shadow-lg"></div>
+                </div>
             </div>
         </div>
 
-        {{-- 🧾 المعاينة --}}
-        <div class="mt-8 border-t pt-6">
-            <h3 class="text-lg font-semibold mb-3">{{ __('messages.contract_preview') }}</h3>
-            <div id="contractPreview" class="bg-gray-50 border border-gray-200 rounded p-4 text-sm text-gray-700">
-                {{ __('messages.fill_form_to_preview') }}
-            </div>
-        </div>
+        {{-- 🌷 محتوى النموذج الرئيسي --}}
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- المبنى --}}
+                <div class="space-y-1">
+                    <label for="building_id" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.building') }}
+                    </label>
+                    <select name="building_id" id="building_id" required
+                            class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border">
+                        <option value="">{{ __('messages.choose_building') }}</option>
+                        @foreach ($buildings as $building)
+                            <option value="{{ $building->id }}">{{ $building->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-        {{-- الأزرار --}}
-        <div class="mt-6 flex justify-end gap-3">
-            <a href="{{ route('admin.contracts.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded text-sm font-medium">
-                {{ __('messages.back') }}
-            </a>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium">
-                {{ __('messages.save_contract') }}
-            </button>
+                {{-- الوحدة --}}
+                <div class="space-y-1">
+                    <label for="unit_id" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.unit') }}
+                    </label>
+                    <select name="unit_id" id="unit_id" required disabled
+                            class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border bg-gray-50">
+                        <option value="">{{ __('messages.choose_unit') }}</option>
+                    </select>
+                </div>
+
+                {{-- التاريخ من وإلى --}}
+                <div class="space-y-1">
+                    <label for="start_date" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.start_date') }}
+                    </label>
+                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" required
+                           class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border">
+                </div>
+                <div class="space-y-1">
+                    <label for="end_date" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.end_date') }}
+                    </label>
+                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" required
+                           class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border">
+                </div>
+                {{-- مبلغ الإيجار --}}
+                <div class="space-y-1">
+                    <label for="rent_amount" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.rent_amount') }}
+                    </label>
+                    <div class="relative mt-1 rounded-md shadow-sm">
+                        <input type="number" name="rent_amount" id="rent_amount" value="{{ old('rent_amount') }}" step="0.01" required
+                               class="block w-full pr-12 border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border">
+                        <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0' : 'right-0' }} flex items-center pr-3 pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">{{ __('messages.currency') }}</span>
+                        </div>
+                    </div>
+                </div>
+                {{-- ملف العقد --}}
+                <div class="space-y-1">
+                    <label for="contract_file" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.contract_file') }}
+                    </label>
+                    <div class="mt-1 flex items-center">
+                        <label for="contract_file" class="cursor-pointer w-full">
+                            <div class="flex items-center justify-between bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 hover:bg-gray-50">
+                                <span class="text-sm text-gray-500 truncate">{{ __('messages.choose_file') }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                            </div>
+                            <input type="file" name="contract_file" id="contract_file" class="sr-only">
+                        </label>
+                    </div>
+                </div>
+
+                {{-- الملاحظات --}}
+                <div class="md:col-span-2 space-y-1">
+                    <label for="notes" class="block text-sm font-medium text-gray-700">
+                        {{ __('messages.notes') }}
+                    </label>
+                    <textarea name="notes" id="notes" rows="3"
+                              class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border">{{ old('notes') }}</textarea>
+                </div>
+            </div>
+
+            {{-- 🌼 قسم الشروط والأحكام --}}
+            <div class="mt-8 space-y-1">
+                <label for="terms" class="block text-sm font-medium text-gray-700">
+                    {{ __('messages.terms_and_conditions') }}
+                </label>
+                <textarea name="terms" id="terms" rows="5" required
+                          class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-4 border font-mono text-sm">{{ old('terms', settings()->default_contract_terms) }}</textarea>
+            </div>
+
+            {{-- 🍃 أزرار التنفيذ --}}
+            <div class="mt-8 flex justify-end gap-3">
+                <a href="{{ route('admin.contracts.index') }}" 
+                   class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    {{ __('messages.back') }}
+                </a>
+                <button type="submit" 
+                        class="flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    {{ __('messages.save_contract') }}
+                </button>
+            </div>
         </div>
     </form>
 </div>
 
+{{-- سكريبتات ذكية --}}
 <script>
-    const chooseUnitText = "{{ __('messages.choose_unit') }}";
-
+    // بحث المستأجر
     document.addEventListener('DOMContentLoaded', function () {
-        const buildingSelect = document.getElementById('building_id');
-        const unitSelect = document.getElementById('unit_id');
-        const tenantSelect = document.getElementById('tenant_id');
-        const startDate = document.getElementById('start_date');
-        const endDate = document.getElementById('end_date');
-        const rentAmount = document.getElementById('rent_amount');
+        const input = document.getElementById('tenant_search');
+        const resultsBox = document.getElementById('tenant_results');
+        const hiddenInput = document.getElementById('tenant_id');
 
-        // ✅ جلب الوحدات عند اختيار المبنى
-        buildingSelect.addEventListener('change', function () {
-            const buildingId = this.value;
-            unitSelect.innerHTML = `<option value="">${chooseUnitText}</option>`;
-            
-            if (buildingId) {
-                fetch(`/admin/api/units-by-building/${buildingId}`)
-                    .then(response => response.json())
-                    .then(units => {
-                        units.forEach(unit => {
-                            const option = document.createElement('option');
-                            option.value = unit.id;
-                            option.textContent = unit.unit_number;
-                            unitSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching units:', error));
+        input.addEventListener('input', function () {
+            const query = this.value.trim();
+
+            if (query.length < 1) {
+                resultsBox.innerHTML = '';
+                resultsBox.classList.add('hidden');
+                return;
             }
-        });
 
-        // ✅ جلب بيانات المستأجر عند اختياره
-        tenantSelect.addEventListener('change', function () {
-            const tenantId = this.value;
-            if (!tenantId) return;
-
-            fetch(`/admin/api/tenant/${tenantId}`)
+            fetch(`/admin/api/tenants/search?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
-                    updateContractPreview(data); // بترجع البيانات للمعاينة
+                    if (data.length === 0) {
+                        resultsBox.innerHTML = '<div class="p-3 text-center text-gray-500 bg-gray-50">{{ __("messages.no_results") }}</div>';
+                    } else {
+                        resultsBox.innerHTML = data.map(tenant => `
+                            <div class="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 text-gray-700 flex items-center"
+                                 data-id="${tenant.id}" data-label="${tenant.name} - ${tenant.phone}">
+                                <div class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center me-2 flex-shrink-0">
+                                    ${tenant.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="truncate">
+                                    <div class="font-medium">${tenant.name}</div>
+                                    <div class="text-xs text-gray-500">${tenant.phone} ${tenant.id_number ? ' - ' + tenant.id_number : ''}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    resultsBox.classList.remove('hidden');
                 });
         });
 
-        // ✅ تحديث المعاينة عند تغيير أي بيانات
-        [unitSelect, startDate, endDate, rentAmount].forEach(el => {
-            el.addEventListener('input', () => updateContractPreview());
+        resultsBox.addEventListener('click', function (e) {
+            const selected = e.target.closest('[data-id]');
+            if (selected) {
+                input.value = selected.dataset.label;
+                hiddenInput.value = selected.dataset.id;
+                resultsBox.classList.add('hidden');
+            }
         });
 
-        // ✅ تحديث المعاينة تلقائياً
-        function updateContractPreview(tenant = {}) {
-            const tenantName = tenant.name || tenantSelect.options[tenantSelect.selectedIndex]?.text || '________';
-            const idNumber = tenant.id_number || '________';
-            const phone = tenant.phone || '________';
-            const email = tenant.email || '________';
-            const unitNumber = unitSelect.options[unitSelect.selectedIndex]?.text || '________';
-            const start = startDate.value || '________';
-            const end = endDate.value || '________';
-            const rent = rentAmount.value ? `${rentAmount.value} {{ __('messages.currency') }}` : '________';
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !resultsBox.contains(e.target)) {
+                resultsBox.classList.add('hidden');
+            }
+        });
+    });
 
-            document.getElementById('contractPreview').innerHTML = `
-                <div class="space-y-4 text-sm">
-                    <h2 class="text-base font-bold text-gray-800 mb-2">{{ __('messages.contract_summary') }}</h2>
+    // تحميل الوحدات حسب المبنى المختار
+    const buildingSelect = document.getElementById('building_id');
+    const unitSelect = document.getElementById('unit_id');
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <strong>{{ __('messages.tenant') }}:</strong> ${tenantName}<br>
-                            <strong>{{ __('messages.id_number') }}:</strong> ${idNumber}<br>
-                            <strong>{{ __('messages.phone') }}:</strong> ${phone}<br>
-                            <strong>{{ __('messages.email') }}:</strong> ${email}<br>
-                        </div>
-                        <div>
-                            <strong>{{ __('messages.unit') }}:</strong> ${unitNumber}<br>
-                            <strong>{{ __('messages.start_date') }}:</strong> ${start}<br>
-                            <strong>{{ __('messages.end_date') }}:</strong> ${end}<br>
-                            <strong>{{ __('messages.rent_amount') }}:</strong> ${rent}<br>
-                        </div>
-                    </div>
-                </div>
-            `;
+    buildingSelect.addEventListener('change', function () {
+        const buildingId = this.value;
+        unitSelect.disabled = true;
+        unitSelect.innerHTML = `<option>{{ app()->getLocale() === 'ar' ? 'جاري التحميل...' : 'Loading...' }}</option>`;
+
+        if (!buildingId) {
+            unitSelect.innerHTML = `<option value="">{{ app()->getLocale() === 'ar' ? 'اختر المبنى أولاً' : 'Choose building first' }}</option>`;
+            return;
         }
+
+        fetch(`/admin/api/buildings/${buildingId}/available-units`)
+            .then(response => response.json())
+            .then(units => {
+                if (units.length === 0) {
+                    unitSelect.innerHTML = `<option value="">{{ app()->getLocale() === 'ar' ? 'لا توجد وحدات متاحة' : 'No available units' }}</option>`;
+                } else {
+                    unitSelect.innerHTML = `<option value="">{{ app()->getLocale() === 'ar' ? 'اختر الوحدة' : 'Choose unit' }}</option>`;
+                    units.forEach(unit => {
+                        unitSelect.innerHTML += `<option value="${unit.id}">${unit.unit_number}</option>`;
+                    });
+                }
+                unitSelect.disabled = false;
+            });
     });
 </script>
-
 @endsection

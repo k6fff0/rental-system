@@ -19,17 +19,23 @@ class Unit extends Model
         'rent_price',
     ];
 
-    // ✅ العلاقة مع المبنى
-    public function building()
+      // ✅ العلاقة مع المبنى
+     public function building()
     {
         return $this->belongsTo(Building::class);
     }
+	   // ✅ العلاقة مع العقود
+	public function contracts()
+    {
+       return $this->hasMany(\App\Models\Contract::class);
+    }
 
-    // ✅ العلاقة مع العقود
-  public function latestContract()
-{
-    return $this->hasOne(Contract::class)->latestOfMany('start_date'); // أو latestOfMany() لو مش عندك start_date
-}
+
+      // ✅ العلاقه مع اخر عقد
+    public function latestContract()
+    {
+        return $this->hasOne(Contract::class)->latestOfMany('start_date'); 
+    }
 
     // ✅ accessor لحالة الغرفة
     public function getStatusLabelAttribute()
@@ -38,12 +44,8 @@ class Unit extends Model
     }
 	
     public function latestTenant()
-{
+   {
        return $this->latestContract?->tenant;
-}
-public function contracts()
-{
-    return $this->hasMany(\App\Models\Contract::class);
-}
+   }
 
 }

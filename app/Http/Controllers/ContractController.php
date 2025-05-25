@@ -6,19 +6,19 @@ use App\Models\Contract;
 use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\Building;
+use App\Models\ContractType; // لازم تضيف موديل ContractType
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ContractController extends Controller
 {
-	
-public function __construct()
-{
-    $this->middleware('permission:view contracts')->only(['index', 'show']);
-    $this->middleware('permission:create contracts')->only(['create', 'store']);
-    $this->middleware('permission:edit contracts')->only(['edit', 'update']);
-    $this->middleware('permission:delete contracts')->only(['destroy']);
-}
+    public function __construct()
+    {
+        $this->middleware('permission:view contracts')->only(['index', 'show']);
+        $this->middleware('permission:create contracts')->only(['create', 'store']);
+        $this->middleware('permission:edit contracts')->only(['edit', 'update']);
+        $this->middleware('permission:delete contracts')->only(['destroy']);
+    }
 
     public function index()
     {
@@ -26,7 +26,10 @@ public function __construct()
         $activeContractsCount = Contract::where('end_date', '>', now()->addDays(30))->count();
         $expiringSoonCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])->count();
 
-        return view('admin.contracts.index', compact('contracts', 'activeContractsCount', 'expiringSoonCount'));
+        // جلب أنواع العقود من الجدول
+        $contractTypes = ContractType::orderBy('updated_at', 'desc')->get();
+
+        return view('admin.contracts.index', compact('contracts', 'activeContractsCount', 'expiringSoonCount', 'contractTypes'));
     }
 
     public function create()
@@ -65,7 +68,7 @@ public function __construct()
 
         $contract = Contract::create($data);
 
-        // ✅ تحديث حالة الوحدة تلقائياً
+        // تحديث حالة الوحدة تلقائياً
         $contract->unit->update(['status' => 'occupied']);
 
         return redirect()->route('admin.contracts.index')
@@ -117,7 +120,7 @@ public function __construct()
 
         $contract->update($data);
 
-        // ✅ تحديث حالة الوحدة بعد التعديل
+        // تحديث حالة الوحدة بعد التعديل
         $contract->unit->update(['status' => 'occupied']);
 
         return redirect()->route('admin.contracts.index')
@@ -137,22 +140,42 @@ public function __construct()
     }
 
     public function end(Contract $contract)
-   {
-    $contract->update([
-        'end_date' => now()->format('Y-m-d'),
-    ]);
+    {
+        $contract->update([
+            'end_date' => now()->format('Y-m-d'),
+        ]);
 
-    // ✅ ترجع حالة الوحدة إلى متاحة
-    $contract->unit()->update([
-        'status' => 'available',
-    ]);
+        // ترجع حالة الوحدة إلى متاحة
+        $contract->unit()->update([
+            'status' => 'available',
+        ]);
 
-    return back()->with('success', __('messages.contract_ended_successfully'));
+        return back()->with('success', __('messages.contract_ended_successfully'));
     }
 
-    // ✅ API: جلب الوحدات الخاصة بمبنى معين
+    // API: جلب الوحدات الخاصة بمبنى معين
     public function getUnitsByBuilding($buildingId)
     {
         return Unit::where('building_id', $buildingId)->get(['id', 'unit_number']);
     }
+
+    // تبديل حالة تفعيل نوع العقد
+    public function toggle($key)
+    {
+        $contractType = ContractType::where('key', $key)->firstOrFail();
+        $contractType->is_active = !$contractType->is_active;
+        $contractType->save();
+
+        return redirect()->back()->with('success', 'تم تحديث حالة العقد بنجاح.');
+    }
+	public function getAvailableUnits(\App\Models\Building $building)
+{
+    $units = $building->units()
+        ->where('status', 'available') // بس الوحدات المتاحة
+        ->select('id', 'unit_number')  // بنختار البيانات اللي هنحتاجها
+        ->get();
+
+    return response()->json($units);
+}
+
 }

@@ -60,12 +60,12 @@
 
     {{-- 🔍 الفلاتر المتقدمة --}}
     <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-        <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center">
+        <form id="filterForm" method="GET" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center">
             {{-- المبنى --}}
             <div class="relative">
                 <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('messages.filter_by_building') }}</label>
                 <div class="relative">
-                    <select name="building_id" class="w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+                    <select name="building_id" class="filter-select w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
                         <option value="">{{ __('messages.all_buildings') }}</option>
                         @foreach($buildings as $building)
                             <option value="{{ $building->id }}" {{ request('building_id') == $building->id ? 'selected' : '' }}>
@@ -85,7 +85,7 @@
             <div class="relative">
                 <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('messages.all_categories') }}</label>
                 <div class="relative">
-                    <select name="category_id" class="w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+                    <select name="category_id" class="filter-select w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
                         <option value="">{{ __('messages.all_categories') }}</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -105,7 +105,7 @@
             <div class="relative">
                 <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('messages.technician') }}</label>
                 <div class="relative">
-                    <select name="technician_id" class="w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+                    <select name="technician_id" class="filter-select w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
                         <option value="">{{ __('messages.all_technicians') }}</option>
                         @foreach($technicians as $technician)
                             <option value="{{ $technician->id }}" {{ request('technician_id') == $technician->id ? 'selected' : '' }}>
@@ -130,7 +130,7 @@
                         name="unit_number" 
                         placeholder="123"
                         value="{{ request('unit_number') }}"
-                        class="w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+                        class="filter-input w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
                     >
                     <button type="submit" class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-2' : 'right-2' }} text-gray-500 hover:text-blue-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,26 @@
                     </button>
                 </div>
             </div>
+            
+            {{-- حقول مخفية للحفاظ على حالة الفلترة --}}
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            @if(request('per_page'))
+                <input type="hidden" name="per_page" value="{{ request('per_page') }}">
+            @endif
         </form>
+    </div>
+
+    {{-- مؤشر التحميل --}}
+    <div id="loadingIndicator" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg flex items-center gap-4">
+            <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-lg font-medium">{{ __('messages.loading') }}...</span>
+        </div>
     </div>
 
     {{-- 📋 عرض الطلبات (Tabs للجوال/جدول للشاشات الكبيرة) --}}
@@ -149,11 +168,11 @@
             <div class="flex items-center gap-4">
                 <p class="text-sm text-gray-500 whitespace-nowrap">{{ __('messages.total_requests') }}: {{ $requests->total() }}</p>
                 <div class="relative">
-                    <select onchange="window.location.href=this.value" class="border rounded px-3 py-1 pr-6 text-xs focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
-                        <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10 {{ __('messages.items') }}</option>
-                        <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25 {{ __('messages.items') }}</option>
-                        <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50 {{ __('messages.items') }}</option>
-                        <option value="{{ request()->fullUrlWithQuery(['per_page' => 100]) }}" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100 {{ __('messages.items') }}</option>
+                    <select onchange="updatePerPage(this.value)" class="border rounded px-3 py-1 pr-6 text-xs focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10 {{ __('messages.items') }}</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25 {{ __('messages.items') }}</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50 {{ __('messages.items') }}</option>
+                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100 {{ __('messages.items') }}</option>
                     </select>
                     <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-1' : 'right-1' }} flex items-center pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,4 +404,67 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // جميع عناصر الفلتر
+    const filterForm = document.getElementById('filterForm');
+    const filterSelects = document.querySelectorAll('.filter-select');
+    const filterInput = document.querySelector('.filter-input');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    
+    // إضافة حدث تغيير لجميع عناصر الفلتر
+    filterSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            submitFilterForm();
+        });
+    });
+    
+    // إضافة حدث إدخال لبحث رقم الغرفة مع تأخير
+    if (filterInput) {
+        let searchTimer;
+        filterInput.addEventListener('input', function() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                submitFilterForm();
+            }, 500); // تأخير 500 مللي ثانية بعد آخر كتابة
+        });
+    }
+    
+    // دعم زر الإدخال في حقل البحث
+    filterInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitFilterForm();
+        }
+    });
+    
+    // دالة لإرسال النموذج
+    function submitFilterForm() {
+        loadingIndicator.classList.remove('hidden');
+        
+        // إضافة تأثير التعتيم أثناء التحميل
+        document.body.style.opacity = '0.8';
+        
+        // إرسال النموذج
+        filterForm.submit();
+    }
+});
+
+// تحديث عدد العناصر المعروضة لكل صفحة
+function updatePerPage(value) {
+    const form = document.getElementById('filterForm');
+    let perPageInput = form.querySelector('input[name="per_page"]');
+    
+    if (!perPageInput) {
+        perPageInput = document.createElement('input');
+        perPageInput.type = 'hidden';
+        perPageInput.name = 'per_page';
+        form.appendChild(perPageInput);
+    }
+    
+    perPageInput.value = value;
+    form.submit();
+}
+</script>
 @endsection

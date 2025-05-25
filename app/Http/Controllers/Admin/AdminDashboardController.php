@@ -19,7 +19,7 @@ class AdminDashboardController extends Controller
 {
 	public function __construct()
 {
-    $this->middleware('permission:view dashboard')->only(['index', 'show']);
+    $this->middleware('permission_or_super:view dashboard')->only(['index', 'show']);
 }
 
     public function index()

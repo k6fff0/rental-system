@@ -16,6 +16,14 @@ return [
     'currency' => 'درهم',
     'success' => 'نجاح',
     'add' => 'إضافة',
+    'properties_management' => 'إدارة العقارات',
+    'tenants_management' => 'إدارة المستأجرين',
+    'financial_management' => 'الإدارة المالية',
+    'maintenance_management' => 'إدارة الصيانة',
+    'system_management' => 'إدارة النظام',
+    'cars' => 'السيارات',
+    'ratings' => 'التقييمات',
+    'payments' => 'المدفوعات',
 
     // لوحة التحكم
     'admin_dashboard' => 'لوحة تحكم الإدارة',
@@ -48,6 +56,9 @@ return [
     // المستأجرين
     'tenants' => 'المستأجرين',
     'tenants_description' => 'عرض وإدارة بيانات المستأجرين.',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'آخر تعديل',
+
 
     // العقود
     'contracts' => 'العقود',
@@ -184,6 +195,9 @@ return [
      'choose_unit' => 'اختر وحدة',
  
     // المستأجرين
+    'tenant_search' => 'اختر المستأجر',
+    'search_tenant_by_any' => 'ابحث بالاسم، رقم الهوية أو الهاتف...',
+    'terms_and_conditions' => 'الشروط والأحكام',
     'tenants' => 'المستأجرين',
     'add_tenant' => 'إضافة مستأجر',
     'edit_tenant' => 'تعديل بيانات المستأجر',
@@ -197,6 +211,7 @@ return [
     'yes' => 'نعم',
     'no' => 'لا',
     'actions' => 'الإجراءات',
+    'choose_file' => 'اختر ملفًا',
     'link_account' => 'ربط بحساب',
     'link_tenant_to_user' => 'ربط المستأجر بحساب مستخدم',
     'select_user' => 'اختر المستخدم',
@@ -672,6 +687,13 @@ return [
     'home_page' => 'الصفحة الرئيسية',
     'need_admin_access' => 'تحتاج إلى صلاحيات إدارية؟',
     'contact_admin' => 'اتصل بمسؤول النظام',
+    'view_permissions' => 'عرض الصلاحيات',
+    'mark_all_read' => 'تمييز الكل كمقروء',
+    'view_all_notifications' => 'عرض كل الإشعارات',
+    'no_notifications' => 'لا توجد إشعارات حالياً',
+
+
+
 
 
 

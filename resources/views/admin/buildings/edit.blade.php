@@ -82,8 +82,11 @@
             {{-- عدادات الكهرباء --}}
             <div class="mt-8">
                 <label class="block mb-2 text-sm font-medium">أرقام عدادات الكهرباء</label>
+                @php
+                    $meters = is_array($building->electric_meters) ? $building->electric_meters : json_decode($building->electric_meters, true);
+                @endphp
                 <div id="electric-meters-wrapper" class="space-y-2">
-                    @foreach ($building->electric_meters ?? [] as $meter)
+                    @foreach ($meters ?? [] as $meter)
                         <input type="text" name="electric_meters[]" value="{{ $meter }}" class="form-input w-full">
                     @endforeach
                 </div>
@@ -93,8 +96,11 @@
             {{-- خطوط الإنترنت --}}
             <div class="mt-6">
                 <label class="block mb-2 text-sm font-medium">خطوط الإنترنت (الرقم + اسم المالك)</label>
+                @php
+                    $internetLines = is_array($building->internet_lines) ? $building->internet_lines : json_decode($building->internet_lines, true);
+                @endphp
                 <div id="internet-lines-wrapper" class="space-y-2">
-                    @foreach ($building->internet_lines ?? [] as $key => $line)
+                    @foreach ($internetLines ?? [] as $key => $line)
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                             <input type="text" name="internet_lines[{{ $key }}][line]" value="{{ $line['line'] ?? '' }}" placeholder="رقم الخط" class="form-input w-full">
                             <input type="text" name="internet_lines[{{ $key }}][owner]" value="{{ $line['owner'] ?? '' }}" placeholder="اسم المالك" class="form-input w-full">
@@ -131,15 +137,17 @@
         const wrapper = document.createElement('div');
         wrapper.className = 'grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2';
 
+        const timestamp = Date.now();
+
         const inputLine = document.createElement('input');
         inputLine.type = 'text';
-        inputLine.name = `internet_lines[${Date.now()}][line]`;
+        inputLine.name = `internet_lines[${timestamp}][line]`;
         inputLine.placeholder = 'رقم الخط';
         inputLine.className = 'form-input w-full';
 
         const inputOwner = document.createElement('input');
         inputOwner.type = 'text';
-        inputOwner.name = `internet_lines[${Date.now()}][owner]`;
+        inputOwner.name = `internet_lines[${timestamp}][owner]`;
         inputOwner.placeholder = 'اسم المالك';
         inputOwner.className = 'form-input w-full';
 

@@ -18,11 +18,16 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\TechnicianController;
+use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\PdfTestController;
+use App\Http\Controllers\Admin\SettingController;
+
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 Route::get('lang/{lang}', function ($lang) {
     Session::put('locale', $lang);
@@ -39,14 +44,17 @@ Route::redirect('/admin', '/admin/dashboard');
 
     Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+	Route::get('/api/buildings/{building}/available-units', [\App\Http\Controllers\ContractController::class, 'getAvailableUnits']);
+	Route::get('/api/tenants/search', [\App\Http\Controllers\TenantController::class, 'search']);
+
+
 
     // ✅ الفنيين
     Route::get('technicians', [TechnicianController::class, 'index'])->name('technicians.index');
     Route::get('technicians/{id}', [TechnicianController::class, 'show'])->name('technicians.show');
 	Route::get('technicians/{id}/edit', [\App\Http\Controllers\Admin\TechnicianController::class, 'edit'])->name('technicians.edit');
     Route::put('technicians/{id}', [\App\Http\Controllers\Admin\TechnicianController::class, 'update'])->name('technicians.update');
-
-
+	
     // ✅ API للمستأجر
     Route::get('/api/tenant/{id}', [TenantController::class, 'getTenantData']);
 
@@ -96,8 +104,112 @@ Route::redirect('/admin', '/admin/dashboard');
 
     // ✅ الإشعارات
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+	
+	 // packup 
+	Route::post('/backup/create', [BackupController::class, 'create'])->name('backup.create');
+	Route::post('/backup/download', [BackupController::class, 'download'])->name('backup.download');
+	Route::post('/backup/clean', [BackupController::class, 'clean'])->name('backup.clean');
+	Route::post('/backup/restore', [BackupController::class, 'restore'])->name('backup.restore');
+
+    // Edit Settings
+	Route::get('/settings/edit', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');
+	
+	//tlggle 
+	Route::post('/contracts/{key}/toggle', [\App\Http\Controllers\ContractController::class, 'toggleStatus'])->name('contracts.toggle');
+	
+	//settings.update
+	Route::post('/update', [SettingController::class, 'update'])->name('settings.update');
+
+
+
+
+	
+	//clear log
+	Route::post('/logs/clear', function () {
+    $logPath = storage_path('logs/laravel.log');
+    if (file_exists($logPath)) {
+        file_put_contents($logPath, ''); // امسح محتوى اللوج
+    }
+    return back()->with('success', '🧹 تم مسح سجلات النظام بنجاح!');
+})->name('logs.clear');
+
+    // download log
+	Route::get('/logs/download', function () {
+    $logPath = storage_path('logs/laravel.log');
+
+    if (!file_exists($logPath)) {
+        return back()->with('error', '❌ لا يوجد ملف سجلات حاليًا.');
+    }
+
+    return response()->download($logPath, 'laravel-log-' . now()->format('Y-m-d_H-i-s') . '.log');
+})->name('logs.download');
+  
+    // settings.maintenance
+	Route::post('/settings/maintenance', function () {
+    $value = request()->has('maintenance_mode') ? true : false;
+
+    // مثال لو بتستخدم config أو جدول Settings مخصص
+    if (function_exists('settings')) {
+        settings()->set('maintenance_mode', $value);
+        settings()->save();
+    }
+
+    // ممكن كمان تشغل مود الصيانة بتاع لارافيل نفسه:
+    if ($value) {
+        Artisan::call('down');
+    } else {
+        Artisan::call('up');
+    }
+
+    return back()->with('success', '✅ تم تحديث وضع الصيانة.');
+})->name('settings.maintenance');
+
+    // cache.clear
+	Route::post('/settings/cache-clear', function () {
+    try {
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        return back()->with('success', '✅ تم تنظيف الكاش بالكامل.');
+    } catch (\Exception $e) {
+        return back()->with('error', '❌ فشل تنظيف الكاش: ' . $e->getMessage());
+    }
+})->name('cache.clear');
+
+    // database.optimize
+	Route::post('/settings/optimize-database', function () {
+    try {
+        // تحسين لكل الجداول في قاعدة البيانات الحالية
+        $tables = DB::select('SHOW TABLES');
+        $dbName = config('database.connections.mysql.database');
+        $tableKey = "Tables_in_$dbName";
+
+        foreach ($tables as $table) {
+            $tableName = $table->$tableKey;
+            DB::statement("OPTIMIZE TABLE `$tableName`");
+        }
+
+        return back()->with('success', '✅ تم تحسين قاعدة البيانات بنجاح!');
+    } catch (\Exception $e) {
+        return back()->with('error', '❌ فشل في تحسين قاعدة البيانات: ' . $e->getMessage());
+    }
+})->name('database.optimize');
+
+    // queue.restart
+	
+Route::post('/settings/queue-restart', function () {
+    try {
+        Artisan::call('queue:restart');
+        return back()->with('success', '🔄 تم إعادة تشغيل الـ Queue Workers بنجاح!');
+    } catch (\Exception $e) {
+        return back()->with('error', '❌ فشل في إعادة تشغيل الـ Queue: ' . $e->getMessage());
+    }
+})->name('queue.restart');
+	
 });
 
+	
 // ✅ بروفايل المستخدم
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
@@ -110,6 +222,12 @@ Route::middleware(['auth', 'permission:super-admin'])->group(function () {
     Route::get('/admin/system-owner', [\App\Http\Controllers\Admin\SystemOwnerController::class, 'index'])
          ->name('admin.system.owner');
 });
+
+// تمييز الإشعارات كمقروء
+Route::post('/notifications/mark-all-read', function () {
+    auth()->user()?->unreadNotifications->markAsRead();
+    return back();
+})->name('notifications.markAllRead');
 
 
 require __DIR__.'/auth.php';

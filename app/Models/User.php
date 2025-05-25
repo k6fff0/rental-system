@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->hasOne(TechnicianProfile::class);
     }
 
-  
-
+    /**
+     * Determine if the user is the system super admin.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->email === config('app.super_admin_email');
+    }
 }

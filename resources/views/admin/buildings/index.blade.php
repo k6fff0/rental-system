@@ -42,50 +42,58 @@
         {{ __('messages.no_results_found') }}
     </div>
 
-    {{-- 📋 جدول عرض المباني --}}
-    <div id="buildingsTable" class="bg-white shadow rounded-lg overflow-x-auto">
-        <table class="min-w-full border border-gray-200 text-sm text-gray-800">
-            <thead class="bg-gray-100 text-gray-700">
-                <tr>
-                    <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.building_name') }}</th>
-                    <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.address') }}</th>
-                    <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_count') }}</th>
-                    <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.actions') }}</th>
+ {{-- 📋 جدول عرض المباني --}}
+<div id="buildingsTable" class="bg-white shadow rounded-lg overflow-x-auto">
+    <table class="min-w-full border border-gray-200 text-sm text-gray-800">
+        <thead class="bg-gray-100 text-gray-700">
+            <tr>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.building_name') }}</th>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.address') }}</th>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_count') }}</th>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.created_at') }}</th>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.actions') }}</th>
+            </tr>
+        </thead>
+        <tbody id="buildingsTableBody">
+            @foreach ($buildings as $building)
+                @php
+                    $confirmMessage = app()->getLocale() === 'ar'
+                        ? '⚠️ هل أنت متأكد أنك تريد حذف هذا المبنى؟ سيتم أيضًا حذف كل الغرف المرتبطة به، وقد تؤدي العملية إلى حذف عقود مرتبطة.'
+                        : '⚠️ Are you sure you want to delete this building? All related units will also be deleted, and this may include linked contracts.';
+                @endphp
+                <tr class="border-t hover:bg-gray-50 transition duration-150" data-name="{{ strtolower($building->name) }}" data-id="{{ $building->id }}">
+                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->name }}</td>
+                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->address }}</td>
+                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->units->count() }}</td>
+                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->created_at->format('Y-m-d') }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}">
+                            <a href="{{ route('admin.buildings.show', $building->id) }}"
+                               class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                               {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
+                            </a>
+                            <a href="{{ route('admin.buildings.edit', $building->id) }}"
+                               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                               {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
+                            </a>
+                            <form action="{{ route('admin.buildings.destroy', $building->id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('{{ $confirmMessage }}')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                                    {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-            <tbody id="buildingsTableBody">
-                @foreach ($buildings as $building)
-                    <tr class="border-t hover:bg-gray-50 transition duration-150" data-name="{{ strtolower($building->name) }}" data-id="{{ $building->id }}">
-                        <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->name }}</td>
-                        <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->address }}</td>
-                        <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->units->count() }}</td>
-                        <td class="px-4 py-3">					
-                            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}"> 
-                               <a href="{{ route('admin.buildings.show', $building->id) }}"
-                                   class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                                   {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
-                                </a>                            
-                                <a href="{{ route('admin.buildings.edit', $building->id) }}"
-                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                                   {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
-                                </a>
-								<form action="{{ route('admin.buildings.destroy', $building->id) }}"
-                                    method="POST"
-                                    onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                                        {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
 
 </div>
 

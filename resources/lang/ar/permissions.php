@@ -66,4 +66,39 @@ return [
     'super-admin' => 'صلاحية مالك النظام',
     'view technicians' => 'عرض الفنيين',
     'view dashboard' => 'عرض لوحة التحكم',
+	'change maintenance status' => 'تغيير حالة الصيانة',
+    'assign technician' => 'تعيين فني',
+    'upload maintenance image' => 'رفع صورة للصيانة',
+    'comment on maintenance' => 'كتابة تعليق على الصيانة',
+	
+
+    'update unit status' => 'تغيير حالة الوحدة',
+
+    'end contract' => 'إنهاء العقد',
+    'renew contract' => 'تجديد العقد',
+    'export contract pdf' => 'تصدير العقد PDF',
+    'preview contract' => 'معاينة العقد',
+
+    'assign tenant to unit' => 'ربط المستأجر بوحدة',
+    'view tenant balance' => 'عرض المديونية',
+
+    'upload invoice image' => 'رفع صورة الفاتورة',
+
+    'evaluate technician' => 'تقييم الفني',
+    'view technician log' => 'عرض سجل الفني',
+	
+	'receive admin notifications' => 'استقبال إشعارات الإدارة',
+    'receive maintenance notifications' => 'استقبال إشعارات الصيانة',
+    'receive financial notifications' => 'استقبال إشعارات المحاسبة',
+    'receive broker notifications' => 'استقبال إشعارات السماسرة',
+    'receive legal notifications' => 'استقبال إشعارات الشؤون القانونية',
+    'receive secretary notifications' => 'استقبال إشعارات السكرتارية',
+    'receive manager notifications' => 'استقبال إشعارات المديرين',
+    'receive building notifications' => 'استقبال إشعارات المشرفين على المباني',
+    'receive maintenance supervisor notifications' => 'استقبال إشعارات مشرفي الصيانة',
+    'receive cleaning notifications' => 'استقبال إشعارات النظافة',
+    'receive department notifications' => 'استقبال إشعارات مشرفي الأقسام',
+    'receive general notifications' => 'استقبال إشعارات المشرف العام',
+    'receive group general notifications' => 'استقبال إشعارات المشرف العام للمجموعة',
+
 ];

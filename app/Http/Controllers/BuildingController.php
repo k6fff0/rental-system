@@ -51,9 +51,9 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
-            'electric_meters' => 'nullable|array',
-            'electric_meters.*' => 'nullable|string',
-            'internet_lines' => 'nullable|array',
+            'electric_meters' => 'array',
+            'electric_meters.*' => 'array',
+            'internet_lines' => 'array',
         ]);
 
         $data['electric_meters'] = json_encode($request->electric_meters);

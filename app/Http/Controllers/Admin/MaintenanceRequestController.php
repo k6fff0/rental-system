@@ -176,6 +176,7 @@ class MaintenanceRequestController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+		abort_unless(auth()->user()->can('change maintenance status'), 403);
         $request->validate([
             'status' => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
         ]);

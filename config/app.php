@@ -15,7 +15,7 @@ return [
     'locale' => 'en',
     'fallback_locale' => 'ar',
     'faker_locale' => 'en_US',
-
+    'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'admin@corvita.net'),
     'cipher' => 'AES-256-CBC',
     'key' => env('APP_KEY'),
 

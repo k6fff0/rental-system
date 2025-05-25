@@ -19,10 +19,14 @@
             <div><strong>اسم المبنى:</strong> {{ $building->name }}</div>
             <div><strong>العنوان:</strong> {{ $building->address }}</div>
 
+            {{-- رابط الموقع --}}
+            @php
+                $locationUrl = is_string($building->location_url) ? trim($building->location_url) : '';
+            @endphp
             <div>
                 <strong>رابط الموقع:</strong>
-                @if ($building->location_url)
-                    <a href="{{ $building->location_url }}" target="_blank" class="text-blue-600 hover:underline">عرض على الخريطة</a>
+                @if (!empty($locationUrl) && filter_var($locationUrl, FILTER_VALIDATE_URL))
+                    <a href="{{ $locationUrl }}" target="_blank" class="text-blue-600 hover:underline">عرض على الخريطة</a>
                 @else
                     -
                 @endif
@@ -35,14 +39,21 @@
             <div><strong>رقم تسجيل الوحدة في البلدية:</strong> {{ $building->municipality_number ?? '-' }}</div>
             <div><strong>سعر الإيجار الشهري:</strong> {{ $building->rent_amount ? number_format($building->rent_amount, 2) . ' درهم' : '-' }}</div>
             <div><strong>تكاليف التعديل لأول مرة:</strong> {{ $building->initial_renovation_cost ? number_format($building->initial_renovation_cost, 2) . ' درهم' : '-' }}</div>
+
+            {{-- ✅ جديد --}}
+            <div><strong>عدد الوحدات:</strong> {{ $building->units()->count() }}</div>
+            <div><strong>تاريخ الإضافة:</strong> {{ $building->created_at?->format('Y-m-d') ?? '-' }}</div>
         </div>
 
         {{-- عدادات الكهرباء --}}
         <div>
             <strong class="block mb-2 text-sm text-gray-700">أرقام عدادات الكهرباء:</strong>
-            @if (!empty($building->electric_meters) && count($building->electric_meters))
+            @php
+                $meters = is_array($building->electric_meters) ? $building->electric_meters : json_decode($building->electric_meters, true);
+            @endphp
+            @if (!empty($meters) && is_array($meters) && count($meters))
                 <ul class="list-disc list-inside text-sm text-gray-600">
-                    @foreach ($building->electric_meters as $meter)
+                    @foreach ($meters as $meter)
                         <li>{{ $meter }}</li>
                     @endforeach
                 </ul>
@@ -54,9 +65,12 @@
         {{-- خطوط الإنترنت --}}
         <div>
             <strong class="block mb-2 text-sm text-gray-700">خطوط الإنترنت:</strong>
-            @if (!empty($building->internet_lines) && count($building->internet_lines))
+            @php
+                $internetLines = is_array($building->internet_lines) ? $building->internet_lines : json_decode($building->internet_lines, true);
+            @endphp
+            @if (!empty($internetLines) && is_array($internetLines) && count($internetLines))
                 <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    @foreach ($building->internet_lines as $line)
+                    @foreach ($internetLines as $line)
                         <li>
                             <span class="text-gray-700">الرقم:</span> {{ $line['line'] ?? '-' }} <br>
                             <span class="text-gray-700">المالك:</span> {{ $line['owner'] ?? '-' }}

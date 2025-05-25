@@ -18,6 +18,14 @@ return [
     'add' => 'Add',
     'no_role' => 'No Role',
     'no_role_assigned' => 'No role assigned',
+    'properties_management' => 'Properties Management',
+    'tenants_management' => 'Tenants Management',
+    'financial_management' => 'Financial Management',
+    'maintenance_management' => 'Maintenance Management',
+    'system_management' => 'System Management',
+    'cars' => 'Cars',
+    'ratings' => 'Ratings',
+    'payments' => 'Payments',
 
     // Dashboard
     'admin_dashboard' => 'Admin Dashboard',
@@ -47,8 +55,14 @@ return [
     'select_unit_optional' => 'Optional – Select Unit',
 
     // Tenants
+    'tenant_search' => 'Select Tenant',
+    'search_tenant_by_any' => 'Search by name, ID number or phone...',
     'tenants' => 'Tenants',
     'tenants_description' => 'View and manage tenant data.',
+    'created_at' => 'Created At',
+    'updated_at' => 'Last Updated',
+    'terms_and_conditions' => 'Terms and Conditions',
+    'choose_file' => 'Choose File',
 
     // Contracts
     'contracts' => 'Contracts',
@@ -657,6 +671,12 @@ return [
     'home_page' => 'Home Page',
     'need_admin_access' => 'Need admin access?',
     'contact_admin' => 'Contact System Administrator',
+    'view_permissions' => 'View Permissions',
+    'mark_all_read' => 'Mark all as read',
+    'view_all_notifications' => 'View all notifications',
+    'no_notifications' => 'No notifications available',
+
+
 
 
 

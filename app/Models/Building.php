@@ -15,7 +15,8 @@ class Building extends Model
     protected $fillable = [
         'name',
         'address',
-        'number_of_units',            // اختياري: لو العمود فعلاً موجود في قاعدة البيانات
+		'location_url',
+        'number_of_units',       
         'owner_name',
         'owner_nationality',
         'owner_id_number',
@@ -34,7 +35,16 @@ class Building extends Model
         'electric_meters' => 'array',
         'internet_lines'  => 'array',
     ];
-
+	
+		protected static function booted()
+    {
+      static::deleting(function ($building) {
+        foreach ($building->units as $unit) {
+            $unit->contracts()->delete(); // حذف العقود المرتبطة بالغرفة
+            $unit->delete(); // حذف الغرفة
+        }
+    });
+    }
     /**
      * علاقة المبنى بالوحدات
      * كل مبنى يحتوي على وحدات متعددة
@@ -43,4 +53,5 @@ class Building extends Model
     {
         return $this->hasMany(Unit::class);
     }
+
 }

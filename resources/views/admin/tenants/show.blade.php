@@ -6,6 +6,7 @@
         <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('messages.tenant_details') }}</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <!-- المعلومات الأساسية -->
             <div class="flex flex-col">
                 <strong class="block text-gray-600">{{ __('messages.full_name') }}:</strong>
                 <span class="text-gray-800">{{ $tenant->name }}</span>
@@ -42,6 +43,23 @@
             <div class="flex flex-col">
                 <strong class="block text-gray-600">{{ __('messages.building') }}:</strong>
                 <span class="text-gray-800">{{ $tenant->unit->building->name ?? '-' }}</span>
+            </div>
+
+            <!-- تاريخ ووقت الإنشاء والتعديل -->
+            <div class="flex flex-col">
+                <strong class="block text-gray-600">{{ __('messages.created_at') }}:</strong>
+                <span class="text-gray-800">
+                    {{ $tenant->created_at->format('Y-m-d H:i:s') }} 
+                    ({{ $tenant->created_at->diffForHumans() }})
+                </span>
+            </div>
+
+            <div class="flex flex-col">
+                <strong class="block text-gray-600">{{ __('messages.updated_at') }}:</strong>
+                <span class="text-gray-800">
+                    {{ $tenant->updated_at->format('Y-m-d H:i:s') }} 
+                    ({{ $tenant->updated_at->diffForHumans() }})
+                </span>
             </div>
 
             <div class="flex flex-col">
