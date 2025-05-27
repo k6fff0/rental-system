@@ -10,7 +10,8 @@ class BuildingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:view buildings')->only(['index', 'show']);
+        $this->middleware('permission:view buildings')->only(['index']);
+        $this->middleware('permission:view building details')->only(['show']);
         $this->middleware('permission:create buildings')->only(['create', 'store']);
         $this->middleware('permission:edit buildings')->only(['edit', 'update']);
         $this->middleware('permission:delete buildings')->only(['destroy']);

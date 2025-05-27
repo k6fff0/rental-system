@@ -40,8 +40,22 @@ return [
     'building_name' => 'Building Name',
     'address' => 'Address',
     'select_building' => 'Select Building',
-
-    // Units
+    'location' => 'Location',
+    'utilities' => 'Utilities',
+    'building_details' => 'Building Details',
+    'back_to_buildings' => 'Back to Building List',
+    'location_url' => 'Location URL',
+    'view_on_map' => 'View on Map',
+    'units_count' => 'Units Count',
+    'edit_building' => 'Edit Building Info',
+    'aed' => 'AED',
+    'initial_renovation_cost' => 'Initial Renovation Cost',
+    'municipality_number'     => 'Municipality Registration Number',
+    'owner_nationality'       => 'Nationality',
+    'owner_phone'             => 'Mobile Number',
+    'add_new_utility_to_get_started' => 'Add a new utility to get started',
+    'no_images' => 'No images uploaded',
+  // Units
     'units' => 'Units',
     'units_description' => 'View and add rooms or apartments.',
     'unit_list' => 'Residential Units List',
@@ -53,6 +67,49 @@ return [
     'unit_type' => 'Unit Type',
     'unit_type_placeholder' => 'Apartment / Room',
     'select_unit_optional' => 'Optional – Select Unit',
+    'unit_type' => 'Unit Type',
+    'unit_type_studio' => 'Studio',
+    'unit_type_furnished_studio' => 'Furnished Studio',
+    'unit_type_room_lounge' => 'Room & Lounge',
+    'unit_type_furnished_room_lounge' => 'Furnished Room & Lounge',
+    'unit_type_two_rooms_lounge' => '2 Rooms & Lounge',
+    'unit_type_furnished_two_rooms_lounge' => 'Furnished 2 Rooms & Lounge',
+    'unit_type_apartment' => 'Apartment',
+    'unit_type_furnished_apartment' => 'Furnished Apartment',
+    'unfurnished_units' => 'Unfurnished Units',
+    'furnished_units' => 'Furnished Units',
+    'unit_has_active_contract_cannot_change_status' => 'You cannot change the unit status because there is an active contract linked to it.',
+
+
+    // u 
+    'utilities_list' => 'Utilities List',
+    'add_utility' => 'Add New Utility',
+    'utility_type' => 'Type',
+    'utility_value' => 'Value',
+    'building_name' => 'Building Name',
+    'owner_name' => 'Owner Name',
+    'owner_id' => 'ID Number',
+    'notes' => 'Notes',
+    'actions' => 'Actions',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'confirm_delete' => 'Are you sure you want to delete?',
+    'no_utilities' => 'No utilities found.',
+    'choose_building' => 'Select Building',
+    'choose_type' => 'Select Utility Type',
+    'owner_id_image' => 'ID Image',
+    'save' => 'Save',
+    'edit_utility' => 'Edit Utility',
+    'update' => 'Update',
+    'view_current_image' => 'View Current Image',
+    'view_utility' => 'View Utility',
+    'back_to_utilities' => 'Back to Utilities List',
+    'created_at' => 'Created At',
+    'updated_at' => 'Last Updated',
+    'electricity' => 'Electricity Meter',
+    'water'       => 'Water Meter',
+    'internet'    => 'Internet Line',
+
 
     // Tenants
     'tenant_search' => 'Select Tenant',
@@ -63,10 +120,69 @@ return [
     'updated_at' => 'Last Updated',
     'terms_and_conditions' => 'Terms and Conditions',
     'choose_file' => 'Choose File',
+    'current_unit' => 'Current Unit',
+    'past_units' => 'Past Units',
+    'from' => 'from',
+    'to' => 'to',
+'add_payment' => 'Add Payment',
+'save_payment' => 'Save Payment',
+'contract' => 'Contract',
+'select_contract' => 'Select a contract',
+'amount' => 'Amount',
+'payment_date' => 'Payment Date',
+'month_for' => 'For Month',
+'payment_method' => 'Payment Method',
+'cash' => 'Cash',
+'bank_transfer' => 'Bank Transfer',
+'cheque' => 'Cheque',
+'other' => 'Other',
+'notes' => 'Notes',
+'payment_added_successfully' => 'Payment saved successfully.',
+'monthly_due_report' => 'Monthly Due Report',
+'monthly_due_report_for' => 'Monthly due report for',
+'tenant' => 'Tenant',
+'contract_code' => 'Contract Code',
+'building' => 'Building',
+'unit' => 'Unit',
+'due_amount' => 'Due',
+'paid_amount' => 'Paid',
+'remaining_amount' => 'Remaining',
+'payment_status' => 'Status',
+'paid' => 'Paid',
+'partial' => 'Partial',
+'unpaid' => 'Unpaid',
+'no_data_found' => 'No data found',
+'export_excel' => 'Export Excel',
+'export_pdf' => 'Export PDF',
+'monthly_due_report' => 'Due Report',
+'assigned_buildings' => 'Assigned Buildings',
+'building_supervisors' => 'Building Supervisors',
+'edit_assigned_buildings' => 'Edit Assigned Buildings',
+'supervisor_name' => 'Supervisor Name',
+'select_buildings' => 'Select Buildings',
+'building_supervisors' => 'Building Supervisors',
+'manage_building_supervisors' => 'Manage building supervisor assignments',
+'assigned_buildings' => 'Assigned Buildings',
+'buildings_count' => 'Buildings: :count',
+'no_buildings_assigned' => 'No buildings assigned',
+'get_started_by_adding_supervisors' => 'Start by adding supervisors now',
+'no_phone' => 'No Phone Numper',
+'total_supervisors' => 'Total Supervisors',
+'supervisors_list' => 'Supervisors List',
+
+
+
+
 
     // Contracts
     'contracts' => 'Contracts',
+    'terminated' => 'Terminated',
     'contracts_description' => 'Coming soon: Manage contracts and dues.',
+    'contract_number' => 'Contract Number',
+    'search_contracts_placeholder' => 'Search by contract number, tenant name, ID number, or unit number',
+    'unit_has_active_contract' => '⚠️ This unit is linked to an active contract.',
+    'unit_linked_to_contract_number' => 'Contract number: :number',
+    'unit_already_has_active_contract' => 'This unit is already linked to an active contract #:number.',
 
     // Maintenance
     'maintenance' => 'Maintenance',
@@ -675,6 +791,110 @@ return [
     'mark_all_read' => 'Mark all as read',
     'view_all_notifications' => 'View all notifications',
     'no_notifications' => 'No notifications available',
+    // Payment List Page
+    'payments_list' => 'Payments List',
+    'manage_payments_description' => 'Manage and track all rental payments',
+    
+    // Statistics Cards
+    'total_payments' => 'Total Payments',
+    'this_month' => 'This Month',
+    'total_amount' => 'Total Amount',
+    
+    // Action Buttons
+    'monthly_due_report' => 'Monthly Due Report',
+    'add_payment' => 'Add Payment',
+    
+    // Table Headers
+    'payments_table' => 'Payments Records',
+    'total_records' => 'Total',
+    'contract' => 'Contract',
+    'tenant' => 'Tenant',
+    'amount' => 'Amount',
+    'payment_date' => 'Payment Date',
+    'month_for' => 'Month For',
+    'payment_method' => 'Payment Method',
+    'notes' => 'Notes',
+    
+    // Payment Methods
+    'cash' => 'Cash',
+    'bank_transfer' => 'Bank Transfer',
+    'check' => 'Check',
+    
+    // Currency
+    'currency' => 'AED',
+    
+    // Empty State
+    'no_payments_found' => 'No Payments Found',
+    'no_payments_description' => 'No payment records available at the moment.',
+    'create_first_payment' => 'Create First Payment',
+    
+    // Pagination
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'payment_logs' => 'Payment Logs',
+    'payment_logs_description' => 'Track all payment changes and modifications',
+    'back_to_payments' => 'Back to Payments',
+    'no_logs_found' => 'No logs found',
+
+    // Table Headers
+    'payment' => 'Payment',
+    'user' => 'User',
+    'action' => 'Action',
+    'changes' => 'Changes',
+    'date' => 'Date',
+
+    // Action Types
+    'created' => 'Created',
+    'updated' => 'Updated',
+    'deleted' => 'Deleted',
+
+    // Status Badges
+    'success' => 'Success',
+    'warning' => 'Warning',
+    'error' => 'Error',
+
+    // Payment Specific
+    'amount_changed' => 'Amount changed',
+    'method_changed' => 'Payment method changed',
+    'date_changed' => 'Date changed',
+    'collector_changed' => 'Collector changed',
+
+    // System Messages
+    'system_auto_update' => 'System auto-update',
+    'unknown_action' => 'Unknown action',
+
+    // Time Formats
+    'today' => 'Today',
+    'yesterday' => 'Yesterday',
+    'last_week' => 'Last week',
+
+    // Filter Labels
+    'filter_by_user' => 'Filter by user',
+    'filter_by_action' => 'Filter by action',
+    'filter_by_date' => 'Filter by date',
+    'apply_filters' => 'Apply Filters',
+    'clear_filters' => 'Clear Filters',
+
+    // Pagination
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'payment_number' => 'Payment Number',
+    'method' => 'Payment Method',
+'collector_name' => 'Collector Name',
+'logs' => 'Logs',
+'manage_all_payments' => 'Manage All Payments',
+'total_due' => 'Total Due',
+'total_paid' => 'Total Paid',
+'total_remaining' => 'Total Remaining',
+'report_for' => 'Report for',
+
+
 
 
 

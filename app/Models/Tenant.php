@@ -9,9 +9,6 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    /**
-     * الحقول القابلة للتعبئة
-     */
     protected $fillable = [
         'unit_id',
         'name',
@@ -24,30 +21,38 @@ class Tenant extends Model
         'debt',
         'tenant_status',
     ];
-public const STATUSES = [
-    'active',
-    'late_payer',
-    'has_debt',
-    'absent',
-    'abroad',
-    'legal_issue',
-];
+
+    public const STATUSES = [
+        'active',
+        'late_payer',
+        'has_debt',
+        'absent',
+        'abroad',
+        'legal_issue',
+    ];
 
     /**
-     * علاقة المستأجر بالوحدة
-     * المستأجر ينتمي إلى وحدة واحدة (أو null)
+     * علاقة المستأجر بالوحدة (قديمة - لم تعد مستخدمة في حالة العقود الديناميكية)
      */
     public function unit()
     {
-        return $this->belongsTo(Unit::class);
+        return $this->hasOneThrough(Unit::class, Contract::class, 'tenant_id', 'id', 'id', 'unit_id')
+                    ->where('contracts.status', 'active')
+                    ->latest('start_date');
     }
-public function latestContract()
-{
-    return $this->hasOne(Contract::class)->latestOfMany('start_date');
-}
 
     /**
-     * علاقة المستأجر بالعقود
+     * أحدث عقد نشط
+     */
+    public function latestContract()
+    {
+        return $this->hasOne(Contract::class)
+                    ->where('contracts.status', 'active')
+                    ->latestOfMany('start_date');
+    }
+
+    /**
+     * كل العقود
      */
     public function contracts()
     {
@@ -55,14 +60,27 @@ public function latestContract()
     }
 
     /**
-     * علاقة المستأجر بالمستخدم (الحساب المرتبط)
+     * الحساب المرتبط
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-	public function additionalUnits()
+
+    /**
+     * الوحدات الإضافية المرتبطة بالمستأجر
+     */
+    public function additionalUnits()
+    {
+        return $this->belongsToMany(Unit::class, 'tenant_unit');
+    }
+	
+	public function activeContracts()
 {
-    return $this->belongsToMany(Unit::class, 'tenant_unit');
+    return $this->hasMany(\App\Models\Contract::class)
+                ->where('contracts.status', 'active')
+                ->whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now());
 }
+
 }

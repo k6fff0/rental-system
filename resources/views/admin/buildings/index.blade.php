@@ -4,6 +4,7 @@
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
     {{-- ➕ زر إضافة مبنى --}}
+	@can('create buildings')
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">{{ __('messages.building_list') }}</h1>
         <a href="{{ route('admin.buildings.create') }}"
@@ -11,6 +12,7 @@
             + {{ __('messages.add_building') }}
         </a>
     </div>
+	@endcan
 
     {{-- 🔍 فلتر البحث الذكي --}}
 <div class="mb-6 bg-white p-4 rounded-lg shadow grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -42,7 +44,7 @@
         {{ __('messages.no_results_found') }}
     </div>
 
- {{-- 📋 جدول عرض المباني --}}
+{{-- 📋 جدول عرض المباني --}}
 <div id="buildingsTable" class="bg-white shadow rounded-lg overflow-x-auto">
     <table class="min-w-full border border-gray-200 text-sm text-gray-800">
         <thead class="bg-gray-100 text-gray-700">
@@ -51,6 +53,7 @@
                 <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.address') }}</th>
                 <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_count') }}</th>
                 <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.created_at') }}</th>
+                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">🌍 {{ __('messages.location') }}</th>
                 <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.actions') }}</th>
             </tr>
         </thead>
@@ -66,34 +69,57 @@
                     <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->address }}</td>
                     <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->units->count() }}</td>
                     <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->created_at->format('Y-m-d') }}</td>
-                    <td class="px-4 py-3">
-                        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}">
-                            <a href="{{ route('admin.buildings.show', $building->id) }}"
-                               class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                               {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
+
+                    {{-- 🌍 رابط الموقع --}}
+                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                        @if ($building->location_url)
+                            <a href="{{ $building->location_url }}" target="_blank" class="text-blue-600 underline">
+                                {{ app()->getLocale() == 'ar' ? 'عرض الموقع' : 'View Map' }}
                             </a>
-                            <a href="{{ route('admin.buildings.edit', $building->id) }}"
-                               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                               {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
-                            </a>
-                            <form action="{{ route('admin.buildings.destroy', $building->id) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('{{ $confirmMessage }}')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                                    {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
-                                </button>
-                            </form>
-                        </div>
+                        @else
+                            <span class="text-gray-400">—</span>
+                        @endif
                     </td>
+
+                    {{-- 🔧 الإجراءات --}}
+                    <td class="px-4 py-3">
+    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}">
+
+        @can('view building details')
+            <a href="{{ route('admin.buildings.show', $building->id) }}"
+               class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+               {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
+            </a>
+        @endcan
+
+        @can('edit buildings')
+            <a href="{{ route('admin.buildings.edit', $building->id) }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+               {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
+            </a>
+        @endcan
+
+        @can('delete buildings')
+            <form action="{{ route('admin.buildings.destroy', $building->id) }}"
+                  method="POST"
+                  onsubmit="return confirm('{{ $confirmMessage }}')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                    {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
+                </button>
+            </form>
+        @endcan
+
+    </div>
+</td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
-
 
 </div>
 

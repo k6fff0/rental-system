@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'rental_contract' => 'عقد إيجار وحدة سكنية',
+    'print' => 'طباعة',
+    'export_pdf' => 'تصدير PDF',
+    'first_party' => 'الطرف الأول (المؤجر)',
+    'second_party' => 'الطرف الثاني (المستأجر)',
+    'property_management' => 'إدارة العقارات',
+    'id_number' => 'رقم الهوية',
+    'phone' => 'رقم الهاتف',
+    'not_available' => 'غير متوفر',
+    'unit_details' => 'بيانات الوحدة',
+    'building' => 'المبنى',
+    'unit_number' => 'رقم الوحدة',
+    'floor' => 'الدور',
+    'not_specified' => 'غير محدد',
+    'unit_type' => 'نوع الوحدة',
+    'contract_details' => 'تفاصيل العقد',
+    'start_date' => 'تاريخ بدء العقد',
+    'end_date' => 'تاريخ انتهاء العقد',
+    'rent_amount' => 'قيمة الإيجار',
+    'terms_conditions' => 'الشروط والأحكام',
+    'signatures' => 'التوقيعات',
+    'first_party_signature' => 'توقيع الطرف الأول (المؤجر)',
+    'second_party_signature' => 'توقيع الطرف الثاني (المستأجر)',
+    'currency' => 'ريال',
+];

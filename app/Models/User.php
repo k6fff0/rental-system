@@ -62,4 +62,10 @@ class User extends Authenticatable
     {
         return $this->email === config('app.super_admin_email');
     }
+	
+	public function buildings()
+{
+    return $this->belongsToMany(Building::class);
+}
+
 }

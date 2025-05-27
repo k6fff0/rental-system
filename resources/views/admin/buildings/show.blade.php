@@ -1,84 +1,97 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8" dir="rtl">
+@section('title', __('messages.building_details'))
 
-    {{-- العنوان --}}
+@section('content')
+<div class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+
+    {{-- ✅ العنوان --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">تفاصيل المبنى</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ __('messages.building_details') }}</h1>
         <a href="{{ route('admin.buildings.index') }}"
            class="text-sm text-blue-600 hover:underline">
-            ← رجوع لقائمة المباني
+            ← {{ __('messages.back_to_buildings') }}
         </a>
     </div>
 
-    {{-- تفاصيل المبنى --}}
-    <div class="bg-white p-6 rounded-lg shadow space-y-6">
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-gray-700">
-            <div><strong>اسم المبنى:</strong> {{ $building->name }}</div>
-            <div><strong>العنوان:</strong> {{ $building->address }}</div>
+    {{-- ✅ تفاصيل المبنى --}}
+    <div class="bg-white p-6 rounded-lg shadow space-y-6 text-sm text-gray-700">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div><strong>{{ __('messages.building_name') }}:</strong> {{ $building->name }}</div>
+            <div><strong>{{ __('messages.address') }}:</strong> {{ $building->address }}</div>
 
             {{-- رابط الموقع --}}
             @php
                 $locationUrl = is_string($building->location_url) ? trim($building->location_url) : '';
             @endphp
             <div>
-                <strong>رابط الموقع:</strong>
+                <strong>{{ __('messages.location_url') }}:</strong>
                 @if (!empty($locationUrl) && filter_var($locationUrl, FILTER_VALIDATE_URL))
-                    <a href="{{ $locationUrl }}" target="_blank" class="text-blue-600 hover:underline">عرض على الخريطة</a>
+                    <a href="{{ $locationUrl }}" target="_blank" class="text-blue-600 hover:underline">
+                        {{ __('messages.view_on_map') }}
+                    </a>
                 @else
                     -
                 @endif
             </div>
 
-            <div><strong>اسم المالك:</strong> {{ $building->owner_name ?? '-' }}</div>
-            <div><strong>الجنسية:</strong> {{ $building->owner_nationality ?? '-' }}</div>
-            <div><strong>رقم الهوية:</strong> {{ $building->owner_id_number ?? '-' }}</div>
-            <div><strong>رقم الموبايل:</strong> {{ $building->owner_phone ?? '-' }}</div>
-            <div><strong>رقم تسجيل الوحدة في البلدية:</strong> {{ $building->municipality_number ?? '-' }}</div>
-            <div><strong>سعر الإيجار الشهري:</strong> {{ $building->rent_amount ? number_format($building->rent_amount, 2) . ' درهم' : '-' }}</div>
-            <div><strong>تكاليف التعديل لأول مرة:</strong> {{ $building->initial_renovation_cost ? number_format($building->initial_renovation_cost, 2) . ' درهم' : '-' }}</div>
-
-            {{-- ✅ جديد --}}
-            <div><strong>عدد الوحدات:</strong> {{ $building->units()->count() }}</div>
-            <div><strong>تاريخ الإضافة:</strong> {{ $building->created_at?->format('Y-m-d') ?? '-' }}</div>
+            <div><strong>{{ __('messages.owner_name') }}:</strong> {{ $building->owner_name ?? '-' }}</div>
+            <div><strong>{{ __('messages.owner_nationality') }}:</strong> {{ $building->owner_nationality ?? '-' }}</div>
+            <div><strong>{{ __('messages.owner_id') }}:</strong> {{ $building->owner_id_number ?? '-' }}</div>
+            <div><strong>{{ __('messages.owner_phone') }}:</strong> {{ $building->owner_phone ?? '-' }}</div>
+            <div><strong>{{ __('messages.municipality_number') }}:</strong> {{ $building->municipality_number ?? '-' }}</div>
+            <div><strong>{{ __('messages.rent_amount') }}:</strong> 
+                {{ $building->rent_amount ? number_format($building->rent_amount, 2) . ' ' . __('messages.aed') : '-' }}
+            </div>
+            <div><strong>{{ __('messages.initial_renovation_cost') }}:</strong> 
+                {{ $building->initial_renovation_cost ? number_format($building->initial_renovation_cost, 2) . ' ' . __('messages.aed') : '-' }}
+            </div>
+            <div><strong>{{ __('messages.units_count') }}:</strong> {{ $building->units()->count() }}</div>
+            <div><strong>{{ __('messages.created_at') }}:</strong> {{ $building->created_at?->format('Y-m-d') ?? '-' }}</div>
         </div>
 
-        {{-- عدادات الكهرباء --}}
-        <div>
-            <strong class="block mb-2 text-sm text-gray-700">أرقام عدادات الكهرباء:</strong>
-            @php
-                $meters = is_array($building->electric_meters) ? $building->electric_meters : json_decode($building->electric_meters, true);
-            @endphp
-            @if (!empty($meters) && is_array($meters) && count($meters))
-                <ul class="list-disc list-inside text-sm text-gray-600">
-                    @foreach ($meters as $meter)
-                        <li>{{ $meter }}</li>
-                    @endforeach
-                </ul>
-            @else
-                <p class="text-sm text-gray-500">لا يوجد عدادات.</p>
-            @endif
-        </div>
+        {{-- ✅ جدول المرافق --}}
+        <div class="mt-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">{{ __('messages.utilities_list') }}</h2>
 
-        {{-- خطوط الإنترنت --}}
-        <div>
-            <strong class="block mb-2 text-sm text-gray-700">خطوط الإنترنت:</strong>
-            @php
-                $internetLines = is_array($building->internet_lines) ? $building->internet_lines : json_decode($building->internet_lines, true);
-            @endphp
-            @if (!empty($internetLines) && is_array($internetLines) && count($internetLines))
-                <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    @foreach ($internetLines as $line)
-                        <li>
-                            <span class="text-gray-700">الرقم:</span> {{ $line['line'] ?? '-' }} <br>
-                            <span class="text-gray-700">المالك:</span> {{ $line['owner'] ?? '-' }}
-                        </li>
-                    @endforeach
-                </ul>
+            @if ($building->utilities->count())
+                <div class="overflow-x-auto bg-white rounded-lg shadow">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th class="px-4 py-2 text-right">#</th>
+                                <th class="px-4 py-2 text-right">{{ __('messages.utility_type') }}</th>
+                                <th class="px-4 py-2 text-right">{{ __('messages.utility_value') }}</th>
+                                <th class="px-4 py-2 text-right">{{ __('messages.owner_name') }}</th>
+                                <th class="px-4 py-2 text-right">{{ __('messages.notes') }}</th>
+                                <th class="px-4 py-2 text-right">{{ __('messages.actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach ($building->utilities as $utility)
+                                <tr>
+                                    <td class="px-4 py-2">{{ $loop->iteration }}</td>
+                                    <td class="px-4 py-2">{{ __('messages.' . $utility->type) }}</td>
+                                    <td class="px-4 py-2">{{ $utility->value }}</td>
+                                    <td class="px-4 py-2">{{ $utility->owner_name ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ Str::limit($utility->notes, 30) }}</td>
+                                    <td class="px-4 py-2 space-x-2 text-left">
+                                        <a href="{{ route('admin.building-utilities.show', $utility->id) }}"
+                                           class="text-green-600 hover:underline">
+                                            {{ __('messages.view') }}
+                                        </a>
+                                        <a href="{{ route('admin.building-utilities.edit', $utility->id) }}"
+                                           class="text-blue-600 hover:underline">
+                                            {{ __('messages.edit') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @else
-                <p class="text-sm text-gray-500">لا يوجد خطوط.</p>
+                <p class="text-sm text-gray-500">{{ __('messages.no_utilities') }}</p>
             @endif
         </div>
 
@@ -86,7 +99,7 @@
         <div class="text-left pt-4">
             <a href="{{ route('admin.buildings.edit', $building->id) }}"
                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow transition">
-                تعديل بيانات المبنى
+                {{ __('messages.edit_building') }}
             </a>
         </div>
     </div>

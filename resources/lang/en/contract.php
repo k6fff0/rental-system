@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'rental_contract' => 'Residential Rental Contract',
+    'print' => 'Print',
+    'export_pdf' => 'Export PDF',
+    'first_party' => 'First Party (Lessor)',
+    'second_party' => 'Second Party (Lessee)',
+    'property_management' => 'Property Management',
+    'id_number' => 'ID Number',
+    'phone' => 'Phone Number',
+    'not_available' => 'Not Available',
+    'unit_details' => 'Unit Details',
+    'building' => 'Building',
+    'unit_number' => 'Unit Number',
+    'floor' => 'Floor',
+    'not_specified' => 'Not Specified',
+    'unit_type' => 'Unit Type',
+    'contract_details' => 'Contract Details',
+    'start_date' => 'Contract Start Date',
+    'end_date' => 'Contract End Date',
+    'rent_amount' => 'Rent Amount',
+    'terms_conditions' => 'Terms and Conditions',
+    'signatures' => 'Signatures',
+    'first_party_signature' => 'First Party Signature (Lessor)',
+    'second_party_signature' => 'Second Party Signature (Lessee)',
+    'currency' => 'SAR',
+];

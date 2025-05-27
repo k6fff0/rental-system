@@ -61,21 +61,32 @@
                 </div>
 
                 {{-- نوع الوحدة --}}
-                <div>
-                    <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-1">
-                        {{ __('messages.unit_type') }}
-                    </label>
-                    <select name="unit_type" id="unit_type" class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-                        @php
-                            $types = ['studio', 'room_lounge', 'two_rooms_lounge', 'apartment'];
-                        @endphp
-                        @foreach ($types as $type)
-                            <option value="{{ $type }}" {{ old('unit_type') === $type ? 'selected' : '' }}>
-                                {{ __('messages.' . $type) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+<div>
+    <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-1">
+        {{ __('messages.unit_type') }}
+    </label>
+    <select name="unit_type" id="unit_type"
+            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm">
+        @php
+            $types = [
+                'studio',
+                'furnished_studio',
+                'room_lounge',
+                'furnished_room_lounge',
+                'two_rooms_lounge',
+                'furnished_two_rooms_lounge',
+                'apartment',
+                'furnished_apartment',
+            ];
+        @endphp
+        @foreach ($types as $type)
+            <option value="{{ $type }}" {{ old('unit_type', $unit->unit_type ?? '') === $type ? 'selected' : '' }}>
+                {{ __('messages.unit_type_' . $type) }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 
                 {{-- السعر --}}
                 <div>

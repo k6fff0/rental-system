@@ -88,12 +88,14 @@
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">{{ __('messages.unit_list') }}</h1>
             <p class="text-gray-500 text-sm">{{ __('messages.total_units') }}: {{ $units->count() }}</p>
         </div>
+		@can('create units')
         <a href="{{ route('admin.units.create') }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg inline-flex items-center transition-colors text-sm sm:text-base w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             {{ __('messages.add_unit') }}
         </a>
+		@endcan
     </div>
 
     @if (session('success'))
@@ -133,17 +135,27 @@
                             <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">{{ $unit->unit_number }}</span>
                         </td>
                         
-                        {{-- نوع الغرفة --}}
+                       {{-- نوع الغرفة --}}
                         <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
                             <span class="text-sm text-gray-900 font-medium">
-                                {{ __('messages.' . $unit->unit_type) }}
+                                {{ __('messages.unit_type_' . $unit->unit_type) }}
                             </span>
                         </td>
+
                         
                         {{-- سعر الإيجار --}}
-                        <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-                            <span class="text-sm font-medium text-gray-900">{{ number_format($unit->rent_price) }} {{ __('messages.currency') }}</span>
-                        </td>
+                        <td class="...">
+    @if ($unit->latestActiveContract)
+        <span class="text-blue-600 font-semibold">
+            {{ number_format($unit->latestActiveContract->rent_amount, 2) }} {{ __('messages.currency') }}
+        </span>
+    @else
+        <span class="text-gray-600">
+            {{ number_format($unit->rent_price, 2) }} {{ __('messages.currency') }}
+        </span>
+    @endif
+</td>
+
                         
                         {{-- الحالة --}}
                         <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
@@ -252,6 +264,7 @@
                                 </div>
 
                                 {{-- 🔵 زر التعديل --}}
+								@can('edit units')
                                 <a href="{{ route('admin.units.edit', $unit->id) }}"
                                    class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
                                    title="{{ __('messages.edit') }}">
@@ -259,6 +272,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </a>
+								@endcan
 
                                 {{-- 👁️ زر العرض --}}
                                 <a href="{{ route('admin.units.show', $unit->id) }}"
@@ -271,6 +285,7 @@
                                 </a>
 
                                 {{-- 🔴 زر الحذف --}}
+								@can('delete units')
                                 <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -282,6 +297,7 @@
                                         </svg>
                                     </button>
                                 </form>
+								@endcan
                             </div>
                         </td>
                     </tr>

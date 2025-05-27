@@ -20,6 +20,11 @@
                     'label' => __('messages.units'), 
                     'icon' => 'heroicon-o-home-modern'
                 ],
+				                [
+                    'route' => 'admin.building-utilities.index', 
+                    'label' => __('messages.utilities'), 
+                    'icon' => 'heroicon-o-bolt'
+                ],
 
             ]
         ],
@@ -45,7 +50,7 @@
             'icon' => 'heroicon-o-currency-dollar',
             'dropdown' => [
                 [
-                    'route' => '#', 
+                    'route' => 'admin.payments.index', 
                     'label' => __('messages.payments'), 
                     'icon' => 'heroicon-o-credit-card'
                 ],
@@ -85,6 +90,11 @@
                     'route' => 'admin.users.index', 
                     'label' => __('messages.users'), 
                     'icon' => 'heroicon-o-user-circle'
+                ],
+				 [
+                    'route' => 'admin.building-supervisors.index', 
+                    'label' => __('messages.building_supervisors'), 
+                    'icon' => 'heroicon-o-user'
                 ],
                 [
                     'route' => 'admin.role_manager.index', 

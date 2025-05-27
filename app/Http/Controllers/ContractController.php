@@ -6,7 +6,7 @@ use App\Models\Contract;
 use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\Building;
-use App\Models\ContractType; // لازم تضيف موديل ContractType
+use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,16 +20,36 @@ class ContractController extends Controller
         $this->middleware('permission:delete contracts')->only(['destroy']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $contracts = Contract::with(['tenant', 'unit'])->latest()->paginate(10);
+        $query = Contract::with(['tenant', 'unit']);
+
+        if ($request->filled('q')) {
+            $search = $request->q;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('contract_number', 'like', "%$search%")
+                  ->orWhereHas('tenant', function ($q2) use ($search) {
+                      $q2->where('name', 'like', "%$search%")
+                         ->orWhere('id_number', 'like', "%$search%");
+                  })
+                  ->orWhereHas('unit', function ($q3) use ($search) {
+                      $q3->where('unit_number', 'like', "%$search%");
+                  });
+            });
+        }
+
+        $contracts = $query->latest()->paginate(10);
         $activeContractsCount = Contract::where('end_date', '>', now()->addDays(30))->count();
         $expiringSoonCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])->count();
-
-        // جلب أنواع العقود من الجدول
         $contractTypes = ContractType::orderBy('updated_at', 'desc')->get();
 
-        return view('admin.contracts.index', compact('contracts', 'activeContractsCount', 'expiringSoonCount', 'contractTypes'));
+        return view('admin.contracts.index', compact(
+            'contracts',
+            'activeContractsCount',
+            'expiringSoonCount',
+            'contractTypes'
+        ));
     }
 
     public function create()
@@ -43,6 +63,7 @@ class ContractController extends Controller
 
     public function store(Request $request)
     {
+		
         $request->validate([
             'tenant_id'     => 'required|exists:tenants,id',
             'unit_id'       => 'required|exists:units,id',
@@ -53,6 +74,17 @@ class ContractController extends Controller
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
+        $hasActiveContract = Contract::where('unit_id', $request->unit_id)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->exists();
+
+        if ($hasActiveContract) {
+            return back()->withErrors([
+                'unit_id' => __('messages.unit_already_has_active_contract')
+            ])->withInput();
+        }
+
         $data = $request->only([
             'tenant_id',
             'unit_id',
@@ -62,17 +94,17 @@ class ContractController extends Controller
             'notes',
         ]);
 
+        $data['contract_number'] = 'C-' . str_pad(Contract::max('id') + 1, 6, '0', STR_PAD_LEFT);
+
         if ($request->hasFile('contract_file')) {
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
         }
 
         $contract = Contract::create($data);
-
-        // تحديث حالة الوحدة تلقائياً
         $contract->unit->update(['status' => 'occupied']);
-
+        $data['status'] = 'active';
         return redirect()->route('admin.contracts.index')
-                         ->with('success', __('messages.contract_created_successfully'));
+            ->with('success', __('messages.contract_created_successfully'));
     }
 
     public function show(Contract $contract)
@@ -100,7 +132,23 @@ class ContractController extends Controller
             'rent_amount'   => 'required|numeric',
             'notes'         => 'nullable|string',
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+			//'status' => 'required|in:active,terminated,expired',
+
         ]);
+
+        if ($contract->unit_id != $request->unit_id) {
+            $conflict = Contract::where('unit_id', $request->unit_id)
+                ->where('id', '!=', $contract->id)
+                ->whereDate('start_date', '<=', $request->end_date)
+                ->whereDate('end_date', '>=', $request->start_date)
+                ->exists();
+
+            if ($conflict) {
+                return back()->withErrors([
+                    'unit_id' => __('messages.unit_already_has_active_contract')
+                ])->withInput();
+            }
+        }
 
         $data = $request->only([
             'tenant_id',
@@ -109,6 +157,7 @@ class ContractController extends Controller
             'end_date',
             'rent_amount',
             'notes',
+			'status',
         ]);
 
         if ($request->hasFile('contract_file')) {
@@ -117,14 +166,14 @@ class ContractController extends Controller
             }
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
         }
+		if ($contract->status === 'terminated' && $request->end_date > now()) {
+           $data['status'] = 'active';
+        }
 
         $contract->update($data);
 
-        // تحديث حالة الوحدة بعد التعديل
-        $contract->unit->update(['status' => 'occupied']);
-
         return redirect()->route('admin.contracts.index')
-                         ->with('success', __('messages.contract_updated_successfully'));
+            ->with('success', __('messages.contract_updated_successfully'));
     }
 
     public function destroy(Contract $contract)
@@ -136,46 +185,49 @@ class ContractController extends Controller
         $contract->delete();
 
         return redirect()->route('admin.contracts.index')
-                         ->with('success', __('messages.contract_deleted_successfully'));
+            ->with('success', __('messages.contract_deleted_successfully'));
     }
 
     public function end(Contract $contract)
     {
-        $contract->update([
-            'end_date' => now()->format('Y-m-d'),
-        ]);
+    $contract->update([
+        'end_date' => now()->timezone('Asia/Dubai'),
+        'status' => 'terminated', // ✅ إضافة تحديث حالة العقد
+    ]);
 
-        // ترجع حالة الوحدة إلى متاحة
-        $contract->unit()->update([
-            'status' => 'available',
-        ]);
+    $contract->unit()->update(['status' => 'available']);
 
-        return back()->with('success', __('messages.contract_ended_successfully'));
+    return back()->with('success', __('messages.contract_ended_successfully'));
     }
 
-    // API: جلب الوحدات الخاصة بمبنى معين
+
     public function getUnitsByBuilding($buildingId)
     {
-        return Unit::where('building_id', $buildingId)->get(['id', 'unit_number']);
+        return Unit::where('building_id', $buildingId)
+            ->select('id', 'unit_number')
+            ->get();
     }
 
-    // تبديل حالة تفعيل نوع العقد
     public function toggle($key)
     {
         $contractType = ContractType::where('key', $key)->firstOrFail();
         $contractType->is_active = !$contractType->is_active;
         $contractType->save();
 
-        return redirect()->back()->with('success', 'تم تحديث حالة العقد بنجاح.');
+        return redirect()->back()->with('success', __('messages.updated_successfully'));
     }
-	public function getAvailableUnits(\App\Models\Building $building)
-{
-    $units = $building->units()
-        ->where('status', 'available') // بس الوحدات المتاحة
-        ->select('id', 'unit_number')  // بنختار البيانات اللي هنحتاجها
-        ->get();
 
-    return response()->json($units);
-}
+    public function getAvailableUnits(Building $building)
+    {
+        return $building->units()
+            ->where('status', 'available')
+            ->select('id', 'unit_number')
+            ->get();
+    }
 
+    public function print($id)
+    {
+        $contract = Contract::with('tenant', 'unit.building')->findOrFail($id);
+        return view('admin.contracts.print', compact('contract'));
+    }
 }

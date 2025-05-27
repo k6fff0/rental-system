@@ -3,42 +3,60 @@
 @section('content')
 <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
-    {{-- العنوان وزر الإضافة --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div class="{{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 me-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                {{ __('messages.contracts') }}
-            </h1>
-            <p class="text-sm text-gray-500 mt-1">{{ __('messages.contracts_description') }}</p>
-        </div>
+    {{-- العنوان + الفلاتر + زر الإضافة --}}
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
 
-        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <div class="relative w-full sm:w-auto">
-                <select id="filter-status" class="w-full appearance-none bg-gray-100 border border-gray-300 rounded-md ps-3 pe-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="all">{{ __('messages.all_statuses') }}</option>
-                    <option value="active">{{ __('messages.active') }}</option>
-                    <option value="expired">{{ __('messages.expired') }}</option>
-                    <option value="expiring">{{ __('messages.expiring_soon') }}</option>
-                </select>
-                <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'start-0 ps-2' : 'end-0 pe-2' }} flex items-center pointer-events-none">
-                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
-            </div>
-
-            <a href="{{ route('admin.contracts.create') }}"
-               class="w-full sm:w-auto flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold shadow transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                {{ __('messages.add_contract') }}
-            </a>
-        </div>
+    {{-- ✅ العنوان والوصف --}}
+    <div class="{{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 me-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            {{ __('messages.contracts') }}
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">{{ __('messages.contracts_description') }}</p>
     </div>
+
+    {{-- ✅ الفلاتر وزر الإضافة --}}
+    <div class="flex flex-col sm:flex-row items-stretch gap-3 w-full sm:w-auto">
+
+        {{-- 🔍 فلتر البحث --}}
+        <form method="GET" class="w-full sm:w-64">
+            <input type="text" name="q"
+                   value="{{ request('q') }}"
+                   placeholder="{{ __('messages.search_contracts_placeholder') }}"
+                   class="w-full bg-white border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </form>
+
+        {{-- ✅ فلتر الحالة --}}
+        <div class="relative w-full sm:w-auto">
+            <select id="filter-status"
+                    class="w-full appearance-none bg-gray-100 border border-gray-300 rounded-md ps-3 pe-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">{{ __('messages.all_statuses') }}</option>
+                <option value="active">{{ __('messages.active') }}</option>
+                <option value="expired">{{ __('messages.expired') }}</option>
+                <option value="expiring">{{ __('messages.expiring_soon') }}</option>
+            </select>
+            <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'start-0 ps-2' : 'end-0 pe-2' }} flex items-center pointer-events-none">
+                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </div>
+
+        {{-- ➕ زر الإضافة --}}
+		@can('create contracts')
+        <a href="{{ route('admin.contracts.create') }}"
+           class="w-full sm:w-auto flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold shadow transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 me-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            {{ __('messages.add_contract') }}
+        </a>
+		@endcan
+    </div>
+</div>
+
 
     {{-- عرض العقود --}}
     @if ($contracts->isEmpty())
@@ -53,6 +71,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+					    <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}">
+                           {{ __('messages.contract_number') }}
+                        </th>
                         <th class="px-4 sm:px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}">
                             {{ __('messages.tenant') }}
                         </th>
@@ -72,12 +93,15 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($contracts as $contract)
-                        @php
-                            $status = now()->gt($contract->end_date)
-                                ? 'expired'
-                                : (now()->diffInDays($contract->end_date) <= 30 ? 'expiring' : 'active');
-                        @endphp
+                      @php
+                       $status = $contract->visual_status;
+                      @endphp
                         <tr class="hover:bg-gray-50 transition-colors duration-150" data-status="{{ $status }}">
+						    <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                <span class="text-sm text-blue-600 font-semibold">
+                                 {{ $contract->contract_number }}
+                                </span>
+                            </td>
                             <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="{{ app()->getLocale() === 'ar' ? 'ml-3' : 'mr-3' }}">
@@ -103,51 +127,80 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold flex items-center justify-center w-24
-                                    {{ $status === 'expired' ? 'bg-red-100 text-red-800' : ($status === 'expiring' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">
-                                    {{ __('messages.' . $status) }}
-                                </span>
-                            </td>
-                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                                <div class="flex justify-center space-x-2 rtl:space-x-reverse">
-                                    <a href="{{ route('admin.contracts.edit', $contract->id) }}" 
-                                       class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-50"
-                                       title="{{ __('messages.edit') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </a>
+                           <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+    <span class="px-3 py-1 rounded-full text-xs font-semibold flex items-center justify-center w-24
+        {{ match($status) {
+            'expired' => 'bg-red-100 text-red-800',
+            'expiring' => 'bg-yellow-100 text-yellow-800',
+            'terminated' => 'bg-gray-200 text-gray-800',
+            default => 'bg-green-100 text-green-800',
+        } }}">
+        {{ __('messages.' . $status) }}
+    </span>
+</td>
 
-                                    <form action="{{ route('admin.contracts.destroy', $contract->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                onclick="return confirm('{{ __('messages.confirm_delete') }}')"
-                                                class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50"
-                                                title="{{ __('messages.delete') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-                                    </form>
+                           <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+    <div class="inline-flex items-center justify-center gap-2 bg-gray-50 dark:bg-gray-700 p-2 rounded-lg shadow-sm">
 
-                                    @if ($status !== 'expired')
-                                    <form action="{{ route('admin.contracts.end', $contract->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit"
-                                                onclick="return confirm('{{ __('messages.confirm_end_contract') }}')"
-                                                class="text-orange-600 hover:text-orange-800 p-1 rounded-full hover:bg-orange-50"
-                                                title="{{ __('messages.end_contract') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                            </svg>
-                                        </button>
-                                    </form>
-                                    @endif
-                                </div>
-                            </td>
+        {{-- 👁️ عرض العقد --}}
+        @can('view contracts')
+        <a href="{{ route('admin.contracts.show', $contract->id) }}" 
+           class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-100"
+           title="{{ __('messages.view') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7s-8.268-2.943-9.542-7z"/>
+            </svg>
+        </a>
+        @endcan
+
+        {{-- ✏️ تعديل العقد --}}
+        @can('edit contracts')
+        <a href="{{ route('admin.contracts.edit', $contract->id) }}" 
+           class="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-50"
+           title="{{ __('messages.edit') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+        </a>
+        @endcan
+
+        {{-- 🗑️ حذف العقد --}}
+        @can('delete contracts')
+        <form action="{{ route('admin.contracts.destroy', $contract->id) }}" method="POST" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" 
+                    onclick="return confirm('{{ __('messages.confirm_delete') }}')"
+                    class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-100"
+                    title="{{ __('messages.delete') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+        </form>
+        @endcan
+
+        {{-- 🛑 إنهاء العقد --}}
+        @can('end contract')
+        @if ($status !== 'expired')
+        <form action="{{ route('admin.contracts.end', $contract->id) }}" method="POST" class="inline">
+            @csrf
+            @method('PATCH')
+            <button type="submit"
+                    onclick="return confirm('{{ __('messages.confirm_end_contract') }}')"
+                    class="text-orange-600 hover:text-orange-800 p-1 rounded-full hover:bg-orange-100"
+                    title="{{ __('messages.end_contract') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </button>
+        </form>
+        @endif
+        @endcan
+    </div>
+</td>
+
                         </tr>
                     @endforeach
                 </tbody>

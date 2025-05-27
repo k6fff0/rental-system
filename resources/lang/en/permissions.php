@@ -6,6 +6,8 @@ return [
     'create buildings' => 'Create Building',
     'edit buildings' => 'Edit Building',
     'delete buildings' => 'Delete Building',
+	'view building details' => 'Access sensitive building information',
+
 
     // Units
     'view units' => 'View Units',

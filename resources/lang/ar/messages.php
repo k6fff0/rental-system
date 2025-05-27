@@ -39,7 +39,21 @@ return [
     'building_name' => 'اسم المبنى',
     'address' => 'العنوان',
     'select_building' => 'اختر المبنى',
-
+    'location' => 'الموقع',
+    'utilities' => 'المرافق',
+    'building_details' => 'تفاصيل المبنى',
+    'back_to_buildings' => 'رجوع لقائمة المباني',
+    'location_url' => 'رابط الموقع',
+    'view_on_map' => 'عرض على الخريطة',
+    'units_count' => 'عدد الوحدات',
+    'edit_building' => 'تعديل بيانات المبنى',
+    'aed' => 'درهم',
+    'initial_renovation_cost' => 'تكاليف التعديل لأول مرة',
+    'municipality_number'     => 'رقم تسجيل الوحدة في البلدية',
+    'owner_nationality'       => 'الجنسية',
+    'owner_phone'             => 'رقم الموبايل',
+    'add_new_utility_to_get_started' => 'أضف مرفقًا جديدًا للبدء',
+    'no_images' => 'لا توجد صور مرفوعة',
     // الوحدات
     'units' => 'الوحدات',
     'units_description' => 'عرض وإضافة الشقق أو الغرف.',
@@ -52,21 +66,120 @@ return [
     'unit_type' => 'نوع الوحدة',
     'unit_type_placeholder' => 'شقة / غرفة',
     'select_unit_optional' => 'اختياري – اختر الوحدة',
+    'unit_type' => 'نوع الوحدة',
+    'unit_type_studio' => 'استوديو',
+    'unit_type_furnished_studio' => 'استوديو مفروش',
+    'unit_type_room_lounge' => 'غرفة وصالة',
+    'unit_type_furnished_room_lounge' => 'غرفة وصالة مفروشة',
+    'unit_type_two_rooms_lounge' => 'غرفتين وصالة',
+    'unit_type_furnished_two_rooms_lounge' => 'غرفتين وصالة مفروشة',
+    'unit_type_apartment' => 'شقة',
+    'unit_type_furnished_apartment' => 'شقة مفروشة',
+    'unfurnished_units' => 'وحدات غير مفروشة',
+    'furnished_units' => 'وحدات مفروشة',
+    'unit_has_active_contract_cannot_change_status' => 'لا يمكن تغيير حالة الوحدة لأن هناك عقدًا ساريًا مرتبط بها.',
+    'unit_already_has_active_contract' => 'لا يمكن ربط هذه الوحدة لأنها مرتبطة بالفعل بعقد رقم :number.',
 
     // المستأجرين
     'tenants' => 'المستأجرين',
     'tenants_description' => 'عرض وإدارة بيانات المستأجرين.',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'آخر تعديل',
+    'current_unit' => 'الغرفة الحالية',
+    'past_units' => 'سجل الوحدات السابقة',
+    'from' => 'من',
+    'to' => 'إلى',
+    'unit_has_active_contract' => '⚠️ هذه الوحدة مرتبطة بعقد ساري.',
+    'unit_linked_to_contract_number' => 'رقم العقد: :number',
+    'assigned_buildings' => 'المباني المخصصة',
+    'building_supervisors' => 'مسؤولو المباني',
+    'edit_assigned_buildings' => 'تعديل الفلل المخصصة',
+'supervisor_name' => 'اسم المشرف',
+'select_buildings' => 'اختر الفلل',
+'building_supervisors' => 'مشرفو المباني',
+'manage_building_supervisors' => 'إدارة صلاحيات مشرفي المباني',
+'assigned_buildings' => 'المباني المسندة',
+'buildings_count' => 'عدد المباني: :count',
+'no_buildings_assigned' => 'لا توجد مبانٍ مسندة',
+'get_started_by_adding_supervisors' => 'ابدأ بإضافة مشرفين الآن',
+'no_phone' => 'لا يوجد رقم هاتف',
+'total_supervisors' => 'إجمالي عدد المشرفين',
+'supervisors_list' => 'قائمة المشرفين',
+
 
 
     // العقود
     'contracts' => 'العقود',
+    'terminated' => 'ملغي',
     'contracts_description' => 'قريبًا: إدارة العقود والمستحقات.',
+    'contract_number' => 'رقم العقد',
+    'search_contracts_placeholder' => 'بحث برقم العقد، اسم المستأجر، رقم الهوية أو رقم الوحدة',
+
+'add_payment' => 'إضافة دفعة',
+'save_payment' => 'حفظ الدفعة',
+'contract' => 'العقد',
+'select_contract' => 'اختر عقدًا',
+'amount' => 'المبلغ',
+'payment_date' => 'تاريخ الدفع',
+'month_for' => 'عن شهر',
+'payment_method' => 'طريقة الدفع',
+'cash' => 'نقدًا',
+'bank_transfer' => 'تحويل بنكي',
+'cheque' => 'شيك',
+'other' => 'أخرى',
+'notes' => 'ملاحظات',
+'payment_added_successfully' => 'تم حفظ الدفعة بنجاح.',
+'monthly_due_report' => 'تقرير المستحقات الشهرية',
+'monthly_due_report_for' => 'تقرير المستحقات لشهر',
+'tenant' => 'المستأجر',
+'contract_code' => 'كود العقد',
+'building' => 'المبنى',
+'unit' => 'الوحدة',
+'due_amount' => 'المطلوب',
+'paid_amount' => 'المدفوع',
+'remaining_amount' => 'المتبقي',
+'payment_status' => 'الحالة',
+'paid' => 'مدفوع',
+'partial' => 'جزئي',
+'unpaid' => 'غير مدفوع',
+'no_data_found' => 'لا توجد بيانات لعرضها',
+'export_excel' => 'تصدير Excel',
+'export_pdf' => 'تصدير PDF',
+'monthly_due_report' => 'تقرير المستحقات',
+
+
 
     // الصيانة
     'maintenance' => 'الصيانة',
     'maintenance_description' => 'قريبًا: بلاغات وأوامر الصيانة.',
+     // u
+    'utilities_list' => 'قائمة المرافق',
+    'add_utility' => 'إضافة مرفق جديد',
+    'utility_type' => 'نوع المرفق',
+    'utility_value' => 'رقم / كود',
+    'building_name' => 'اسم المبنى',
+    'owner_name' => 'اسم المالك',
+    'owner_id' => 'رقم الهوية',
+    'notes' => 'ملاحظات',
+    'actions' => 'خيارات',
+    'edit' => 'تعديل',
+    'delete' => 'حذف',
+    'confirm_delete' => 'هل أنت متأكد من الحذف؟',
+    'no_utilities' => 'لا توجد مرافق مسجلة حاليًا.',
+    'choose_building' => 'اختر المبنى',
+    'choose_type' => 'اختر نوع المرفق',
+    'owner_id_image' => 'صورة الهوية',
+    'save' => 'حفظ',
+    'edit_utility' => 'تعديل المرفق',
+    'update' => 'تحديث',
+    'view_current_image' => 'عرض الصورة الحالية',
+    'view_utility' => 'عرض المرفق',
+    'back_to_utilities' => 'رجوع لقائمة المرافق',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'آخر تحديث',
+    'electricity' => 'عداد كهرباء',
+    'water'       => 'عداد مياه',
+    'internet'    => 'خط إنترنت',
 
     // المصروفات
     'expenses' => 'المصروفات',
@@ -691,43 +804,120 @@ return [
     'mark_all_read' => 'تمييز الكل كمقروء',
     'view_all_notifications' => 'عرض كل الإشعارات',
     'no_notifications' => 'لا توجد إشعارات حالياً',
+ // صفحة قائمة المدفوعات
+ 'payments_list' => 'قائمة المدفوعات',
+ 'manage_payments_description' => 'إدارة وتتبع جميع مدفوعات الإيجار',
+ 
+ // بطاقات الإحصائيات
+ 'total_payments' => 'إجمالي المدفوعات',
+ 'this_month' => 'هذا الشهر',
+ 'total_amount' => 'المبلغ الإجمالي',
+ 
+ // أزرار العمليات
+ 'monthly_due_report' => 'تقرير الاستحقاقات الشهرية',
+ 'add_payment' => 'إضافة دفعة',
+ 
+ // عناوين الجدول
+ 'payments_table' => 'سجلات المدفوعات',
+ 'total_records' => 'الإجمالي',
+ 'contract' => 'العقد',
+ 'tenant' => 'المستأجر',
+ 'amount' => 'المبلغ',
+ 'payment_date' => 'تاريخ الدفع',
+ 'month_for' => 'الشهر المستحق',
+ 'payment_method' => 'طريقة الدفع',
+ 'notes' => 'الملاحظات',
+ 
+ // طرق الدفع
+ 'cash' => 'نقداً',
+ 'bank_transfer' => 'تحويل بنكي',
+ 'check' => 'شيك',
+ 
+ // العملة
+ 'currency' => 'درهم',
+ 
+ // حالة فارغة
+ 'no_payments_found' => 'لا توجد مدفوعات',
+ 'no_payments_description' => 'لا توجد سجلات مدفوعات متاحة في الوقت الحالي.',
+ 'create_first_payment' => 'إنشاء أول دفعة',
+ 
+ // ترقيم الصفحات
+ 'showing' => 'عرض',
+ 'to' => 'إلى',
+ 'of' => 'من',
+ 'results' => 'نتيجة',
+ 'payment_logs' => 'سجل التعديلات',
+'user' => 'المستخدم',
+'action' => 'العملية',
+'changes' => 'التغييرات',
+'date_time' => 'التاريخ والوقت',
+'updated' => 'تعديل',
+'deleted' => 'حذف',
+'no_logs_found' => 'لا توجد سجلات حتى الآن.',
+'all_payment_logs' => 'سجل التعديلات الكامل',
+'all_logs' => 'كل التعديلات',
+'payment_id' => 'رقم الدفعة',
+'payment_logs' => 'سجلات الدفعات',
+'payment_logs_description' => 'تتبع جميع التغييرات والتعديلات على الدفعات',
+'back_to_payments' => 'العودة للدفعات',
+'no_logs_found' => 'لا توجد سجلات',
 
+// Table Headers
+'payment' => 'الدفعة',
+'user' => 'المستخدم',
+'action' => 'الإجراء',
+'changes' => 'التغييرات',
+'date' => 'التاريخ',
 
+// Action Types
+'created' => 'إنشاء',
+'updated' => 'تحديث',
+'deleted' => 'حذف',
 
+// Status Badges
+'success' => 'نجاح',
+'warning' => 'تحذير',
+'error' => 'خطأ',
 
+// Payment Specific
+'amount_changed' => 'تغير المبلغ',
+'method_changed' => 'تغيرت طريقة الدفع',
+'date_changed' => 'تغير التاريخ',
+'collector_changed' => 'تغير المحصل',
 
+// System Messages
+'system_auto_update' => 'تحديث تلقائي للنظام',
+'unknown_action' => 'إجراء غير معروف',
 
+// Time Formats
+'today' => 'اليوم',
+'yesterday' => 'أمس',
+'last_week' => 'الأسبوع الماضي',
 
+// Filter Labels
+'filter_by_user' => 'تصفية بالمستخدم',
+'filter_by_action' => 'تصفية بالإجراء',
+'filter_by_date' => 'تصفية بالتاريخ',
+'apply_filters' => 'تطبيق الفلاتر',
+'clear_filters' => 'مسح الفلاتر',
 
+// Pagination
+'showing' => 'عرض',
+'to' => 'إلى',
+'of' => 'من',
+'results' => 'نتيجة',
+'previous' => 'السابق',
+'next' => 'التالي',
+'payment_number' => 'رقم الدفعة',
+'method' => 'طريقة الدفع',
+'collector_name' => 'اسم المحصل',
+'logs' => 'السجلات',
+'manage_all_payments' => 'إدارة جميع الدفعات',
+'total_due' => 'إجمالي المستحق',
+'total_paid' => 'إجمالي المدفوع',
+'total_remaining' => 'المتبقي',
+'report_for' => 'تقرير عن شهر',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
 
 

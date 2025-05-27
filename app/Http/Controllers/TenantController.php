@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Building;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,24 +21,33 @@ class TenantController extends Controller
 	}
 
 	public function index(Request $request)
-	{
-		$query = Tenant::query()->with('unit');
+{
+    $query = Tenant::query()->with(['activeContracts.unit']);
 
-		if ($request->filled('search')) {
-			$search = $request->search;
+    if ($request->filled('search')) {
+        $search = $request->search;
 
-			$query->where(function ($q) use ($search) {
-				$q->where('name', 'like', "%$search%")
-					->orWhere('id_number', 'like', "%$search%")
-					->orWhere('phone', 'like', "%$search%")
-					->orWhereHas('unit', fn($q2) => $q2->where('unit_number', 'like', "%$search%"));
-			});
-		}
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+              ->orWhere('id_number', 'like', "%$search%")
+              ->orWhere('phone', 'like', "%$search%")
+              ->orWhereHas('contracts', function ($q3) use ($search) {
+                   $q3->where('status', 'active')
+                   ->whereDate('start_date', '<=', now())
+                   ->whereDate('end_date', '>=', now())
+                   ->whereHas('unit', function ($q4) use ($search) {
+                   $q4->where('unit_number', 'like', "%$search%");
+                   });
+                });
 
-		$tenants = $query->latest()->paginate(15);
+        });
+    }
 
-		return view('admin.tenants.index', compact('tenants'));
-	}
+    $tenants = $query->latest()->paginate(15);
+
+    return view('admin.tenants.index', compact('tenants'));
+}
+
 
 	public function create()
 	{
@@ -183,13 +193,31 @@ public function search(Request $request)
 	}
 
 	public function show(Tenant $tenant)
-	{
-		if (request()->ajax()) {
-			return view('admin.tenants.show', compact('tenant'));
-		}
+{
+    // لو طلب AJAX (زي المودال)، رجّع البيانات بس
+    if (request()->ajax()) {
+        return view('admin.tenants.show', compact('tenant'));
+    }
 
-		return view('admin.tenants.show', compact('tenant'));
-	}
+    // جلب العقود المرتبطة بالمستأجر
+    $contracts = \App\Models\Contract::with('unit.building')
+        ->where('tenant_id', $tenant->id)
+        ->orderByDesc('start_date')
+        ->get();
+
+    // العقد الحالي = عقد ساري الآن
+  $activeContracts = $contracts->filter(function ($contract) {
+    return $contract->start_date <= now() && $contract->end_date >= now();
+});
+
+    // العقود القديمة = غير العقد الحالي
+  $pastContracts = $contracts->filter(function ($contract) use ($activeContracts) {
+    return !$activeContracts->contains('id', $contract->id);
+});
+    return view('admin.tenants.show', compact('tenant', 'activeContracts', 'pastContracts'));
+
+}
+
 
 	public function linkUser(Tenant $tenant)
 	{

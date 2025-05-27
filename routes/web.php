@@ -7,7 +7,7 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ContractController;
-//use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\admin\PaymentController;
 //use App\Http\Controllers\MaintenanceWorkerController;
 use App\Http\Controllers\Admin\MaintenanceRequestController;
 use App\Http\Controllers\ExpenseController;
@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\TechnicianController;
 use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\PdfTestController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\BuildingUtilityController;
+use App\Http\Controllers\Admin\BuildingSupervisorController;
 
 
 use Illuminate\Support\Facades\App;
@@ -47,8 +49,12 @@ Route::redirect('/admin', '/admin/dashboard');
 	Route::get('/api/buildings/{building}/available-units', [\App\Http\Controllers\ContractController::class, 'getAvailableUnits']);
 	Route::get('/api/tenants/search', [\App\Http\Controllers\TenantController::class, 'search']);
 
-
-
+    Route::get('contracts/{contract}/print', [\App\Http\Controllers\ContractController::class, 'print'])
+    ->name('contracts.print');
+	
+	Route::resource('building-utilities', BuildingUtilityController::class);
+	Route::post('building-utilities/{utility}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
+	
     // ✅ الفنيين
     Route::get('technicians', [TechnicianController::class, 'index'])->name('technicians.index');
     Route::get('technicians/{id}', [TechnicianController::class, 'show'])->name('technicians.show');
@@ -82,6 +88,8 @@ Route::redirect('/admin', '/admin/dashboard');
     //Route::resource('maintenance-workers', MaintenanceWorkerController::class);
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
+	Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
+
 
     // ✅ المصروفات والمخزون
     Route::resource('expenses', ExpenseController::class);
@@ -228,6 +236,32 @@ Route::post('/notifications/mark-all-read', function () {
     auth()->user()?->unreadNotifications->markAsRead();
     return back();
 })->name('notifications.markAllRead');
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('admin.payments.create');
+    Route::post('/payments', [PaymentController::class, 'store'])->name('admin.payments.store');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments.index');	
+	Route::get('/payments/due-report', [\App\Http\Controllers\Admin\PaymentController::class, 'monthlyDueReport'])->name('admin.payments.due_report');
+	Route::get('/payments/due-report/export-excel', [\App\Http\Controllers\Admin\PaymentController::class, 'exportExcel'])->name('admin.payments.export_excel');
+    Route::get('/payments/due-report/export-pdf', [\App\Http\Controllers\Admin\PaymentController::class, 'exportPDF'])->name('admin.payments.export_pdf');
+	Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
+	       // صفحة جميع اللوجات
+    Route::get('/payment-logs/all', [PaymentController::class, 'logsIndex'])->name('admin.payments.logs.all');
+        // زر العين بجانب كل دفعة
+    Route::get('/payments/{payment}/logs', [PaymentController::class, 'logs'])->name('admin.payments.logs.single');
+
+    Route::resource('payments', \App\Http\Controllers\Admin\PaymentController::class)->names('admin.payments');
+
+});
+
+Route::prefix('admin/building-supervisors')
+    ->name('admin.building-supervisors.')
+    ->middleware(['auth:web'])
+    ->group(function () {
+        Route::get('/', [BuildingSupervisorController::class, 'index'])->name('index');
+        Route::get('/{user}/edit', [BuildingSupervisorController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [BuildingSupervisorController::class, 'update'])->name('update');
+    });
 
 
 require __DIR__.'/auth.php';

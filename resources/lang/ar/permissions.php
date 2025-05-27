@@ -6,6 +6,8 @@ return [
     'create buildings' => 'إضافة مبنى',
     'edit buildings' => 'تعديل مبنى',
     'delete buildings' => 'حذف مبنى',
+	'view building details' => 'الاطلاع على بيانات المبنى الكاملة',
+
 
     // الوحدات
     'view units' => 'عرض الوحدات',

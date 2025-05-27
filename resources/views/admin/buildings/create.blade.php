@@ -81,28 +81,6 @@
                     <input type="number" name="initial_renovation_cost" id="initial_renovation_cost" class="form-input w-full" step="0.01">
                 </div>
             </div>
-
-            {{-- عدادات الكهرباء --}}
-            <div class="mt-8">
-                <label class="block mb-2 text-sm font-medium">أرقام عدادات الكهرباء *</label>
-                <div id="electric-meters-wrapper" class="space-y-2">
-                    <input type="text" name="electric_meters[]" class="form-input w-full" required>
-                </div>
-                <button type="button" onclick="addElectricMeter()" class="mt-2 text-blue-600 text-sm hover:underline">+ إضافة عداد</button>
-            </div>
-
-            {{-- خطوط الإنترنت --}}
-            <div class="mt-6">
-                <label class="block mb-2 text-sm font-medium">خطوط الإنترنت (الرقم + اسم المالك)</label>
-                <div id="internet-lines-wrapper" class="space-y-2">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <input type="text" name="internet_lines[0][line]" class="form-input w-full" placeholder="رقم الخط">
-                        <input type="text" name="internet_lines[0][owner]" class="form-input w-full" placeholder="اسم المالك">
-                    </div>
-                </div>
-                <button type="button" onclick="addInternetLine()" class="mt-2 text-blue-600 text-sm hover:underline">+ إضافة خط</button>
-            </div>
-
             {{-- زر الحفظ --}}
             <div class="mt-8 text-left">
                 <button type="submit"

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
+use Illuminate\Pagination\Paginator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\Http\Kernel;
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
             // ضم الإعدادات داخل config
             config(['settings' => $settings]);
         }
-
+        Paginator::useTailwind();
         // ✅ تفعيل اللغة من الجلسة
         app()->resolving(function () {
             $locale = Session::get('locale', config('app.locale'));

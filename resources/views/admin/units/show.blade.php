@@ -46,37 +46,52 @@
         </div>
     @endif
 
-    {{-- 📄 العقود السابقة --}}
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-bold mb-4 text-gray-800">{{ __('messages.contract_history') }}</h3>
+   {{-- 📄 العقود السابقة --}}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-xl font-bold mb-4 text-gray-800">{{ __('messages.contract_history') }}</h3>
 
-        @if ($unit->contracts->count())
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gray-50">
+    @if ($unit->contracts->count())
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left">{{ __('messages.tenant_name') }}</th>
+                        <th class="px-4 py-2 text-left">{{ __('messages.contract_start') }}</th>
+                        <th class="px-4 py-2 text-left">{{ __('messages.contract_end') }}</th>
+                        <th class="px-4 py-2 text-left">{{ __('messages.rent_price') }}</th>
+                        <th class="px-4 py-2 text-left">{{ __('messages.actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-100">
+                    @foreach ($unit->contracts->sortByDesc('start_date') as $contract)
                         <tr>
-                            <th class="px-4 py-2 text-left">{{ __('messages.tenant_name') }}</th>
-                            <th class="px-4 py-2 text-left">{{ __('messages.contract_start') }}</th>
-                            <th class="px-4 py-2 text-left">{{ __('messages.contract_end') }}</th>
-                            <th class="px-4 py-2 text-left">{{ __('messages.rent_price') }}</th>
+                            <td class="px-4 py-2">{{ $contract->tenant->name ?? '-' }}</td>
+                            <td class="px-4 py-2">{{ $contract->start_date }}</td>
+                            <td class="px-4 py-2">{{ $contract->end_date }}</td>
+                            <td class="px-4 py-2">{{ number_format($contract->rent_amount) }} {{ __('messages.currency') }}</td>
+                            <td class="px-4 py-2">
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.contracts.show', $contract->id) }}"
+                                       class="text-blue-600 hover:text-blue-800 text-xs inline-flex items-center">
+                                        👁️ {{ __('messages.view') }}
+                                    </a>
+                                    <a href="{{ route('admin.contracts.print', $contract->id) }}"
+                                       target="_blank"
+                                       class="text-gray-600 hover:text-gray-800 text-xs inline-flex items-center">
+                                        🖨️ {{ __('messages.print') }}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
-                        @foreach ($unit->contracts->sortByDesc('start_date') as $contract)
-                            <tr>
-                                <td class="px-4 py-2">{{ $contract->tenant->name ?? '-' }}</td>
-                                <td class="px-4 py-2">{{ $contract->start_date }}</td>
-                                <td class="px-4 py-2">{{ $contract->end_date }}</td>
-                                <td class="px-4 py-2">{{ number_format($contract->rent_price) }} {{ __('messages.currency') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <p class="text-gray-500">{{ __('messages.no_contracts_found') }}</p>
-        @endif
-    </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p class="text-gray-500">{{ __('messages.no_contracts_found') }}</p>
+    @endif
+</div>
+
 
 </div>
 @endsection

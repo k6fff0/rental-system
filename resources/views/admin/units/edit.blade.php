@@ -66,23 +66,53 @@
                            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
                 </div>
 
-                {{-- نوع الوحدة --}}
-                <div>
-                    <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-1">
-                        {{ __('messages.unit_type') }}
-                    </label>
-                    <select name="unit_type" id="unit_type"
-                            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-                        @php
-                            $types = ['studio', 'room_lounge', 'two_rooms_lounge', 'apartment'];
-                        @endphp
-                        @foreach ($types as $type)
-                            <option value="{{ $type }}" {{ old('unit_type', $unit->unit_type) === $type ? 'selected' : '' }}>
-                                {{ __('messages.' . $type) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+{{-- نوع الوحدة --}}
+<div>
+    <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-1">
+        {{ __('messages.unit_type') }}
+    </label>
+    <select name="unit_type" id="unit_type"
+            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm">
+        
+        
+		 {{-- وحدات مفروشة --}}
+        <optgroup label="{{ __('messages.furnished_units') }}">
+            @php
+                $furnished = [
+                    'furnished_studio',
+                    'furnished_room_lounge',
+                    'furnished_two_rooms_lounge',
+                    'furnished_apartment',
+                ];
+            @endphp
+            @foreach ($furnished as $type)
+                <option value="{{ $type }}"
+                    {{ old('unit_type', $unit->unit_type ?? '') === $type ? 'selected' : '' }}>
+                    {{ __('messages.unit_type_' . $type) }}
+                </option>
+            @endforeach
+        </optgroup>
+		{{-- وحدات غير مفروشة --}}
+        <optgroup label="{{ __('messages.unfurnished_units') }}">
+            @php
+                $unfurnished = [
+                    'studio',
+                    'room_lounge',
+                    'two_rooms_lounge',
+                    'apartment',
+                ];
+            @endphp
+            @foreach ($unfurnished as $type)
+                <option value="{{ $type }}"
+                    {{ old('unit_type', $unit->unit_type ?? '') === $type ? 'selected' : '' }}>
+                    {{ __('messages.unit_type_' . $type) }}
+                </option>
+            @endforeach
+        </optgroup>
+    </select>
+</div>
+
+
 
                 {{-- السعر --}}
                 <div>
@@ -94,6 +124,17 @@
                            value="{{ old('rent_price', $unit->rent_price) }}">
                 </div>
             </div>
+                     {{-- ⚠️ تحذير بوجود عقد مرتبط بالغرفة --}}
+                @if ($unit->status === 'occupied' && isset($activeContract))
+            <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
+                <p class="font-semibold">
+                    {{ __('messages.unit_has_active_contract') }}
+                </p>
+                <p class="text-sm mt-1">
+                    {{ __('messages.unit_linked_to_contract_number', ['number' => $activeContract->contract_number]) }}
+                </p>
+            </div>
+                @endif
 
             {{-- ✅ الحالة بالألوان --}}
             <div>

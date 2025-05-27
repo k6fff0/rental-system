@@ -45,33 +45,65 @@
             </div>
         </div>
 
-        {{-- 🌷 محتوى النموذج الرئيسي --}}
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- المبنى --}}
-                <div class="space-y-1">
-                    <label for="building_id" class="block text-sm font-medium text-gray-700">
-                        {{ __('messages.building') }}
-                    </label>
-                    <select name="building_id" id="building_id" required
-                            class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border">
-                        <option value="">{{ __('messages.choose_building') }}</option>
-                        @foreach ($buildings as $building)
-                            <option value="{{ $building->id }}">{{ $building->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+       {{-- 🌷 محتوى النموذج الرئيسي --}}
+<div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @php
+            $preselectedUnitId = request()->get('unit_id');
+            $preselectedUnit = $preselectedUnitId ? \App\Models\Unit::with('building')->find($preselectedUnitId) : null;
+        @endphp
 
-                {{-- الوحدة --}}
-                <div class="space-y-1">
-                    <label for="unit_id" class="block text-sm font-medium text-gray-700">
-                        {{ __('messages.unit') }}
-                    </label>
-                    <select name="unit_id" id="unit_id" required disabled
-                            class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border bg-gray-50">
-                        <option value="">{{ __('messages.choose_unit') }}</option>
-                    </select>
+        @if ($preselectedUnit)
+            {{-- حقل مخفي للمبنى والوحدة --}}
+            <input type="hidden" name="building_id" value="{{ $preselectedUnit->building->id }}">
+            <input type="hidden" name="unit_id" value="{{ $preselectedUnit->id }}">
+
+            {{-- عرض المبنى --}}
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700">
+                    {{ __('messages.building') }}
+                </label>
+                <div class="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3">
+                    {{ $preselectedUnit->building->name }}
                 </div>
+            </div>
+
+            {{-- عرض الوحدة --}}
+            <div class="space-y-1">
+                <label class="block text-sm font-medium text-gray-700">
+                    {{ __('messages.unit') }}
+                </label>
+                <div class="bg-gray-50 border border-gray-300 rounded-lg py-2 px-3">
+                    {{ $preselectedUnit->unit_number }}
+                </div>
+            </div>
+        @else
+            {{-- المبنى --}}
+            <div class="space-y-1">
+                <label for="building_id" class="block text-sm font-medium text-gray-700">
+                    {{ __('messages.building') }}
+                </label>
+                <select name="building_id" id="building_id" required
+                        class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border">
+                    <option value="">{{ __('messages.choose_building') }}</option>
+                    @foreach ($buildings as $building)
+                        <option value="{{ $building->id }}">{{ $building->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- الوحدة --}}
+            <div class="space-y-1">
+                <label for="unit_id" class="block text-sm font-medium text-gray-700">
+                    {{ __('messages.unit') }}
+                </label>
+                <select name="unit_id" id="unit_id" required disabled
+                        class="mt-1 w-full border-gray-300 rounded-lg shadow-sm sm:text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 border bg-gray-50">
+                    <option value="">{{ __('messages.choose_unit') }}</option>
+                </select>
+            </div>
+        @endif
+
 
                 {{-- التاريخ من وإلى --}}
                 <div class="space-y-1">

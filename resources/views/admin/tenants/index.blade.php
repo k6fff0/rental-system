@@ -5,6 +5,7 @@
 
     {{-- ✅ زر الإضافة --}}
     <div class="mb-6 flex justify-end">
+	@can('create tenants')
         <a href="{{ route('admin.tenants.create') }}"
            class="fixed bottom-6 right-6 sm:static z-10 bg-green-600 hover:bg-green-700 text-white p-3 sm:px-4 sm:py-2 rounded-full sm:rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -12,6 +13,7 @@
             </svg>
             <span class="hidden sm:inline">{{ __('messages.add_tenant') }}</span>
         </a>
+		@endcan
     </div>
 
     {{-- ✅ العنوان --}}
@@ -92,8 +94,21 @@
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
-                                    {{ $tenant->unit?->unit_number ?? '-' }}
-                                </td>
+    @if ($tenant->activeContracts->isNotEmpty())
+        <div class="flex flex-wrap gap-2">
+            @foreach ($tenant->activeContracts as $contract)
+                @if ($contract->unit)
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
+                        {{ $contract->unit->unit_number }}
+                    </span>
+                @endif
+            @endforeach
+        </div>
+    @else
+        <span class="text-gray-400 text-sm">-</span>
+    @endif
+</td>
+
                                 <!-- إضافة خلية تاريخ الإضافة -->
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
                                     {{ $tenant->created_at->format('Y-m-d') }}

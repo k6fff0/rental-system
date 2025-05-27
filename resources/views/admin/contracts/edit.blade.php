@@ -3,6 +3,12 @@
 @section('content')
 <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
+    {{-- 🔙 زر الرجوع --}}
+    <a href="{{ url()->previous() }}"
+       class="inline-block mb-4 text-sm text-blue-600 hover:underline">
+        ← {{ __('messages.back') }}
+    </a>
+
     <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('messages.edit_contract') }}</h1>
 
     <form action="{{ route('admin.contracts.update', $contract->id) }}" method="POST" enctype="multipart/form-data"
@@ -42,20 +48,18 @@
             @enderror
         </div>
 
-        {{-- تاريخ البداية --}}
+        {{-- تاريخ البداية (ثابت) --}}
         <div class="mb-4">
             <label for="start_date" class="block text-sm font-medium text-gray-700">{{ __('messages.start_date') }}</label>
-            <input type="date" name="start_date" id="start_date" value="{{ $contract->start_date }}" required
-                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-            @error('start_date')
-                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-            @enderror
+            <input type="date" id="start_date" value="{{ $contract->start_date->format('Y-m-d') }}" disabled
+                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm bg-gray-100 cursor-not-allowed">
+            <input type="hidden" name="start_date" value="{{ $contract->start_date->format('Y-m-d') }}">
         </div>
 
         {{-- تاريخ النهاية --}}
         <div class="mb-4">
             <label for="end_date" class="block text-sm font-medium text-gray-700">{{ __('messages.end_date') }}</label>
-            <input type="date" name="end_date" id="end_date" value="{{ $contract->end_date }}" required
+            <input type="date" name="end_date" id="end_date" value="{{ $contract->end_date->format('Y-m-d') }}" required
                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
             @error('end_date')
                 <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
