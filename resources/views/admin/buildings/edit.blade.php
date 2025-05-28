@@ -23,7 +23,11 @@
                     <label for="name" class="block mb-1 text-sm font-medium">اسم المبنى</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $building->name) }}" class="form-input w-full" required>
                 </div>
-
+                {{-- رقم المبنى --}}
+                <div>
+                    <label for="building_number" class="block mb-1 text-sm font-medium">رقم المبنى</label>
+                    <input type="text" name="building_number" id="building_number" value="{{ old('building_number', $building->building_number) }}" class="form-input w-full">
+                </div>
                 {{-- العنوان --}}
                 <div>
                     <label for="address" class="block mb-1 text-sm font-medium">العنوان</label>

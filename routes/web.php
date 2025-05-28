@@ -73,6 +73,8 @@ Route::redirect('/admin', '/admin/dashboard');
     Route::patch('units/{unit}/status', [UnitController::class, 'updateStatus'])->name('units.updateStatus');
     Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
     Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
+	Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
+
 
     // ✅ المستأجرين
     Route::resource('tenants', TenantController::class);
@@ -262,6 +264,12 @@ Route::prefix('admin/building-supervisors')
         Route::get('/{user}/edit', [BuildingSupervisorController::class, 'edit'])->name('edit');
         Route::put('/{user}', [BuildingSupervisorController::class, 'update'])->name('update');
     });
+	
+	//room images 
+	Route::get('units/{unit}/images', [UnitController::class, 'images'])->name('admin.units.images');
+    Route::post('units/{unit}/images', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
+    Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
+
 
 
 require __DIR__.'/auth.php';

@@ -14,6 +14,8 @@ return [
     'create units' => 'Create Unit',
     'edit units' => 'Edit Unit',
     'delete units' => 'Delete Unit',
+	'view unit details' => 'View unit details',
+
 
     // Tenants
     'view tenants' => 'View Tenants',

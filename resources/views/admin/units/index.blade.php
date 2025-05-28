@@ -88,14 +88,14 @@
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800">{{ __('messages.unit_list') }}</h1>
             <p class="text-gray-500 text-sm">{{ __('messages.total_units') }}: {{ $units->count() }}</p>
         </div>
-		@can('create units')
+        @can('create units')
         <a href="{{ route('admin.units.create') }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg inline-flex items-center transition-colors text-sm sm:text-base w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
             {{ __('messages.add_unit') }}
         </a>
-		@endcan
+        @endcan
     </div>
 
     @if (session('success'))
@@ -144,17 +144,17 @@
 
                         
                         {{-- سعر الإيجار --}}
-                        <td class="...">
-    @if ($unit->latestActiveContract)
-        <span class="text-blue-600 font-semibold">
-            {{ number_format($unit->latestActiveContract->rent_amount, 2) }} {{ __('messages.currency') }}
-        </span>
-    @else
-        <span class="text-gray-600">
-            {{ number_format($unit->rent_price, 2) }} {{ __('messages.currency') }}
-        </span>
-    @endif
-</td>
+                        <td class="px-4 sm:px-6 py-4 hidden sm:table-cell {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
+                            @if ($unit->latestActiveContract)
+                                <span class="text-blue-600 font-semibold">
+                                    {{ number_format($unit->latestActiveContract->rent_amount, 2) }} {{ __('messages.currency') }}
+                                </span>
+                            @else
+                                <span class="text-gray-600">
+                                    {{ number_format($unit->rent_price, 2) }} {{ __('messages.currency') }}
+                                </span>
+                            @endif
+                        </td>
 
                         
                         {{-- الحالة --}}
@@ -203,51 +203,108 @@
 
                         {{-- عرض للجوال (بطاقة لكل وحدة) --}}
                         <td class="px-4 py-4 sm:hidden">
-                            <div class="flex flex-col gap-2">
-                                <div class="flex justify-between items-start">
-                                    <span class="font-medium text-gray-900">{{ $unit->building->name }}</span>
-                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">{{ $unit->unit_number }}</span>
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-200">
+                                {{-- الصف العلوي: المبنى ورقم الوحدة --}}
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                        <span class="font-medium text-gray-800">{{ $unit->building->name }}</span>
+                                    </div>
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
+                                        #{{ $unit->unit_number }}
+                                    </span>
                                 </div>
                                 
+                                {{-- الصف الأوسط: نوع الوحدة والسعر --}}
+                                <div class="flex justify-between items-center mb-3">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                        <span class="text-sm font-medium text-gray-700">
+                                            {{ __('messages.unit_type_' . $unit->unit_type) }}
+                                        </span>
+                                    </div>
+                                    <span class="text-sm font-semibold {{ $unit->latestActiveContract ? 'text-blue-600' : 'text-gray-600' }}">
+                                        {{ number_format($unit->latestActiveContract ? $unit->latestActiveContract->rent_amount : $unit->rent_price, 2) }} {{ __('messages.currency') }}
+                                    </span>
+                                </div>
+                                
+                                {{-- الصف السفلي: الحالة والمستأجر --}}
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm font-medium">{{ __('messages.' . $unit->unit_type) }}</span>
-                                    <span class="text-sm font-medium">{{ number_format($unit->rent_price) }} {{ __('messages.currency') }}</span>
-                                </div>
-                                
-                                <div class="flex justify-between items-center mt-1">
                                     <span class="px-2 py-1 {{ $status['bg'] }} {{ $status['text'] }} rounded-full text-xs font-semibold">
                                         {{ __('messages.' . $unit->status_label) }}
                                     </span>
-                                    {{-- زر العين المضاف للجوال --}}
+                                    
+                                    @if($unit->status_label === 'occupied' && $unit->contracts->last()?->tenant)
+                                        <div class="flex items-center">
+                                            <span class="text-sm text-gray-700 mr-2">{{ $unit->contracts->last()->tenant->name }}</span>
+                                            <a href="{{ route('admin.tenants.show', $unit->contracts->last()->tenant->id) }}"
+                                               class="text-blue-500 hover:text-blue-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">-</span>
+                                    @endif
+                                </div>
+                                
+                                {{-- أزرار الإجراءات --}}
+                                <div class="flex justify-end items-center mt-3 pt-3 border-t border-gray-100 gap-2">
+                                    @if($unit->status_label === 'available' || $unit->status_label === 'booked')
+                                        <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}"
+                                           class="p-2 text-green-600 hover:bg-green-50 rounded-full"
+                                           title="{{ __('messages.rent_unit') }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    
+                                    @can('edit units')
+                                    <a href="{{ route('admin.units.edit', $unit->id) }}"
+                                       class="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
+                                       title="{{ __('messages.edit') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </a>
+                                    @endcan
+                                    @can('view unit details')
                                     <a href="{{ route('admin.units.show', $unit->id) }}"
-                                       class="text-gray-600 hover:text-gray-900 ml-2"
+                                       class="p-2 text-gray-600 hover:bg-gray-100 rounded-full"
                                        title="{{ __('messages.view') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </a>
-                                </div>
-                                
-                                {{-- اسم المستأجر (عرض للجوال) --}}
-                                <div class="text-sm mt-1">
-                                    @if($unit->status_label === 'occupied' && $unit->contracts->last()?->tenant)
-                                        <span class="text-red-600 flex items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    @endcan
+                                    @can('delete units')
+                                    <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('{{ __('messages.confirm_delete') }}')"
+                                                class="p-2 text-red-600 hover:bg-red-50 rounded-full"
+                                                title="{{ __('messages.delete') }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
-                                            {{ $unit->contracts->last()->tenant->name }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400 text-sm">-</span>
-                                    @endif
+                                        </button>
+                                    </form>
+                                    @endcan
                                 </div>
                             </div>
                         </td>
                         
-                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        {{-- خلايا الإجراءات للشاشات الكبيرة --}}
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium hidden sm:table-cell">
                             <div class="flex {{ app()->getLocale() === 'ar' ? 'justify-end' : 'justify-start' }} sm:justify-center gap-1 sm:gap-2">
-
                                 {{-- 🟢 زر التأجير أو مساحة فاضية --}}
                                 <div class="w-8 h-8 flex items-center justify-center">
                                     @if($unit->status_label === 'available' || $unit->status_label === 'booked')
@@ -264,7 +321,7 @@
                                 </div>
 
                                 {{-- 🔵 زر التعديل --}}
-								@can('edit units')
+                                @can('edit units')
                                 <a href="{{ route('admin.units.edit', $unit->id) }}"
                                    class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-50"
                                    title="{{ __('messages.edit') }}">
@@ -272,9 +329,10 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </a>
-								@endcan
+                                @endcan
 
                                 {{-- 👁️ زر العرض --}}
+								@can('view unit details')
                                 <a href="{{ route('admin.units.show', $unit->id) }}"
                                    class="text-gray-600 hover:text-gray-900 p-1 rounded-full hover:bg-gray-100"
                                    title="{{ __('messages.view') }}">
@@ -283,9 +341,9 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </a>
-
+								@endcan
                                 {{-- 🔴 زر الحذف --}}
-								@can('delete units')
+                                @can('delete units')
                                 <form action="{{ route('admin.units.destroy', $unit->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -297,7 +355,7 @@
                                         </svg>
                                     </button>
                                 </form>
-								@endcan
+                                @endcan
                             </div>
                         </td>
                     </tr>
@@ -354,91 +412,38 @@
         const unitType = this.value;
         window.location.href = `?building_id=${buildingId}&search=${encodeURIComponent(search)}&unit_type=${unitType}`;
     });
-	
+    
 </script>
 
 <style>
-    /* تحسينات عامة للصفحة */
-    .bg-white {
-        background-color: #fff;
-    }
-    
-    .shadow-sm {
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
-    
-    .rounded-lg {
-        border-radius: 0.5rem;
-    }
-    
-    /* تحسينات للجوال */
+    /* تحسينات للبطاقات على الجوال */
     @media (max-width: 640px) {
-        .p-4 {
-            padding: 1rem;
-        }
-        
-        /* تحسين عرض البطاقات */
         .unit-card-mobile {
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.5rem;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
         
-        /* تحسين الأزرار للجوال */
-        .action-buttons-mobile {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        .unit-card-mobile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        /* تحسين النصوص للغة العربية */
-        [dir="rtl"] .unit-card-mobile {
-            text-align: right;
+        /* تحسينات للأيقونات على الجوال */
+        .action-icon-mobile {
+            transition: all 0.2s ease;
+        }
+        
+        .action-icon-mobile:hover {
+            transform: scale(1.1);
         }
     }
     
-    /* تحسينات للأيقونات */
-    .icon-hover:hover {
-        transform: scale(1.1);
-        transition: transform 0.2s ease;
+    /* تحسينات للغة العربية */
+    [dir="rtl"] .unit-card-mobile {
+        text-align: right;
     }
     
-    /* تحسينات لحالة hover للصفوف */
-    .hover\:bg-gray-50:hover {
-        background-color: #f9fafb;
-    }
-    
-    /* تحسينات للعرض على الجوال */
-    @media (max-width: 640px) {
-        .sm\:hidden {
-            display: block;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        /* تحسينات للجداول على الجوال */
-        table {
-            display: block;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* تحسينات للبطاقات على الجوال */
-        .unit-card-mobile {
-            border: 1px solid #e2e8f0;
-            margin-bottom: 0.75rem;
-        }
-        
-        /* تحسينات للأزرار على الجوال */
-        .action-button-mobile {
-            padding: 0.25rem;
-        }
+    [dir="rtl"] .action-buttons-mobile {
+        justify-content: flex-start;
     }
 </style>
 {{-- 👁️ Modal عرض بيانات المستأجر --}}

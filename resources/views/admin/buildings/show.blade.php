@@ -18,6 +18,7 @@
     <div class="bg-white p-6 rounded-lg shadow space-y-6 text-sm text-gray-700">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div><strong>{{ __('messages.building_name') }}:</strong> {{ $building->name }}</div>
+			<div><strong>{{ __('messages.building_number') }}:</strong> {{ $building->building_number ?? '-' }}</div>
             <div><strong>{{ __('messages.address') }}:</strong> {{ $building->address }}</div>
 
             {{-- رابط الموقع --}}

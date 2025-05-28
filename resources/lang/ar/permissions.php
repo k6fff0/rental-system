@@ -14,6 +14,8 @@ return [
     'create units' => 'إضافة وحدة',
     'edit units' => 'تعديل وحدة',
     'delete units' => 'حذف وحدة',
+	'view unit details' => 'الاطلاع على تفاصيل الوحدة',
+
 
     // المستأجرين
     'view tenants' => 'عرض المستأجرين',

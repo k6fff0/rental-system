@@ -45,6 +45,12 @@ class Unit extends Model
     {
         return $this->belongsTo(Building::class);
     }
+	// images
+	public function images()
+    {
+    return $this->hasMany(UnitImage::class);
+    }
+
 
     // ✅ العلاقة مع العقود
     public function contracts()

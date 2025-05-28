@@ -144,7 +144,7 @@ public function monthlyDueReport(Request $request)
             $q->whereBetween('month_for', [$startOfMonth, $endOfMonth]);
         },
         'payments.collector'
-    ])->where('status', 'active')->get();
+    ])->get();
 
     $data = $contracts->map(function ($contract) {
         $paid = $contract->payments->sum('amount');

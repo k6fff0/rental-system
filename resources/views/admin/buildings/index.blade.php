@@ -49,12 +49,17 @@
     <table class="min-w-full border border-gray-200 text-sm text-gray-800">
         <thead class="bg-gray-100 text-gray-700">
             <tr>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.building_name') }}</th>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.address') }}</th>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.unit_count') }}</th>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.created_at') }}</th>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">🌍 {{ __('messages.location') }}</th>
-                <th class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ __('messages.actions') }}</th>
+                {{-- ✅ ظاهرة في الموبايل --}}
+                <th class="px-4 py-3 text-right w-full sm:w-auto">{{ __('messages.building_name') }}</th>
+                <th class="px-4 py-3 text-right">{{ __('messages.building_number') }}</th>
+                {{-- ⛔ مخفية في الموبايل --}}
+                <th class="px-4 py-3 hidden sm:table-cell text-right">{{ __('messages.address') }}</th>
+                <th class="px-4 py-3 hidden sm:table-cell text-right">{{ __('messages.unit_count') }}</th>
+                <th class="px-4 py-3 hidden sm:table-cell text-right">{{ __('messages.created_at') }}</th>
+                {{-- ✅ ظاهرة في الموبايل --}}
+                <th class="px-4 py-3 text-right">🌍 {{ __('messages.location') }}</th>
+                {{-- ✅ ظاهرة في الموبايل --}}
+                <th class="px-4 py-3 text-right">{{ __('messages.actions') }}</th>
             </tr>
         </thead>
         <tbody id="buildingsTableBody">
@@ -65,13 +70,23 @@
                         : '⚠️ Are you sure you want to delete this building? All related units will also be deleted, and this may include linked contracts.';
                 @endphp
                 <tr class="border-t hover:bg-gray-50 transition duration-150" data-name="{{ strtolower($building->name) }}" data-id="{{ $building->id }}">
-                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->name }}</td>
-                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->address }}</td>
-                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->units->count() }}</td>
-                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">{{ $building->created_at->format('Y-m-d') }}</td>
+                    {{-- ✅ اسم المبنى --}}
+                    <td class="px-4 py-3 text-right min-w-[160px] sm:min-w-0">{{ $building->name }}</td>
 
-                    {{-- 🌍 رابط الموقع --}}
-                    <td class="px-4 py-3 {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }}">
+                    {{-- ✅ رقم المبنى --}}
+                    <td class="px-4 py-3 text-right">{{ $building->building_number ?? '-' }}</td>
+
+                    {{-- ⛔ العنوان - مخفي في الموبايل --}}
+                    <td class="px-4 py-3 hidden sm:table-cell text-right">{{ $building->address }}</td>
+
+                    {{-- ⛔ عدد الوحدات - مخفي في الموبايل --}}
+                    <td class="px-4 py-3 hidden sm:table-cell text-right">{{ $building->units->count() }}</td>
+
+                    {{-- ⛔ تاريخ الإنشاء - مخفي في الموبايل --}}
+                    <td class="px-4 py-3 hidden sm:table-cell text-right">{{ $building->created_at->format('Y-m-d') }}</td>
+
+                    {{-- 🌍 الموقع - ظاهر دائماً --}}
+                    <td class="px-4 py-3 text-right">
                         @if ($building->location_url)
                             <a href="{{ $building->location_url }}" target="_blank" class="text-blue-600 underline">
                                 {{ app()->getLocale() == 'ar' ? 'عرض الموقع' : 'View Map' }}
@@ -81,47 +96,43 @@
                         @endif
                     </td>
 
-                    {{-- 🔧 الإجراءات --}}
-                    <td class="px-4 py-3">
-    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 {{ app()->getLocale() == 'ar' ? 'justify-end flex-row-reverse' : 'justify-start flex-row' }}">
+                    {{-- 🔧 الإجراءات - ظاهرة دائماً --}}
+                    <td class="px-4 py-3 text-right">
+                        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 justify-end flex-row-reverse">
+                            @can('view building details')
+                                <a href="{{ route('admin.buildings.show', $building->id) }}"
+                                   class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                                    {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
+                                </a>
+                            @endcan
 
-        @can('view building details')
-            <a href="{{ route('admin.buildings.show', $building->id) }}"
-               class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-               {{ app()->getLocale() == 'ar' ? 'عرض' : 'Show' }}
-            </a>
-        @endcan
+                            @can('edit buildings')
+                                <a href="{{ route('admin.buildings.edit', $building->id) }}"
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                                    {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
+                                </a>
+                            @endcan
 
-        @can('edit buildings')
-            <a href="{{ route('admin.buildings.edit', $building->id) }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-               {{ app()->getLocale() == 'ar' ? 'تعديل' : 'Edit' }}
-            </a>
-        @endcan
-
-        @can('delete buildings')
-            <form action="{{ route('admin.buildings.destroy', $building->id) }}"
-                  method="POST"
-                  onsubmit="return confirm('{{ $confirmMessage }}')">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
-                    {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
-                </button>
-            </form>
-        @endcan
-
-    </div>
-</td>
-
+                            @can('delete buildings')
+                                <form action="{{ route('admin.buildings.destroy', $building->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('{{ $confirmMessage }}')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition duration-200">
+                                        {{ app()->getLocale() == 'ar' ? 'حذف' : 'Delete' }}
+                                    </button>
+                                </form>
+                            @endcan
+                        </div>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
 
-</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

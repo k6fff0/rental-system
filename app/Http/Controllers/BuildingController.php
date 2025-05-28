@@ -43,6 +43,7 @@ class BuildingController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+			'building_number' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'location_url' => 'nullable|url',
             'owner_name' => 'nullable|string|max:255',
@@ -79,6 +80,7 @@ class BuildingController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+			'building_number' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
             'location_url' => 'nullable|url',
             'owner_name' => 'nullable|string|max:255',

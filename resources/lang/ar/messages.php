@@ -33,6 +33,7 @@ return [
     // المباني
     'buildings' => 'المباني',
     'buildings_description' => 'إدارة وعرض المباني.',
+    'building_number' => 'رقم المبنى',
     'building_list' => 'قائمة المباني',
     'add_building' => 'إضافة مبنى',
     'no_buildings' => 'لا توجد مباني مسجلة حالياً.',
@@ -79,6 +80,12 @@ return [
     'furnished_units' => 'وحدات مفروشة',
     'unit_has_active_contract_cannot_change_status' => 'لا يمكن تغيير حالة الوحدة لأن هناك عقدًا ساريًا مرتبط بها.',
     'unit_already_has_active_contract' => 'لا يمكن ربط هذه الوحدة لأنها مرتبطة بالفعل بعقد رقم :number.',
+    'unit_images' => 'صور الوحدة',
+    'unit_status' => 'حالة الوحدة',
+    'upload_image' => 'رفع صورة',
+    'upload' => 'رفع',
+    'unit_not_in_cleaning_status' => 'يمكن رفع الصور فقط عندما تكون الوحدة تحت التنظيف.',
+
 
     // المستأجرين
     'tenants' => 'المستأجرين',

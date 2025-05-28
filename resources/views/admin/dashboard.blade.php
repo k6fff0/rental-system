@@ -192,7 +192,7 @@
             <h2 class="text-lg font-semibold text-gray-700">{{ __('messages.total_income') }}</h2>
             <p class="text-3xl font-bold mt-2 text-green-600">{{ number_format($totalIncome, 2) }} {{ __('messages.currency') }}</p>
             <p class="text-sm text-gray-500 mt-2">{{ __('messages.total_income_description') }}</p>
-            <a href="{{ route('admin.expenses.index') }}" class="mt-4 inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800">
+            <a href="{{ route('admin.payments.due_report') }}" class="mt-4 inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800">
                 {{ __('messages.view_details') }}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

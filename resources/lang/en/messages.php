@@ -34,6 +34,7 @@ return [
     // Buildings
     'buildings' => 'Buildings',
     'buildings_description' => 'Manage and view buildings.',
+    'building_number' => 'Building Number',
     'building_list' => 'Building List',
     'add_building' => 'Add Building',
     'no_buildings' => 'No buildings found.',
@@ -79,6 +80,12 @@ return [
     'unfurnished_units' => 'Unfurnished Units',
     'furnished_units' => 'Furnished Units',
     'unit_has_active_contract_cannot_change_status' => 'You cannot change the unit status because there is an active contract linked to it.',
+    'unit_images' => 'Unit Images',
+    'unit_status' => 'Unit Status',
+    'upload_image' => 'Upload Image',
+    'upload' => 'Upload',
+    'unit_not_in_cleaning_status' => 'Images can only be uploaded when the unit is in cleaning status.',
+
 
 
     // u 

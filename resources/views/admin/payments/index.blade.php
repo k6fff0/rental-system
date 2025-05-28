@@ -131,24 +131,24 @@
                                 #{{ $payment->id }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                                        <span class="text-indigo-600 font-medium">
-                                            {{ substr(optional($payment->contract->tenant)->name ?? '—', 0, 1) }}
-                                        </span>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ optional($payment->contract->tenant)->name ?? '—' }}
-                                        </div>
-                                        <div class="text-sm text-gray-500 md:hidden">
-                                            {{ $payment->contract->contract_number ?? '—' }}
-                                        </div>
-                                    </div>
+                              <div class="flex items-center">
+                                 <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                   <span class="text-indigo-600 font-medium">
+                                      {{ substr($tenant->name ?? '—', 0, 1) }}
+                                    </span>
+                                 </div>
+                                <div class="ml-4">
+                              <div class="text-sm font-medium text-gray-900">
+                                   {{ $tenant->name ?? '—' }}
                                 </div>
+                                 <div class="text-sm text-gray-500 md:hidden">
+                                  {{ $contract->contract_number ?? '—' }}
+                                </div>
+                               </div>
+                              </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                                {{ $payment->contract->contract_number ?? '—' }}
+                               {{ $contract->contract_number ?? '—' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
