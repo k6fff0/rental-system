@@ -6,7 +6,10 @@ use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Building;
-
+use App\Enums\UnitType;
+use App\Enums\UnitStatus;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewTenantNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,32 +24,31 @@ class TenantController extends Controller
 	}
 
 	public function index(Request $request)
-{
-    $query = Tenant::query()->with(['activeContracts.unit']);
+	{
+		$query = Tenant::query()->with(['activeContracts.unit']);
 
-    if ($request->filled('search')) {
-        $search = $request->search;
+		if ($request->filled('search')) {
+			$search = $request->search;
 
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%$search%")
-              ->orWhere('id_number', 'like', "%$search%")
-              ->orWhere('phone', 'like', "%$search%")
-              ->orWhereHas('contracts', function ($q3) use ($search) {
-                   $q3->where('status', 'active')
-                   ->whereDate('start_date', '<=', now())
-                   ->whereDate('end_date', '>=', now())
-                   ->whereHas('unit', function ($q4) use ($search) {
-                   $q4->where('unit_number', 'like', "%$search%");
-                   });
-                });
+			$query->where(function ($q) use ($search) {
+				$q->where('name', 'like', "%$search%")
+					->orWhere('id_number', 'like', "%$search%")
+					->orWhere('phone', 'like', "%$search%")
+					->orWhereHas('contracts', function ($q3) use ($search) {
+						$q3->where('status', 'active')
+							->whereDate('start_date', '<=', now())
+							->whereDate('end_date', '>=', now())
+							->whereHas('unit', function ($q4) use ($search) {
+								$q4->where('unit_number', 'like', "%$search%");
+							});
+					});
+			});
+		}
 
-        });
-    }
+		$tenants = $query->latest()->paginate(15);
 
-    $tenants = $query->latest()->paginate(15);
-
-    return view('admin.tenants.index', compact('tenants'));
-}
+		return view('admin.tenants.index', compact('tenants'));
+	}
 
 
 	public function create()
@@ -55,30 +57,36 @@ class TenantController extends Controller
 		return view('admin.tenants.create', compact('buildings'));
 	}
 
-	public function store(Request $request)
-	{
-		$request->validate([
-			'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
-			'name' => 'required|string|max:100',
-			'phone' => 'nullable|string|max:20',
-			'id_number' => 'nullable|string|max:50',
-			'email' => 'nullable|email|max:100',
-			'notes' => 'nullable|string|max:500',
-			'debt' => 'nullable|numeric|min:0',
-		]);
 
-		$tenant = Tenant::create([
-			'tenant_status' => $request->tenant_status,
-			'name' => $request->name,
-			'phone' => $request->phone,
-			'id_number' => $request->id_number,
-			'email' => $request->email,
-			'notes' => $request->notes,
-			'debt' => $request->debt ?? 0,
-		]);
 
-		return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
-	}
+public function store(Request $request)
+{
+    $request->validate([
+        'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+        'name' => 'required|string|max:100',
+        'phone' => 'nullable|string|max:20',
+        'id_number' => 'nullable|string|max:50',
+        'email' => 'nullable|email|max:100',
+        'notes' => 'nullable|string|max:500',
+        'debt' => 'nullable|numeric|min:0',
+    ]);
+
+    $tenant = Tenant::create([
+        'tenant_status' => $request->tenant_status,
+        'name' => $request->name,
+        'phone' => $request->phone,
+        'id_number' => $request->id_number,
+        'email' => $request->email,
+        'notes' => $request->notes,
+        'debt' => $request->debt ?? 0,
+    ]);
+
+    // ✅ إرسال إشعار لكل من لديه صلاحية notify.tenants.create
+    $notifiables = User::permission('notify.tenants.create')->get();
+    Notification::send($notifiables, new NewTenantNotification($tenant->name));
+
+    return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+}
 
 	public function edit(Tenant $tenant)
 	{
@@ -127,32 +135,32 @@ class TenantController extends Controller
 
 		return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
 	}
-	
-public function search(Request $request)
-{
-    $q = $request->input('q');
 
-    if (!$q) {
-        return response()->json([]);
-    }
+	public function search(Request $request)
+	{
+		$q = $request->input('q');
 
-    $searchTerm = strtolower(trim($q));
-    $digitsOnly = preg_replace('/[^0-9]/', '', $q);
+		if (!$q) {
+			return response()->json([]);
+		}
 
-    // احتمال يكون كتب رقم محلي: 050xxxxxxx → نحوله لـ 9715xxxxxxx
-    $normalized = $digitsOnly;
-    if (preg_match('/^05[0-9]{8}$/', $digitsOnly)) {
-        $normalized = '971' . substr($digitsOnly, 1);
-    }
+		$searchTerm = strtolower(trim($q));
+		$digitsOnly = preg_replace('/[^0-9]/', '', $q);
 
-    $results = \App\Models\Tenant::query()
-        ->where(function ($query) use ($searchTerm, $digitsOnly, $normalized) {
-            $query->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"])
-                  ->orWhereRaw('LOWER(id_number) LIKE ?', ["%{$searchTerm}%"]);
+		// احتمال يكون كتب رقم محلي: 050xxxxxxx → نحوله لـ 9715xxxxxxx
+		$normalized = $digitsOnly;
+		if (preg_match('/^05[0-9]{8}$/', $digitsOnly)) {
+			$normalized = '971' . substr($digitsOnly, 1);
+		}
 
-            if (!empty($digitsOnly)) {
-                // تنظيف الرقم في قاعدة البيانات
-                $cleanPhone = "
+		$results = \App\Models\Tenant::query()
+			->where(function ($query) use ($searchTerm, $digitsOnly, $normalized) {
+				$query->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"])
+					->orWhereRaw('LOWER(id_number) LIKE ?', ["%{$searchTerm}%"]);
+
+				if (!empty($digitsOnly)) {
+					// تنظيف الرقم في قاعدة البيانات
+					$cleanPhone = "
                     REPLACE(
                         REPLACE(
                             REPLACE(
@@ -164,21 +172,21 @@ public function search(Request $request)
                     ')', '')
                 ";
 
-                $query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$digitsOnly}%"]);
-                $query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$normalized}%"]);
-                $query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$searchTerm}%"]);
-            }
-			if (preg_match('/^05[0-9]{2,}$/', $digitsOnly)) {
-              $partialNormalized = '971' . substr($digitsOnly, 1); // نحوله حتى لو ناقص
-              $query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$partialNormalized}%"]);
-            }
-        })
-        ->select('id', 'name', 'phone', 'id_number')
-        ->limit(10)
-        ->get();
+					$query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$digitsOnly}%"]);
+					$query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$normalized}%"]);
+					$query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$searchTerm}%"]);
+				}
+				if (preg_match('/^05[0-9]{2,}$/', $digitsOnly)) {
+					$partialNormalized = '971' . substr($digitsOnly, 1); // نحوله حتى لو ناقص
+					$query->orWhereRaw("{$cleanPhone} LIKE ?", ["%{$partialNormalized}%"]);
+				}
+			})
+			->select('id', 'name', 'phone', 'id_number')
+			->limit(10)
+			->get();
 
-    return response()->json($results);
-}
+		return response()->json($results);
+	}
 
 
 
@@ -193,30 +201,29 @@ public function search(Request $request)
 	}
 
 	public function show(Tenant $tenant)
-{
-    // لو طلب AJAX (زي المودال)، رجّع البيانات بس
-    if (request()->ajax()) {
-        return view('admin.tenants.show', compact('tenant'));
-    }
+	{
+		// لو طلب AJAX (زي المودال)، رجّع البيانات بس
+		if (request()->ajax()) {
+			return view('admin.tenants.show', compact('tenant'));
+		}
 
-    // جلب العقود المرتبطة بالمستأجر
-    $contracts = \App\Models\Contract::with('unit.building')
-        ->where('tenant_id', $tenant->id)
-        ->orderByDesc('start_date')
-        ->get();
+		// جلب العقود المرتبطة بالمستأجر
+		$contracts = \App\Models\Contract::with('unit.building')
+			->where('tenant_id', $tenant->id)
+			->orderByDesc('start_date')
+			->get();
 
-    // العقد الحالي = عقد ساري الآن
-  $activeContracts = $contracts->filter(function ($contract) {
-    return $contract->start_date <= now() && $contract->end_date >= now();
-});
+		// العقد الحالي = عقد ساري الآن
+		$activeContracts = $contracts->filter(function ($contract) {
+			return $contract->start_date <= now() && $contract->end_date >= now();
+		});
 
-    // العقود القديمة = غير العقد الحالي
-  $pastContracts = $contracts->filter(function ($contract) use ($activeContracts) {
-    return !$activeContracts->contains('id', $contract->id);
-});
-    return view('admin.tenants.show', compact('tenant', 'activeContracts', 'pastContracts'));
-
-}
+		// العقود القديمة = غير العقد الحالي
+		$pastContracts = $contracts->filter(function ($contract) use ($activeContracts) {
+			return !$activeContracts->contains('id', $contract->id);
+		});
+		return view('admin.tenants.show', compact('tenant', 'activeContracts', 'pastContracts'));
+	}
 
 
 	public function linkUser(Tenant $tenant)

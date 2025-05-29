@@ -6,7 +6,7 @@ return [
     'create buildings' => 'Create Building',
     'edit buildings' => 'Edit Building',
     'delete buildings' => 'Delete Building',
-	'view building details' => 'Access sensitive building information',
+    'view building details' => 'Access sensitive building information',
 
 
     // Units
@@ -14,7 +14,7 @@ return [
     'create units' => 'Create Unit',
     'edit units' => 'Edit Unit',
     'delete units' => 'Delete Unit',
-	'view unit details' => 'View unit details',
+    'view unit details' => 'View unit details',
 
 
     // Tenants
@@ -22,6 +22,10 @@ return [
     'create tenants' => 'Add Tenant',
     'edit tenants' => 'Edit Tenant',
     'delete tenants' => 'Delete Tenant',
+    'view full tenant details' => 'View full tenant details',
+    'link tenant to user' => 'Link tenant to user',
+
+
 
     // Contracts
     'view contracts' => 'View Contracts',
@@ -34,6 +38,8 @@ return [
     'create payments' => 'Add Payment',
     'edit payments' => 'Edit Payment',
     'delete payments' => 'Delete Payment',
+    'view payment logs' => 'View Full Payment Logs',
+    'view monthly due report' => 'View Monthly Due Report',
 
     // Maintenance
     'view maintenance requests' => 'View Maintenance Requests',
@@ -62,7 +68,7 @@ return [
     'delete roles' => 'Delete Role',
     'view permissions' => 'View Permissions',
     'edit permissions' => 'Edit Permissions',
-	 'edit-posts' => 'Edit Posts',
+    'edit-posts' => 'Edit Posts',
     'create users' => 'Create Users',
     'delete users' => 'Delete Users',
     'create permissions' => 'Create Permissions',
@@ -70,7 +76,7 @@ return [
     'super-admin' => 'Super Admin',
     'view technicians' => 'View Technicians',
     'view dashboard' => 'View Dashboard',
-	'change maintenance status' => 'Change Maintenance Status',
+    'change maintenance status' => 'Change Maintenance Status',
     'assign technician' => 'Assign Technician',
     'upload maintenance image' => 'Upload Maintenance Image',
     'comment on maintenance' => 'Comment on Maintenance',
@@ -89,7 +95,7 @@ return [
 
     'evaluate technician' => 'Evaluate Technician',
     'view technician log' => 'View Technician Log',
-	'receive admin notifications' => 'Receive admin notifications',
+    'receive admin notifications' => 'Receive admin notifications',
     'receive maintenance notifications' => 'Receive maintenance notifications',
     'receive financial notifications' => 'Receive financial notifications',
     'receive broker notifications' => 'Receive broker notifications',
@@ -102,4 +108,9 @@ return [
     'receive department notifications' => 'Receive department notifications',
     'receive general notifications' => 'Receive general supervisor notifications',
     'receive group general notifications' => 'Receive group general notifications',
+    'view bookings' => 'View bookings',
+    'create bookings' => 'Create bookings',
+    'cancel bookings' => 'Cancel bookings',
+    'view booking owner' => 'View booking owner',
+    'notify.tenants.create' => 'Send notification to tenants',
 ];

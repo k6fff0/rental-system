@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Building;
 use Illuminate\Http\Request;
 use App\Enums\UnitType;
+use App\Enums\UnitStatus;
 use App\Models\UnitImage;
 
 class UnitController extends Controller
@@ -27,28 +28,48 @@ class UnitController extends Controller
     }
 
 
-    public function index(Request $request)
-    {
-        $query = Unit::with(['building', 'contracts.tenant', 'latestActiveContract']);
+   public function index(Request $request)
+{
+    $query = Unit::with(['building', 'contracts.tenant', 'latestContract']);
 
-        if ($request->filled('building_id')) {
-            $query->where('building_id', $request->building_id);
-        }
-
-        if ($request->filled('search')) {
-            $query->where('unit_number', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('unit_type')) {
-            $query->where('unit_type', $request->unit_type);
-        }
-
-        $units = $query->get();
-        $buildings = Building::all();
-        $unitTypes = UnitType::values();
-
-        return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
+    if ($request->filled('building_id')) {
+        $query->where('building_id', $request->building_id);
     }
+
+    if ($request->filled('search')) {
+        $query->where('unit_number', 'like', '%' . $request->search . '%');
+    }
+
+    if ($request->filled('unit_type')) {
+        $query->where('unit_type', $request->unit_type);
+    }
+
+    // ✅ جلب البيانات الأصلية
+    $unitsRaw = $query->get();
+
+    // ✅ تجهيز البيانات مع السعر الفعلي
+    $units = $unitsRaw->map(function ($unit) {
+        $contract = $unit->latestContract;
+
+        $actualRent = ($contract && $contract->status !== 'terminated')
+            ? $contract->rent_amount
+            : $unit->rent_price;
+
+        return [
+            'unit' => $unit,
+            'building' => optional($unit->building)->name,
+            'rent' => $actualRent,
+            'original_rent' => $unit->rent_price,
+            'has_discount' => $actualRent != $unit->rent_price,
+            'contract_status' => $contract?->status,
+        ];
+    });
+
+    $buildings = Building::all();
+    $unitTypes = UnitType::values();
+
+    return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
+}
 
     public function create()
     {
@@ -58,45 +79,48 @@ class UnitController extends Controller
         return view('admin.units.create', compact('buildings', 'unitTypes'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'building_id'  => 'required|exists:buildings,id',
-            'unit_number'  => 'required|string|max:50|unique:units,unit_number,NULL,id,building_id,' . $request->building_id,
-            'floor'        => 'nullable|integer',
-            'unit_type'    => 'required|string|in:' . implode(',', UnitType::values()),
-            'status'       => 'required|in:available,occupied,booked,maintenance,cleaning',
-            'notes'        => 'nullable|string|max:1000',
-            'rent_price'   => 'required|numeric|min:0',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'building_id'  => 'required|exists:buildings,id',
+        'unit_number'  => 'required|string|max:50|unique:units,unit_number,NULL,id,building_id,' . $request->building_id,
+        'floor'        => 'nullable|integer',
+        'unit_type'    => 'required|string|in:' . implode(',', UnitType::values()),
+        'status'       => 'required|string|in:' . implode(',', UnitStatus::values()),
+        'notes'        => 'nullable|string|max:1000',
+        'rent_price'   => 'required|numeric|min:0',
+    ]);
 
-        Unit::create($request->only([
-            'building_id',
-            'unit_number',
-            'floor',
-            'unit_type',
-            'status',
-            'notes',
-            'rent_price',
-        ]));
+    Unit::create($request->only([
+        'building_id',
+        'unit_number',
+        'floor',
+        'unit_type',
+        'status',
+        'notes',
+        'rent_price',
+    ]));
 
-        return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
-    }
+    return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
+}
 
-    public function edit(Unit $unit)
-    {
-        $buildings = Building::all();
-        $unitTypes = UnitType::values();
 
-        $activeContract = \App\Models\Contract::where('unit_id', $unit->id)
-            ->whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now())
-            ->first();
+ public function edit(Unit $unit)
+{
+    $buildings   = Building::all();
+    $unitTypes   = UnitType::values();
+    $unitStatuses = UnitStatus::values();
 
-        return view('admin.units.edit', compact('unit', 'buildings', 'unitTypes', 'activeContract'));
-    }
+    $activeContract = \App\Models\Contract::where('unit_id', $unit->id)
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now())
+        ->first();
 
-  public function update(Request $request, Unit $unit)
+    return view('admin.units.edit', compact('unit', 'buildings', 'unitTypes', 'unitStatuses', 'activeContract'));
+}
+
+
+public function update(Request $request, Unit $unit)
 {
     $unit->load('latestContract');
 
@@ -131,8 +155,8 @@ class UnitController extends Controller
         'unit_number' => 'required|string|max:255',
         'floor' => 'nullable|string|max:255',
         'rent_price' => 'required|numeric',
-        'status' => 'required|in:available,occupied,booked,maintenance,cleaning',
-        'unit_type'    => 'required|string|in:' . implode(',', UnitType::values()),		
+        'status' => 'required|in:' . implode(',', UnitStatus::values()),
+        'unit_type' => 'required|string|in:' . implode(',', UnitType::values()),		
         'notes' => 'nullable|string',
     ]);
 

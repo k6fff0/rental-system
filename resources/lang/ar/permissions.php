@@ -6,7 +6,7 @@ return [
     'create buildings' => 'إضافة مبنى',
     'edit buildings' => 'تعديل مبنى',
     'delete buildings' => 'حذف مبنى',
-	'view building details' => 'الاطلاع على بيانات المبنى الكاملة',
+    'view building details' => 'الاطلاع على بيانات المبنى الكاملة',
 
 
     // الوحدات
@@ -14,7 +14,7 @@ return [
     'create units' => 'إضافة وحدة',
     'edit units' => 'تعديل وحدة',
     'delete units' => 'حذف وحدة',
-	'view unit details' => 'الاطلاع على تفاصيل الوحدة',
+    'view unit details' => 'الاطلاع على تفاصيل الوحدة',
 
 
     // المستأجرين
@@ -22,6 +22,9 @@ return [
     'create tenants' => 'إضافة مستأجر',
     'edit tenants' => 'تعديل مستأجر',
     'delete tenants' => 'حذف مستأجر',
+    'view full tenant details' => 'الاطلاع على بيانات المستأجر بالكامل',
+    'link tenant to user' => 'ربط المستأجر بحساب مستخدم',
+
 
     // العقود
     'view contracts' => 'عرض العقود',
@@ -34,6 +37,8 @@ return [
     'create payments' => 'إضافة دفعة',
     'edit payments' => 'تعديل دفعة',
     'delete payments' => 'حذف دفعة',
+    'view payment logs' => 'رؤية سجل التعديلات الكاملة للدفعات',
+    'view monthly due report' => 'رؤية تقرير الاستحقاقات الشهرية',
 
     // الصيانة
     'view maintenance requests' => 'عرض طلبات الصيانة',
@@ -62,7 +67,7 @@ return [
     'delete roles' => 'حذف مجموعة',
     'view permissions' => 'عرض الصلاحيات',
     'edit permissions' => 'تعديل الصلاحيات',
-	 'edit-posts' => 'تعديل المنشورات',
+    'edit-posts' => 'تعديل المنشورات',
     'create users' => 'إنشاء مستخدمين',
     'delete users' => 'حذف مستخدمين',
     'create permissions' => 'إنشاء صلاحيات',
@@ -70,11 +75,11 @@ return [
     'super-admin' => 'صلاحية مالك النظام',
     'view technicians' => 'عرض الفنيين',
     'view dashboard' => 'عرض لوحة التحكم',
-	'change maintenance status' => 'تغيير حالة الصيانة',
+    'change maintenance status' => 'تغيير حالة الصيانة',
     'assign technician' => 'تعيين فني',
     'upload maintenance image' => 'رفع صورة للصيانة',
     'comment on maintenance' => 'كتابة تعليق على الصيانة',
-	
+
 
     'update unit status' => 'تغيير حالة الوحدة',
 
@@ -90,8 +95,8 @@ return [
 
     'evaluate technician' => 'تقييم الفني',
     'view technician log' => 'عرض سجل الفني',
-	
-	'receive admin notifications' => 'استقبال إشعارات الإدارة',
+
+    'receive admin notifications' => 'استقبال إشعارات الإدارة',
     'receive maintenance notifications' => 'استقبال إشعارات الصيانة',
     'receive financial notifications' => 'استقبال إشعارات المحاسبة',
     'receive broker notifications' => 'استقبال إشعارات السماسرة',
@@ -104,5 +109,10 @@ return [
     'receive department notifications' => 'استقبال إشعارات مشرفي الأقسام',
     'receive general notifications' => 'استقبال إشعارات المشرف العام',
     'receive group general notifications' => 'استقبال إشعارات المشرف العام للمجموعة',
+    'view bookings' => 'عرض الحجوزات',
+    'create bookings' => 'إنشاء حجز',
+    'cancel bookings' => 'إلغاء حجز',
+    'view booking owner' => 'عرض صاحب الحجز',
+    'notify.tenants.create' => 'إرسال إشعار للمستأجرين',
 
 ];

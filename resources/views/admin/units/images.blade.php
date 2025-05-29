@@ -17,7 +17,7 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.upload_image') }}</label>
-                <input type="file" name="image" accept="image/*" required class="block w-full border border-gray-300 rounded px-3 py-2">
+                <input type="file" name="images[]" multiple accept="image/*">
                 @error('image')
                     <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                 @enderror

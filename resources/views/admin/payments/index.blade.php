@@ -17,6 +17,7 @@
                     </p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-3">
+				    @can('view payment logs')
                     <a href="{{ route('admin.payments.logs.all') }}"
                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -24,6 +25,8 @@
                         </svg>
                         {{ __('messages.all_payment_logs') }}
                     </a>
+					@endcan
+					@can('create payments')
                     <a href="{{ route('admin.payments.create') }}"
                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -31,6 +34,7 @@
                         </svg>
                         {{ __('messages.add_payment') }}
                     </a>
+					@endcan
                 </div>
             </div>
         </div>
@@ -80,6 +84,7 @@
                             </svg>
                             {{ __('messages.filter') }}
                         </button>
+						@can('view monthly due report')
                         <a href="{{ route('admin.payments.due_report') }}"
                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -87,6 +92,7 @@
                             </svg>
                             {{ __('messages.monthly_due_report') }}
                         </a>
+						@endcan
                     </div>
                 </div>
             </div>
@@ -106,6 +112,9 @@
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                                 {{ __('messages.contract_code') }}
+                            </th>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                                {{ __('messages.unit_number') }}
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {{ __('messages.amount') }}
@@ -128,27 +137,30 @@
                         @forelse($payments as $payment)
                         <tr class="hover:bg-gray-50 transition-colors duration-150">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                #{{ $payment->id }}
+                                {{ $payment->id }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                               <div class="flex items-center">
                                  <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
                                    <span class="text-indigo-600 font-medium">
-                                      {{ substr($tenant->name ?? '—', 0, 1) }}
+                                      {{ substr($payment->contract->tenant->name ?? '—', 0, 1) }}
                                     </span>
                                  </div>
                                 <div class="ml-4">
                               <div class="text-sm font-medium text-gray-900">
-                                   {{ $tenant->name ?? '—' }}
+                                   {{ $payment->contract->tenant->name ?? '—' }}
                                 </div>
                                  <div class="text-sm text-gray-500 md:hidden">
-                                  {{ $contract->contract_number ?? '—' }}
+                                  {{ $payment->contract?->contract_number ?? '—' }}
                                 </div>
                                </div>
                               </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
-                               {{ $contract->contract_number ?? '—' }}
+                               {{ $payment->contract?->contract_number ?? '—' }}
+                            </td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                               {{ $payment->contract?->unit?->unit_number ?? '—' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

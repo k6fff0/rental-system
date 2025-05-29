@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Contract;
+use App\Enums\UnitType;
+use App\Enums\UnitStatus;
+
 
 class Unit extends Model
 {
@@ -64,11 +67,36 @@ class Unit extends Model
         return $this->hasOne(Contract::class)->latestOfMany('start_date');
     }
 
-    // ✅ accessor لحالة الغرفة
-    public function getStatusLabelAttribute()
-    {
-        return $this->status;
+public function getStatusLabelAttribute()
+{
+    $contract = $this->latestContract;
+
+    // لو فيه عقد غير مفسوخ
+    if ($contract && $contract->status !== 'terminated') {
+        return match ($contract->status) {
+            'active', 'expiring_soon' => UnitStatus::OCCUPIED->value,
+            'ended'                   => UnitStatus::EXPIRED_CONTRACT->value,
+            default                   => $this->status,
+        };
     }
+
+    // مفيش عقد مرتبط أو مفسوخ → نرجع الحالة الأصلية
+    return $this->status;
+}
+
+
+public function getCurrentRentPriceAttribute()
+{
+    $contract = $this->latestContract;
+
+    if ($contract && $contract->status !== 'terminated') {
+        return (float) $contract->rent_amount; // نرجع قيمة فعلية
+    }
+
+    return (float) $this->rent_price;
+}
+
+
 
     // ✅ آخر مستأجر
     public function latestTenant()
@@ -76,11 +104,17 @@ class Unit extends Model
         return $this->latestContract?->tenant;
     }
 	
+	
+	
+	
 	public function activeContract()
     {
     return $this->hasOne(\App\Models\Contract::class)
         ->where('end_date', '>', now()); // العقد لسه شغال
     }
+	
+	
+	
 	public function latestActiveContract()
 {
     return $this->hasOne(\App\Models\Contract::class)

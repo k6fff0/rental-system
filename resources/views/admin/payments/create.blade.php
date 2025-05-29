@@ -8,9 +8,8 @@
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9m10 0H6" />
-</svg>
-
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V9m10 0H6" />
+            </svg>
             {{ __('messages.add_payment') }}
         </h1>
     </div>
@@ -21,11 +20,11 @@
         {{-- 🔗 اختيار العقد --}}
         <div class="mb-4">
             <label for="contract_id" class="block font-medium text-sm text-gray-700">{{ __('messages.contract') }}</label>
-            <select id="contract_id" name="contract_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <select id="contract_id" name="contract_id" required class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">{{ __('messages.select_contract') }}</option>
                 @foreach($contracts as $contract)
                     <option value="{{ $contract->id }}">
-                        {{ $contract->code }} - {{ $contract->tenant->name ?? '---' }}
+                        [{{ $contract->contract_number }}] {{ $contract->tenant->name ?? '---' }} - غرفة {{ $contract->unit->unit_number ?? '—' }}
                     </option>
                 @endforeach
             </select>
@@ -82,3 +81,23 @@
     </form>
 </div>
 @endsection
+
+{{-- 🧠 Scripts --}}
+@push('scripts')
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                width: '100%',
+                placeholder: "{{ __('messages.select_contract') }}",
+                dir: "{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
+            });
+        });
+    </script>
+@endpush

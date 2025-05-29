@@ -7,6 +7,10 @@ use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\Building;
 use App\Models\ContractType;
+use App\Enums\UnitStatus;
+use App\Enums\UnitType;
+use App\Models\RoomBooking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,13 +33,13 @@ class ContractController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('contract_number', 'like', "%$search%")
-                  ->orWhereHas('tenant', function ($q2) use ($search) {
-                      $q2->where('name', 'like', "%$search%")
-                         ->orWhere('id_number', 'like', "%$search%");
-                  })
-                  ->orWhereHas('unit', function ($q3) use ($search) {
-                      $q3->where('unit_number', 'like', "%$search%");
-                  });
+                    ->orWhereHas('tenant', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%$search%")
+                            ->orWhere('id_number', 'like', "%$search%");
+                    })
+                    ->orWhereHas('unit', function ($q3) use ($search) {
+                        $q3->where('unit_number', 'like', "%$search%");
+                    });
             });
         }
 
@@ -63,28 +67,30 @@ class ContractController extends Controller
 
     public function store(Request $request)
     {
-		
         $request->validate([
             'tenant_id'     => 'required|exists:tenants,id',
             'unit_id'       => 'required|exists:units,id',
-            'start_date'    => 'required|date',
+            'start_date'    => 'required|date|before:end_date',
             'end_date'      => 'required|date|after:start_date',
             'rent_amount'   => 'required|numeric',
             'notes'         => 'nullable|string',
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $hasActiveContract = Contract::where('unit_id', $request->unit_id)
-            ->whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now())
+        $unit = Unit::with('contracts')->findOrFail($request->unit_id);
+
+        // 🛑 منع توقيع عقد جديد لو فيه أي عقد غير ملغي
+        $hasNonTerminatedContract = $unit->contracts()
+            ->where('status', '!=', 'terminated')
             ->exists();
 
-        if ($hasActiveContract) {
+        if ($hasNonTerminatedContract) {
             return back()->withErrors([
-                'unit_id' => __('messages.unit_already_has_active_contract')
+                'unit_id' => 'لا يمكن إنشاء عقد جديد لهذه الوحدة إلا بعد إنهاء العقد السابق يدوياً.',
             ])->withInput();
         }
 
+        // ✅ تجهيز البيانات
         $data = $request->only([
             'tenant_id',
             'unit_id',
@@ -95,14 +101,23 @@ class ContractController extends Controller
         ]);
 
         $data['contract_number'] = 'C-' . str_pad(Contract::max('id') + 1, 6, '0', STR_PAD_LEFT);
+        $data['status'] = 'active';
 
         if ($request->hasFile('contract_file')) {
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
         }
 
+        // ✅ إنشاء العقد
         $contract = Contract::create($data);
-        $contract->unit->update(['status' => 'occupied']);
-        $data['status'] = 'active';
+
+        // ✅ تحديث حالة الغرفة إلى مشغولة
+        $contract->unit->update(['status' => UnitStatus::OCCUPIED->value]);
+		
+		// ✅ إلغاء أي حجز فعّال على نفس الغرفة
+        RoomBooking::where('unit_id', $contract->unit_id)
+           ->where('status', 'active')
+           ->update(['status' => 'cancelled_due_to_rent']);
+
         return redirect()->route('admin.contracts.index')
             ->with('success', __('messages.contract_created_successfully'));
     }
@@ -127,29 +142,29 @@ class ContractController extends Controller
         $request->validate([
             'tenant_id'     => 'required|exists:tenants,id',
             'unit_id'       => 'required|exists:units,id',
-            'start_date'    => 'required|date',
+            'start_date'    => 'required|date|before:end_date',
             'end_date'      => 'required|date|after:start_date',
             'rent_amount'   => 'required|numeric',
             'notes'         => 'nullable|string',
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-			//'status' => 'required|in:active,terminated,expired',
-
+            'status'        => 'nullable|in:active,terminated,ended',
         ]);
 
+        // 🛑 منع ربط وحدة بعقد تاني غير مفسوخ
         if ($contract->unit_id != $request->unit_id) {
-            $conflict = Contract::where('unit_id', $request->unit_id)
+            $hasOtherContract = Contract::where('unit_id', $request->unit_id)
                 ->where('id', '!=', $contract->id)
-                ->whereDate('start_date', '<=', $request->end_date)
-                ->whereDate('end_date', '>=', $request->start_date)
+                ->where('status', '!=', 'terminated')
                 ->exists();
 
-            if ($conflict) {
+            if ($hasOtherContract) {
                 return back()->withErrors([
-                    'unit_id' => __('messages.unit_already_has_active_contract')
+                    'unit_id' => 'لا يمكن ربط هذه الوحدة لأنها مرتبطة بعقد آخر غير ملغي.',
                 ])->withInput();
             }
         }
 
+        // تجهيز البيانات
         $data = $request->only([
             'tenant_id',
             'unit_id',
@@ -157,47 +172,78 @@ class ContractController extends Controller
             'end_date',
             'rent_amount',
             'notes',
-			'status',
+            'status',
         ]);
 
+        // رفع ملف جديد لو تم تغييره
         if ($request->hasFile('contract_file')) {
             if ($contract->contract_file) {
                 Storage::disk('public')->delete($contract->contract_file);
             }
             $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
         }
-		if ($contract->status === 'terminated' && $request->end_date > now()) {
-           $data['status'] = 'active';
-        }
 
+        // ✅ تحديث العقد
         $contract->update($data);
+
+        // ✅ تحديث حالة الغرفة بناءً على حالة العقد الجديدة
+        if ($contract->status === 'terminated') {
+            $contract->unit()->update(['status' => UnitStatus::AVAILABLE->value]);
+        } elseif (now()->greaterThan(Carbon::parse($contract->end_date))) {
+            $contract->update(['status' => 'ended']);
+            $contract->unit()->update(['status' => UnitStatus::EXPIRED_CONTRACT->value]);
+        } else {
+            $contract->unit()->update(['status' => UnitStatus::OCCUPIED->value]);
+        }
 
         return redirect()->route('admin.contracts.index')
             ->with('success', __('messages.contract_updated_successfully'));
     }
 
+
+
     public function destroy(Contract $contract)
     {
+        // 🛑 ممنوع حذف عقد غير مفسوخ
+        if ($contract->status !== 'terminated') {
+            return back()->withErrors([
+                'contract' => '❌ لا يمكن حذف هذا العقد لأنه لم يتم فسخه بعد. يُرجى أولاً إنهاء العقد يدويًا من خلال "فسخ العقد".',
+            ]);
+        }
+
+        // 🛡️ التحقق من صلاحية Role "Admin's"
+        if (!auth()->user()->hasRole("Admin's")) {
+            return back()->withErrors([
+                'contract' => '❌ ليس لديك الصلاحية لحذف العقود. مسموح فقط لمجموعة Admin\'s.',
+            ]);
+        }
+
+        // 🗑️ حذف الملف إن وُجد
         if ($contract->contract_file) {
             Storage::disk('public')->delete($contract->contract_file);
         }
 
-        $contract->delete();
+        // 🧹 حذف العقد
+        $contract->forceDelete();
 
         return redirect()->route('admin.contracts.index')
             ->with('success', __('messages.contract_deleted_successfully'));
     }
 
+
     public function end(Contract $contract)
     {
-    $contract->update([
-        'end_date' => now()->timezone('Asia/Dubai'),
-        'status' => 'terminated', // ✅ إضافة تحديث حالة العقد
-    ]);
+        $contract->update([
+            'end_date' => now()->timezone('Asia/Dubai'),
+            'status'   => 'terminated',
+        ]);
 
-    $contract->unit()->update(['status' => 'available']);
+        // ✅ بما أن العقد اتفسخ يدويًا، نرجّع الغرفة متاحة فورًا
+        $contract->unit()->update([
+            'status' => UnitStatus::AVAILABLE->value,
+        ]);
 
-    return back()->with('success', __('messages.contract_ended_successfully'));
+        return back()->with('success', __('messages.contract_ended_successfully'));
     }
 
 

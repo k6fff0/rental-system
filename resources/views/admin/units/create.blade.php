@@ -67,23 +67,17 @@
     </label>
     <select name="unit_type" id="unit_type"
             class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm">
-        @php
-            $types = [
-                'studio',
-                'furnished_studio',
-                'room_lounge',
-                'furnished_room_lounge',
-                'two_rooms_lounge',
-                'furnished_two_rooms_lounge',
-                'apartment',
-                'furnished_apartment',
-            ];
-        @endphp
+       @php
+       use App\Enums\UnitType;
+       $types = UnitType::cases();
+       @endphp
+
         @foreach ($types as $type)
-            <option value="{{ $type }}" {{ old('unit_type', $unit->unit_type ?? '') === $type ? 'selected' : '' }}>
-                {{ __('messages.unit_type_' . $type) }}
-            </option>
-        @endforeach
+    <option value="{{ $type->value }}" {{ old('unit_type', $unit->unit_type ?? '') === $type->value ? 'selected' : '' }}>
+        {{ __('messages.unit_type_' . $type->value) }}
+    </option>
+@endforeach
+
     </select>
 </div>
 
@@ -109,10 +103,9 @@
                     @php
                         $statuses = [
                             'available' => ['label' => 'status_available', 'bg' => 'bg-green-200', 'text' => 'text-green-800'],
-                            'occupied' => ['label' => 'status_occupied', 'bg' => 'bg-red-200', 'text' => 'text-red-800'],
                             'booked' => ['label' => 'status_booked', 'bg' => 'bg-purple-200', 'text' => 'text-purple-800'],
+                            'cleaning' => ['label' => 'status_cleaning', 'bg' => 'bg-indigo-200', 'text' => 'text-indigo-800'],							
                             'maintenance' => ['label' => 'status_maintenance', 'bg' => 'bg-yellow-200', 'text' => 'text-yellow-800'],
-                            'cleaning' => ['label' => 'status_cleaning', 'bg' => 'bg-indigo-200', 'text' => 'text-indigo-800'],
                         ];
                     @endphp
 

@@ -21,6 +21,7 @@ class Contract extends Model
         'contract_file',
         'notes',
 		'status',
+		'contract_number',
     ];
 
     /**

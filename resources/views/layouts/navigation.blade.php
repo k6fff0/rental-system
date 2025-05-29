@@ -82,33 +82,38 @@
                 ],
             ]
         ],
+       [
+    'label' => __('messages.system_management'),
+    'icon' => 'heroicon-o-cog',
+    'dropdown' => [
         [
-            'label' => __('messages.system_management'),
-            'icon' => 'heroicon-o-cog',
-            'dropdown' => [
-                [
-                    'route' => 'admin.users.index', 
-                    'label' => __('messages.users'), 
-                    'icon' => 'heroicon-o-user-circle'
-                ],
-				 [
-                    'route' => 'admin.building-supervisors.index', 
-                    'label' => __('messages.building_supervisors'), 
-                    'icon' => 'heroicon-o-user'
-                ],
-                [
-                    'route' => 'admin.role_manager.index', 
-                    'label' => __('messages.permissions'), 
-                    'icon' => 'heroicon-o-shield-check'
-                ],
-			    [
-                    'route' => '#', 
-                    'label' => __('messages.ratings'), 
-                    'icon' => 'heroicon-o-star'
-                ],
-			   
-            ]
+            'route' => 'admin.users.index', 
+            'label' => __('messages.users'), 
+            'icon' => 'heroicon-o-user-circle'
         ],
+        [
+            'route' => 'admin.building-supervisors.index', 
+            'label' => __('messages.building_supervisors'), 
+            'icon' => 'heroicon-o-user'
+        ],
+        [
+            'route' => 'admin.role_manager.index', 
+            'label' => __('messages.permissions'), 
+            'icon' => 'heroicon-o-shield-check'
+        ],
+        [
+            'route' => '#', 
+            'label' => __('messages.ratings'), 
+            'icon' => 'heroicon-o-star'
+        ],
+        [
+            'route' => 'admin.bookings.index', 
+            'label' => __('messages.room_bookings'), 
+            'icon' => 'heroicon-o-calendar-days'
+        ],
+    ]
+],
+
     ];
 @endphp
 
@@ -208,54 +213,66 @@
             <div class="hidden sm:flex items-center gap-3 rtl:flex-row-reverse">
 
                 {{-- 🔔 الجرس --}}
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open"
-                            class="p-1 rounded-full text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none relative">
-                        <x-heroicon-o-bell class="h-5 w-5" />
-                        @if($unreadNotificationsCount > 0)
-                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-                        @endif
-                    </button>
+<div class="relative" x-data="{ open: false }">
+    <button @click="open = !open"
+            class="p-1 rounded-full text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none relative">
+        <x-heroicon-o-bell class="h-5 w-5" />
+        @if($unreadNotificationsCount > 0)
+            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+        @endif
+    </button>
 
-                    <div x-show="open" @click.away="open = false"
-                         class="origin-top-right absolute right-0 mt-2 w-72 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-[999]">
-                        <div class="py-1 max-h-80 overflow-y-auto">
-                            @forelse($recentNotifications as $notification)
-                                <a href="{{ $notification->data['url'] ?? '#' }}"
-                                   class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-                                    <div class="flex items-center">
-                                        <x-dynamic-component :component="$notification->data['icon'] ?? 'heroicon-o-information-circle'"
-                                                             class="h-4 w-4 text-blue-500 mr-2" />
-                                        <div>
-                                            <p class="font-medium">{{ $notification->data['title'] ?? 'Notification' }}</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $notification->created_at->diffForHumans() }}</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            @empty
-                                <div class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
-                                    {{ __('messages.no_notifications') }}
-                                </div>
-                            @endforelse
-                        </div>
+    <div x-show="open" @click.away="open = false"
+         x-transition
+         class="origin-top-right absolute right-0 mt-2 w-80 rounded-xl shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-[999]">
+        <div class="py-2 max-h-96 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
 
-                        {{-- ✅ زر تمييز الكل كمقروء + رابط عرض الكل --}}
-                        <div class="border-t border-gray-100 dark:border-gray-700 flex justify-between items-center px-4 py-2">
-                            <form method="POST" action="{{ route('notifications.markAllRead') }}">
-                                @csrf
-                                <button type="submit"
-                                        class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
-                                    ✔️ {{ __('messages.mark_all_read') }}
-                                </button>
-                            </form>
-
-                            <a href="{{ route('admin.notifications.index') }}"
-                               class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                                {{ __('messages.view_all_notifications') }}
-                            </a>
+            @forelse($recentNotifications as $notification)
+                <a href="{{ $notification->data['url'] ?? '#' }}"
+                   class="block px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm text-gray-700 dark:text-gray-200">
+                    <div class="flex items-start gap-3">
+                        <x-dynamic-component :component="$notification->data['icon'] ?? 'heroicon-o-information-circle'"
+                                             class="h-5 w-5 text-blue-500 mt-1" />
+                        <div>
+                            <p class="font-semibold text-gray-800 dark:text-gray-100">
+                                {{ $notification->data['title'] ?? __('messages.notification') }}
+                            </p>
+                            @if (!empty($notification->data['message']))
+                                <p class="mt-1 text-gray-600 dark:text-gray-300">
+                                    {{ $notification->data['message'] }}
+                                </p>
+                            @endif
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {{ $notification->created_at->diffForHumans() }}
+                            </p>
                         </div>
                     </div>
+                </a>
+            @empty
+                <div class="px-4 py-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    {{ __('messages.no_notifications') }}
                 </div>
+            @endforelse
+        </div>
+
+        {{-- ✅ زر تمييز الكل كمقروء + رابط عرض الكل --}}
+        <div class="border-t border-gray-100 dark:border-gray-700 flex justify-between items-center px-4 py-2 bg-gray-50 dark:bg-gray-900 rounded-b-xl">
+            <form method="POST" action="{{ route('notifications.markAllRead') }}">
+                @csrf
+                <button type="submit"
+                        class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                    ✔️ {{ __('messages.mark_all_read') }}
+                </button>
+            </form>
+
+            <a href="{{ route('admin.notifications.index') }}"
+               class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                {{ __('messages.view_all_notifications') }}
+            </a>
+        </div>
+    </div>
+</div>
+
 
                 {{-- 🧑‍🤝‍🧑 المستخدم --}}
                 @include('layouts.partials.user-dropdown')

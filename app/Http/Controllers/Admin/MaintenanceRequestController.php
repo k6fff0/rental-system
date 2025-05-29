@@ -78,7 +78,7 @@ class MaintenanceRequestController extends Controller
             'building_id'    => 'required|exists:buildings,id',
             'unit_id'        => 'required|exists:units,id',
             'category_id'    => 'required|exists:maintenance_categories,id',
-            'description'    => 'required|string',
+            'description'    => 'nullable|string',
             'image'          => 'nullable|image|max:2048',
             'technician_id'  => 'nullable|exists:users,id',
         ]);
@@ -102,64 +102,74 @@ class MaintenanceRequestController extends Controller
         return view('admin.maintenance_requests.show', compact('request'));
     }
 
-    public function edit($id)
-    {
-        $request = MaintenanceRequest::findOrFail($id);
-        $buildings = Building::all();
-        $units = Unit::all();
-        $workers = MaintenanceWorker::all();
-        $technicians = User::role('technician')->get(); // أو Technician::all()
-        $categories = MaintenanceCategory::all();
+ public function edit($id)
+{
+    $maintenance = MaintenanceRequest::findOrFail($id);
+    $buildings = Building::all();
+    $units = Unit::all();
+    $workers = MaintenanceWorker::all();
+    $technicians = User::role('technician')->get(); // أو Technician::all()
+    $categories = MaintenanceCategory::all();
 
-        return view('admin.maintenance_requests.edit', compact(
-            'request',
-            'buildings',
-            'units',
-            'workers',
-            'technicians',
-            'categories'
-        ));
-    }
+    return view('admin.maintenance_requests.edit', compact(
+        'maintenance',
+        'buildings',
+        'units',
+        'workers',
+        'technicians',
+        'categories'
+    ));
+}
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'building_id'    => 'required|exists:buildings,id',
-            'unit_id'        => 'required|exists:units,id',
-            'category_id'    => 'required|exists:maintenance_categories,id',
-            'description'    => 'required|string',
-            'status'         => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
-            'image'          => 'nullable|image|max:2048',
-            'cost'           => 'nullable|numeric',
-            'technician_id'  => 'nullable|exists:users,id',
-        ]);
+ public function update(Request $request, $id)
+{
+	
+    $request->validate([
+        'building_id'    => 'required|exists:buildings,id',
+        'unit_id'        => 'required|exists:units,id',
+        'category_id'    => 'required|exists:maintenance_categories,id',
+        'description'    => 'required|string',
+        'status'         => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
+        'image'          => 'nullable|image|max:2048',
+        'cost'           => 'nullable|numeric',
+        'technician_id'  => 'nullable|exists:users,id',
+    ]);
 
-        $maintenance = MaintenanceRequest::findOrFail($id);
+    $maintenance = MaintenanceRequest::findOrFail($id);
 
-        $data = $request->only([
-            'building_id',
-            'unit_id',
-            'category_id',
-            'description',
-            'status',
-            'start_notes',
-            'end_notes',
-            'note',
-            'cost',
-            'technician_id'
-        ]);
+    $data = $request->only([
+        'building_id',
+        'unit_id',
+        'category_id',
+        'description',
+        'status',
+        'start_notes',
+        'end_notes',
+        'note',
+        'cost',
+        'technician_id'
+    ]);
 
-        if ($request->hasFile('image')) {
-            if ($maintenance->image && Storage::disk('public')->exists($maintenance->image)) {
-                Storage::disk('public')->delete($maintenance->image);
-            }
-            $data['image'] = $request->file('image')->store('maintenance_images', 'public');
+   if ($request->hasFile('image')) {
+    // جرّب ترفع الصورة الجديدة الأول
+    $newImagePath = $request->file('image')->store('maintenance_images', 'public');
+
+    // لو اتحفظت الصورة الجديدة بنجاح
+    if ($newImagePath) {
+        // احذف القديمة فقط لو موجودة
+        if (!empty($maintenance->image) && Storage::disk('public')->exists($maintenance->image)) {
+            Storage::disk('public')->delete($maintenance->image);
         }
 
-        $maintenance->update($data);
-
-        return redirect()->route('admin.maintenance_requests.index')->with('success', 'تم تحديث البلاغ بنجاح');
+        $data['image'] = $newImagePath;
     }
+}
+
+
+    $maintenance->update($data);
+
+    return redirect()->route('admin.maintenance_requests.index')->with('success', 'تم تحديث البلاغ بنجاح');
+}
 
     public function destroy($id)
     {

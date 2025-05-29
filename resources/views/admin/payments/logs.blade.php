@@ -35,7 +35,7 @@
                         </td>
                         <td class="px-4 py-2">
                             @php
-                                $changes = json_decode($log->changes, true);
+                                $changes = is_string($log->changes) ? json_decode($log->changes, true) : $log->changes;
                             @endphp
 
                             <div class="grid grid-cols-2 gap-4 text-xs">

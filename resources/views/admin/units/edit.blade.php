@@ -153,10 +153,9 @@
                     @php
                         $statuses = [
                             'available' => ['label' => 'status_available', 'bg' => 'bg-green-200', 'text' => 'text-green-800'],
-                            'occupied' => ['label' => 'status_occupied', 'bg' => 'bg-red-200', 'text' => 'text-red-800'],
                             'booked' => ['label' => 'status_booked', 'bg' => 'bg-purple-200', 'text' => 'text-purple-800'],
+                            'cleaning' => ['label' => 'status_cleaning', 'bg' => 'bg-indigo-200', 'text' => 'text-indigo-800'],							
                             'maintenance' => ['label' => 'status_maintenance', 'bg' => 'bg-yellow-200', 'text' => 'text-yellow-800'],
-                            'cleaning' => ['label' => 'status_cleaning', 'bg' => 'bg-indigo-200', 'text' => 'text-indigo-800'],
                         ];
                     @endphp
 
