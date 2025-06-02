@@ -24,9 +24,6 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\BuildingUtilityController;
 use App\Http\Controllers\Admin\BuildingSupervisorController;
 use App\Http\Controllers\Admin\RoomBookingController;
-
-
-
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -76,6 +73,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
     Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
     Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
+    Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])
+        ->name('buildings.toggleFamiliesOnly')
+        ->middleware('can:edit buildings');
+
+
+
 
 
     // ✅ المستأجرين
@@ -261,6 +264,7 @@ Route::prefix('admin/building-supervisors')
     ->middleware(['auth:web'])
     ->group(function () {
         Route::get('/', [BuildingSupervisorController::class, 'index'])->name('index');
+        Route::get('/{user}', [BuildingSupervisorController::class, 'show'])->name('show'); // 🟢 خليه الأول
         Route::get('/{user}/edit', [BuildingSupervisorController::class, 'edit'])->name('edit');
         Route::put('/{user}', [BuildingSupervisorController::class, 'update'])->name('update');
     });
@@ -276,6 +280,10 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/bookings/create', [RoomBookingController::class, 'create'])->name('admin.bookings.create');
     Route::post('/bookings', [RoomBookingController::class, 'store'])->name('admin.bookings.store');
     Route::patch('/bookings/{booking}/cancel', [RoomBookingController::class, 'cancel'])->name('admin.bookings.cancel');
+	Route::post('/bookings/{booking}/confirm', [RoomBookingController::class, 'confirm'])->name('admin.bookings.confirm');
+	Route::get('/bookings/{booking}', [RoomBookingController::class, 'show'])->name('admin.bookings.show');
+
+
 });
 // notifications
 Route::prefix('admin')->middleware(['auth'])->group(function () {

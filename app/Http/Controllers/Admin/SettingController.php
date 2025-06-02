@@ -94,83 +94,75 @@ class SettingController extends Controller
     /**
      * ✅ تحديث إعدادات النظام (الاسم، الشعار، اللون، وضع الصيانة)
      */
-  public function update(Request $request)
-{
-    $request->validate([
-        'app_name' => 'required|string|max:100',
-        'app_logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-        'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:1024',
-        'primary_color' => 'required|string',
-    ]);
+    public function update(Request $request)
+    {
+        $request->validate([
+            'app_name' => 'required|string|max:100',
+            'system_email' => 'required|email',
+            'primary_color' => 'required|string',
+            'secondary_color' => 'required|string',
+            'default_contract_terms' => 'required|string',
+            'app_logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'favicon' => 'nullable|mimes:ico,png,jpg,jpeg|max:1024',
 
-    try {
-        $settings = app(SystemSettings::class);
+        ]);
 
-        // احفظ القيمة الحالية لوضع الصيانة قبل التعديل
-        $previousMaintenance = $settings->maintenance_mode;
+        try {
+            /** ✅ الطريقة الصح من Spatie */
+            $settings = resolve(SystemSettings::class);
 
-        // ✅ تحديث الاسم واللون
-        $settings->app_name = $request->input('app_name');
-        $settings->primary_color = $request->input('primary_color');
+            // 🟢 النصوص والألوان
+            $settings->app_name = $request->input('app_name');
+            $settings->system_email = $request->input('system_email');
+            $settings->primary_color = $request->input('primary_color');
+            $settings->secondary_color = $request->input('secondary_color');
+            $settings->default_contract_terms = $request->input('default_contract_terms');
+            $settings->maintenance_mode = $request->boolean('maintenance_mode');
 
-        // ✅ تحديث وضع الصيانة حسب الطلب الجديد
-        $newMaintenance = $request->boolean('maintenance_mode');
-        $settings->maintenance_mode = $newMaintenance;
-
-        // ✅ حذف الشعار لو تم اختياره
-        if ($request->boolean('remove_logo')) {
-            if ($settings->app_logo && Storage::disk('public')->exists($settings->app_logo)) {
+            // 🟢 حذف اللوجو
+            if ($request->boolean('remove_logo') && $settings->app_logo) {
                 Storage::disk('public')->delete($settings->app_logo);
+                $settings->app_logo = null;
             }
-            $settings->app_logo = null;
-        }
 
-        // ✅ رفع الشعار الجديد
-        if ($request->hasFile('app_logo')) {
-            if ($settings->app_logo && Storage::disk('public')->exists($settings->app_logo)) {
-                Storage::disk('public')->delete($settings->app_logo);
+            // 🟢 رفع لوجو جديد
+            if ($request->hasFile('app_logo')) {
+                if ($settings->app_logo) {
+                    Storage::disk('public')->delete($settings->app_logo);
+                }
+                $settings->app_logo = $request->file('app_logo')->store('logos', 'public');
             }
-            $path = $request->file('app_logo')->store('logos', 'public');
-            $settings->app_logo = $path;
-        }
 
-        // ✅ حذف الفاف ايقون لو تم اختياره
-        if ($request->boolean('remove_favicon')) {
-            if ($settings->favicon && Storage::disk('public')->exists($settings->favicon)) {
+            // 🟢 حذف الفاف ايقون
+            if ($request->boolean('remove_favicon') && $settings->favicon) {
                 Storage::disk('public')->delete($settings->favicon);
+                $settings->favicon = null;
             }
-            $settings->favicon = null;
-        }
 
-        // ✅ رفع الفاف ايقون الجديد
-        if ($request->hasFile('favicon')) {
-            if ($settings->favicon && Storage::disk('public')->exists($settings->favicon)) {
-                Storage::disk('public')->delete($settings->favicon);
+            // 🟢 رفع فاف ايقون جديد
+            if ($request->hasFile('favicon')) {
+                if ($settings->favicon) {
+                    Storage::disk('public')->delete($settings->favicon);
+                }
+                $settings->favicon = $request->file('favicon')->store('favicons', 'public');
             }
-            $path = $request->file('favicon')->store('favicons', 'public');
-            $settings->favicon = $path;
-        }
 
-        $settings->save();
+            // 🧠 حفظ التعديلات
+            $settings->save();
 
-        // 🧠 إعادة تحميل القيم لتحديث الـ Singleton
-        app()->forgetInstance(SystemSettings::class);
-        $settings = app(SystemSettings::class);
+            // 🧠 إعادة تحميل instance جديدة بعد الحفظ
+            app()->forgetInstance(SystemSettings::class);
 
-        // ✅ تغيير وضع الصيانة فقط إذا اختلف عن السابق
-        if ($previousMaintenance !== $newMaintenance) {
-            if ($newMaintenance) {
+            // 🛠️ لو وضع الصيانة اختلف نفذه
+            if ($settings->maintenance_mode) {
                 Artisan::call('down');
             } else {
                 Artisan::call('up');
             }
+
+            return back()->with('success', '✅ تم تحديث إعدادات النظام بنجاح.');
+        } catch (\Throwable $e) {
+            return back()->with('error', '❌ حصل خطأ: ' . $e->getMessage());
         }
-
-        return back()->with('success', '✅ تم تحديث الإعدادات بنجاح.');
-    } catch (\Exception $e) {
-        return back()->with('error', '❌ حدث خطأ أثناء تحديث الإعدادات: ' . $e->getMessage());
     }
-}
-
-
 }

@@ -9,18 +9,21 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'unit_id',
-        'name',
-        'phone',
-        'id_number',
-        'email',
-        'move_in_date',
-        'notes',
-        'user_id',
-        'debt',
-        'tenant_status',
-    ];
+   protected $fillable = [
+    'unit_id',
+    'name',
+    'phone',
+    'id_number',
+    'type', 
+    'family_type',
+    'email',
+    'move_in_date',
+    'notes',
+    'user_id',
+    'debt',
+    'tenant_status',
+];
+
 
     public const STATUSES = [
         'active',

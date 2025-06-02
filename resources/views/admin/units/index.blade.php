@@ -475,37 +475,38 @@
 
         <script>
             function filterBy(status) {
-                const rows = document.querySelectorAll('tbody tr');
+                // إظهار/إخفاء الصفوف في الجدول والموبايل
+                const rows = document.querySelectorAll('tbody tr, .sm\\:hidden .bg-white');
                 rows.forEach(row => {
                     const current = row.getAttribute('data-status');
                     row.style.display = (status === 'all' || status === current) ? '' : 'none';
                 });
 
-                // Update active filter cards
+                // تحديث البطاقات النشطة
                 document.querySelectorAll('[onclick^="filterBy"]').forEach(card => {
-                    if (card.getAttribute('onclick').includes(status)) {
-                        card.classList.add('ring-1', 'ring-offset-1',
+                    const cardStatus = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (status === cardStatus) {
+                        card.classList.add('ring-1', 'ring-offset-1', 'ring-opacity-50',
                             `ring-${card.classList.contains('border-blue-500') ? 'blue' : 
-                                                           card.classList.contains('border-green-500') ? 'green' :
-                                                           card.classList.contains('border-red-500') ? 'red' :
-                                                           card.classList.contains('border-yellow-500') ? 'yellow' :
-                                                           card.classList.contains('border-purple-500') ? 'purple' : 'indigo'}-500`
-                            );
+                       card.classList.contains('border-green-500') ? 'green' :
+                       card.classList.contains('border-red-500') ? 'red' :
+                       card.classList.contains('border-yellow-500') ? 'yellow' :
+                       card.classList.contains('border-purple-500') ? 'purple' : 'indigo'}-500`);
                     } else {
-                        card.classList.remove('ring-1', 'ring-offset-1', 'ring-blue-500', 'ring-green-500',
-                            'ring-red-500', 'ring-yellow-500', 'ring-purple-500', 'ring-indigo-500');
+                        card.classList.remove('ring-1', 'ring-offset-1', 'ring-opacity-50',
+                            'ring-blue-500', 'ring-green-500', 'ring-red-500',
+                            'ring-yellow-500', 'ring-purple-500', 'ring-indigo-500');
                     }
                 });
             }
 
-            // فلتر المباني
+            // ✅ الكود الخاص بالفلاتر الأخرى (خارج دالة filterBy)
             document.getElementById('buildingSelect').addEventListener('change', function() {
                 const buildingId = this.value;
                 const search = document.getElementById('unitSearchInput').value;
                 window.location.href = `?building_id=${buildingId}&search=${encodeURIComponent(search)}`;
             });
 
-            // بحث رقم الغرفة
             document.getElementById('unitSearchInput').addEventListener('input', function() {
                 const search = this.value;
                 const buildingId = document.getElementById('buildingSelect').value;
@@ -515,7 +516,6 @@
                 }, 600);
             });
 
-            // فلتر نوع الوحدة
             document.getElementById('unitTypeSelect').addEventListener('change', function() {
                 const buildingId = document.getElementById('buildingSelect').value;
                 const search = document.getElementById('unitSearchInput').value;

@@ -65,7 +65,7 @@ class User extends Authenticatable
 	
 	public function buildings()
 {
-    return $this->belongsToMany(Building::class);
+    return $this->belongsToMany(Building::class)->withTimestamps();
 }
 
 }

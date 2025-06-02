@@ -47,6 +47,7 @@ class TenantController extends Controller
 
 		$tenants = $query->latest()->paginate(15);
 
+
 		return view('admin.tenants.index', compact('tenants'));
 	}
 
@@ -59,34 +60,37 @@ class TenantController extends Controller
 
 
 
-public function store(Request $request)
-{
-    $request->validate([
-        'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
-        'name' => 'required|string|max:100',
-        'phone' => 'nullable|string|max:20',
-        'id_number' => 'nullable|string|max:50',
-        'email' => 'nullable|email|max:100',
-        'notes' => 'nullable|string|max:500',
-        'debt' => 'nullable|numeric|min:0',
-    ]);
+	public function store(Request $request)
+	{
 
-    $tenant = Tenant::create([
-        'tenant_status' => $request->tenant_status,
-        'name' => $request->name,
-        'phone' => $request->phone,
-        'id_number' => $request->id_number,
-        'email' => $request->email,
-        'notes' => $request->notes,
-        'debt' => $request->debt ?? 0,
-    ]);
+		$request->validate([
+			'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+			'name' => 'required|string|max:100',
+			'phone' => 'nullable|string|max:20',
+			'id_number' => 'nullable|string|max:50',
+			'family_type' => 'required|in:individual,family',
+			'email' => 'nullable|email|max:100',
+			'notes' => 'nullable|string|max:500',
+			'debt' => 'nullable|numeric|min:0',
+		]);
 
-    // ✅ إرسال إشعار لكل من لديه صلاحية notify.tenants.create
-    $notifiables = User::permission('notify.tenants.create')->get();
-    Notification::send($notifiables, new NewTenantNotification($tenant->name));
+		$tenant = Tenant::create([
+			'tenant_status' => $request->tenant_status,
+			'name' => $request->name,
+			'phone' => $request->phone,
+			'id_number' => $request->id_number,
+			'family_type' => $request->family_type,
+			'email' => $request->email,
+			'notes' => $request->notes,
+			'debt' => $request->debt ?? 0,
+		]);
 
-    return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
-}
+		// ✅ إرسال إشعار لكل من لديه صلاحية notify.tenants.create
+		$notifiables = User::permission('notify.tenants.create')->get();
+		Notification::send($notifiables, new NewTenantNotification($tenant->name));
+
+		return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+	}
 
 	public function edit(Tenant $tenant)
 	{
@@ -107,6 +111,7 @@ public function store(Request $request)
 			'name' => 'required|string|max:100',
 			'phone' => 'nullable|string|max:20',
 			'id_number' => 'nullable|string|max:50',
+			'family_type' => 'required|in:individual,family',
 			'email' => 'nullable|email|max:100',
 			'move_in_date' => 'nullable|date',
 			'notes' => 'nullable|string|max:500',
@@ -123,6 +128,7 @@ public function store(Request $request)
 			'name' => $request->name,
 			'phone' => $request->phone,
 			'id_number' => $request->id_number,
+			'family_type' => $request->family_type,
 			'email' => $request->email,
 			'move_in_date' => $request->move_in_date,
 			'notes' => $request->notes,

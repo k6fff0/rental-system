@@ -80,6 +80,7 @@ class BuildingController extends Controller
 
     public function update(Request $request, Building $building)
     {
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'building_number' => 'nullable|string|max:255',
@@ -110,5 +111,15 @@ class BuildingController extends Controller
         $building->delete();
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم حذف المبنى.');
+    }
+    public function toggleFamiliesOnly(Building $building)
+    {
+
+        $building->families_only = !$building->families_only;
+        $building->save();
+
+        // علشان تفضل في صفحة التعديل بعد الضغط
+        return redirect()->route('admin.buildings.edit', $building->id)
+            ->with('success', 'تم تحديث الحالة بنجاح');
     }
 }

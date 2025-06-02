@@ -77,7 +77,15 @@ class ContractController extends Controller
             'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
+        $tenant = Tenant::findOrFail($request->tenant_id);
         $unit = Unit::with('contracts')->findOrFail($request->unit_id);
+
+        if (
+            $tenant->family_type === 'individual' &&
+            $unit->building->families_only
+        ) {
+            return back()->withErrors(['tenant_id' => 'هذا المبنى مخصص للعائلات فقط ولا يمكن تسجيل عقد لفرد.'])->withInput();
+        }
 
         // 🛑 منع توقيع عقد جديد لو فيه أي عقد غير ملغي
         $hasNonTerminatedContract = $unit->contracts()
@@ -112,11 +120,11 @@ class ContractController extends Controller
 
         // ✅ تحديث حالة الغرفة إلى مشغولة
         $contract->unit->update(['status' => UnitStatus::OCCUPIED->value]);
-		
-		// ✅ إلغاء أي حجز فعّال على نفس الغرفة
+
+        // ✅ إلغاء أي حجز فعّال على نفس الغرفة
         RoomBooking::where('unit_id', $contract->unit_id)
-           ->where('status', 'active')
-           ->update(['status' => 'cancelled_due_to_rent']);
+            ->where('status', 'active')
+            ->update(['status' => 'cancelled_due_to_rent']);
 
         return redirect()->route('admin.contracts.index')
             ->with('success', __('messages.contract_created_successfully'));

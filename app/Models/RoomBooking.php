@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\BookingStatus;
 
 class RoomBooking extends Model
 {
@@ -12,15 +13,29 @@ class RoomBooking extends Model
     protected $fillable = [
         'unit_id',
         'user_id',
+        'is_broker_booking',
+        'tentative_at',
         'start_date',
         'end_date',
+        'confirmed_at',
+        'auto_expire_at',
+        'expires_at',
+        'cancelled_at',
+        'deposit_paid',
         'status',
+        'expired_reason',
         'notes',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date'   => 'date',
+        'start_date' => 'datetime',
+    'end_date' => 'datetime',
+    'tentative_at' => 'datetime',
+    'confirmed_at' => 'datetime',
+    'auto_expire_at' => 'datetime',
+    'expires_at' => 'datetime',
+    'cancelled_at' => 'datetime',
+        'status'     => BookingStatus::class,
     ];
 
     // 🔗 الغرفة المرتبطة بالحجز
@@ -38,12 +53,17 @@ class RoomBooking extends Model
     // ✅ هل الحجز منتهي؟
     public function isExpired()
     {
-        return $this->status === 'expired' || now()->gt($this->end_date);
+        return $this->status === BookingStatus::Expired || now()->gt($this->end_date);
     }
 
     // ✅ هل يمكن إلغاؤه؟
     public function isCancelableBy($user)
     {
         return $this->user_id === $user->id || $user->hasRole('admin');
+    }
+
+    public function contract()
+    {
+        return $this->hasOne(Contract::class);
     }
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Artisan;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
+
 
 class LogController extends Controller
 {

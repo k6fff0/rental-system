@@ -3,94 +3,115 @@
 @section('title', 'تعديل إعدادات النظام')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-10 px-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-    <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2">
-        <i class="fas fa-cogs text-yellow-500"></i>
-        إعدادات النظام
-    </h1>
+    <div class="max-w-4xl mx-auto py-10 px-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2">
+            <i class="fas fa-cogs text-yellow-500"></i>
+            إعدادات النظام
+        </h1>
 
-    @if (session('success'))
-        <div class="mb-6 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-800 dark:text-green-200 px-4 py-3 rounded">
-            {{ session('success') }}
-        </div>
-    @elseif (session('error'))
-        <div class="mb-6 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-800 dark:text-red-200 px-4 py-3 rounded">
-            {{ session('error') }}
-        </div>
-    @endif
+        @if (session('success'))
+            <div
+                class="mb-6 bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-800 dark:text-green-200 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @elseif (session('error'))
+            <div
+                class="mb-6 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-800 dark:text-red-200 px-4 py-3 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
 
-    <form method="POST" action="{{ url('admin/update') }}" enctype="multipart/form-data">
-        @csrf
+        <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-6">
+            @csrf
 
-        {{-- 🔤 اسم التطبيق --}}
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم التطبيق</label>
-            <input type="text" name="app_name" value="{{ settings()->app_name ?? config('app.name') }}"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-gray-100">
-        </div>
+            {{-- 🔤 اسم النظام --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اسم النظام</label>
+                <input type="text" name="app_name" value="{{ old('app_name', settings()->app_name) }}"
+                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white">
+            </div>
 
-        {{-- 🎨 اللون الأساسي --}}
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اللون الأساسي</label>
-            <input type="color" name="primary_color" value="{{ settings()->primary_color ?? '#000000' }}"
-                class="w-24 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-100">
-        </div>
+            {{-- 📧 البريد العام للنظام --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">البريد الإلكتروني
+                    للنظام</label>
+                <input type="email" name="system_email" value="{{ old('system_email', settings()->system_email) }}"
+                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white">
+            </div>
 
-        {{-- 🖼️ الشعار --}}
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">شعار النظام</label>
-            <input type="file" name="app_logo" accept="image/*"
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-gray-100">
+            {{-- 🎨 اللون الأساسي --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اللون الأساسي</label>
+                <input type="color" name="primary_color" value="{{ old('primary_color', settings()->primary_color) }}"
+                    class="w-20 h-10 rounded-md border dark:bg-gray-700">
+            </div>
 
-            @if (settings()->app_logo)
-                <div class="mt-3 flex items-center gap-4">
-                    <img src="{{ asset('storage/' . settings()->app_logo) }}" alt="Logo" class="h-16 rounded-md shadow border border-gray-200 dark:border-gray-600">
-                    <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <input type="hidden" name="remove_logo" value="0">
-                        <input type="checkbox" name="remove_logo" value="1">
-                        حذف الشعار الحالي
-                    </label>
-                </div>
-            @endif
-        </div>
+            {{-- 🌈 اللون الثانوي --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اللون الثانوي</label>
+                <input type="color" name="secondary_color"
+                    value="{{ old('secondary_color', settings()->secondary_color) }}"
+                    class="w-20 h-10 rounded-md border dark:bg-gray-700">
+            </div>
 
-        {{-- 🌐 Favicon --}}
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Favicon (الأيقونة الصغيرة)</label>
-            <input type="file" name="favicon" accept="image/x-icon,image/png"
-                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-gray-100">
+            {{-- 🖼️ شعار النظام --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">شعار النظام</label>
+                <input type="file" name="app_logo" accept="image/*" class="block w-full text-sm">
 
-            @if (settings()->favicon)
-                <div class="mt-3 flex items-center gap-4">
-                    <img src="{{ asset('storage/' . settings()->favicon) }}" alt="Favicon" class="h-8 w-8 rounded shadow border border-gray-200 dark:border-gray-600">
-                    <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <input type="hidden" name="remove_favicon" value="0">
-                        <input type="checkbox" name="remove_favicon" value="1">
-                        حذف الأيقونة الحالية
-                    </label>
-                </div>
-            @endif
-        </div>
+                @if (settings()->app_logo)
+                    <div class="mt-2 flex items-center gap-4">
+                        <img src="{{ Storage::url(settings()->app_logo) }}" class="h-12 rounded shadow border">
+                        <label class="flex items-center gap-2 text-sm text-red-600">
+                            <input type="hidden" name="remove_logo" value="0">
+                            <input type="checkbox" name="remove_logo" value="1">
+                            حذف الشعار الحالي
+                        </label>
+                    </div>
+                @endif
+            </div>
 
-        {{-- ⚙️ وضع الصيانة --}}
-        <div class="mb-6 flex items-center gap-3">
-            <input type="hidden" name="maintenance_mode" value="0">
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" name="maintenance_mode" value="1" class="sr-only peer"
-                    {{ settings()->maintenance_mode ? 'checked' : '' }}>
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600"></div>
-            </label>
-            <span class="text-sm text-gray-700 dark:text-gray-300">تفعيل وضع الصيانة</span>
-        </div>
+            {{-- 🌐 Favicon --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Favicon</label>
+                <input type="file" name="favicon" accept="image/x-icon,image/png" class="block w-full text-sm">
 
-        {{-- 💾 زر الحفظ --}}
-        <div class="mt-6">
-            <button type="submit"
-                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow text-sm font-semibold transition-colors duration-200">
-                <i class="fas fa-save mr-2"></i>
-                حفظ الإعدادات
-            </button>
-        </div>
-    </form>
-</div>
+                @if (settings()->favicon)
+                    <div class="mt-2 flex items-center gap-4">
+                        <img src="{{ Storage::url(settings()->favicon) }}" class="h-8 w-8 border rounded shadow">
+                        <label class="flex items-center gap-2 text-sm text-red-600">
+                            <input type="hidden" name="remove_favicon" value="0">
+                            <input type="checkbox" name="remove_favicon" value="1">
+                            حذف الأيقونة الحالية
+                        </label>
+                    </div>
+                @endif
+            </div>
+
+            {{-- 📝 شروط العقد الافتراضية --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">شروط العقد الافتراضية</label>
+                <textarea name="default_contract_terms" rows="4"
+                    class="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white">{{ old('default_contract_terms', settings()->default_contract_terms) }}</textarea>
+            </div>
+
+            {{-- 🚧 وضع الصيانة --}}
+            <div>
+                <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <input type="hidden" name="maintenance_mode" value="0">
+                    <input type="checkbox" name="maintenance_mode" value="1"
+                        {{ settings()->maintenance_mode ? 'checked' : '' }}>
+                    تفعيل وضع الصيانة
+                </label>
+            </div>
+
+            {{-- 💾 زر الحفظ --}}
+            <div class="pt-4">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                    💾 حفظ التعديلات
+                </button>
+            </div>
+        </form>
+
+    </div>
 @endsection
