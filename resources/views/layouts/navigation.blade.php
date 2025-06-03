@@ -2,7 +2,7 @@
     $navLinks = [
         [
             'route' => 'admin.dashboard',
-            'label' => 'Dashboard',
+            'label' => __('messages.Dashboard'),
             'icon' => 'heroicon-o-home',
         ],
         [
@@ -24,6 +24,11 @@
                     'label' => __('messages.utilities'),
                     'icon' => 'heroicon-o-bolt',
                 ],
+                [
+                    'route' => '#',
+                    'label' => __('messages.cars'),
+                    'icon' => 'heroicon-o-truck',
+                ],
             ],
         ],
         [
@@ -39,6 +44,11 @@
                     'route' => 'admin.contracts.index',
                     'label' => __('messages.contracts'),
                     'icon' => 'heroicon-o-document-text',
+                ],
+                [
+                    'route' => 'admin.bookings.index',
+                    'label' => __('messages.room_bookings'),
+                    'icon' => 'heroicon-o-calendar-days',
                 ],
             ],
         ],
@@ -56,11 +66,7 @@
                     'label' => __('messages.expenses'),
                     'icon' => 'heroicon-o-receipt-percent',
                 ],
-                [
-                    'route' => '#',
-                    'label' => __('messages.cars'),
-                    'icon' => 'heroicon-o-truck',
-                ],
+
             ],
         ],
         [
@@ -103,11 +109,7 @@
                     'label' => __('messages.ratings'),
                     'icon' => 'heroicon-o-star',
                 ],
-                [
-                    'route' => 'admin.bookings.index',
-                    'label' => __('messages.room_bookings'),
-                    'icon' => 'heroicon-o-calendar-days',
-                ],
+
             ],
         ],
     ];
@@ -314,7 +316,7 @@
                                 <form method="POST" action="{{ route('notifications.markAllRead') }}">
                                     @csrf
                                     <button type="submit" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-300">
-                                        {{ __('messages.mark_all_as_read') }}
+                                        {{ __('messages.mark_all_read') }}
                                     </button>
                                 </form>
 

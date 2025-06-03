@@ -9,21 +9,28 @@ class Tenant extends Model
 {
     use HasFactory;
 
-   protected $fillable = [
-    'unit_id',
-    'name',
-    'phone',
-    'id_number',
-    'type', 
-    'family_type',
-    'email',
-    'move_in_date',
-    'notes',
-    'user_id',
-    'debt',
-    'tenant_status',
-];
+    protected $fillable = [
+        'unit_id',
+        'user_id',
+        'uuid',
+        'name',
+        'phone',
+        'id_number',
+        'type',
+        'family_type',
+        'email',
+        'move_in_date',
+        'notes',
+        'debt',
+        'tenant_status',
+        'id_front',
+        'id_back',
+    ];
 
+    protected $casts = [
+        'move_in_date' => 'date',
+        'debt' => 'decimal:2',
+    ];
 
     public const STATUSES = [
         'active',
@@ -77,13 +84,15 @@ class Tenant extends Model
     {
         return $this->belongsToMany(Unit::class, 'tenant_unit');
     }
-	
-	public function activeContracts()
-{
-    return $this->hasMany(\App\Models\Contract::class)
-                ->where('contracts.status', 'active')
-                ->whereDate('start_date', '<=', now())
-                ->whereDate('end_date', '>=', now());
-}
 
+    /**
+     * العقود النشطة الحالية
+     */
+    public function activeContracts()
+    {
+        return $this->hasMany(Contract::class)
+                    ->where('contracts.status', 'active')
+                    ->whereDate('start_date', '<=', now())
+                    ->whereDate('end_date', '>=', now());
+    }
 }

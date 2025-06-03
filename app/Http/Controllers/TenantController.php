@@ -61,36 +61,50 @@ class TenantController extends Controller
 
 
 	public function store(Request $request)
-	{
+{
+	
+	$request->validate([
+		'name' => 'required|string|max:100',
+		'phone' => 'nullable|string|max:20',
+		'id_number' => 'nullable|string|max:50',
+		'family_type' => 'required|in:individual,family',
+		'email' => 'nullable|email|max:100',
+		'notes' => 'nullable|string|max:500',
+		'debt' => 'nullable|numeric|min:0',
+		'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+		'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+	]);
 
-		$request->validate([
-			'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
-			'name' => 'required|string|max:100',
-			'phone' => 'nullable|string|max:20',
-			'id_number' => 'nullable|string|max:50',
-			'family_type' => 'required|in:individual,family',
-			'email' => 'nullable|email|max:100',
-			'notes' => 'nullable|string|max:500',
-			'debt' => 'nullable|numeric|min:0',
-		]);
+	// 🖼️ رفع الصور لو موجودة
+	$idFrontPath = $request->hasFile('id_front')
+		? $request->file('id_front')->store('tenant_ids', 'public')
+		: null;
 
-		$tenant = Tenant::create([
-			'tenant_status' => $request->tenant_status,
-			'name' => $request->name,
-			'phone' => $request->phone,
-			'id_number' => $request->id_number,
-			'family_type' => $request->family_type,
-			'email' => $request->email,
-			'notes' => $request->notes,
-			'debt' => $request->debt ?? 0,
-		]);
+	$idBackPath = $request->hasFile('id_back')
+		? $request->file('id_back')->store('tenant_ids', 'public')
+		: null;
 
-		// ✅ إرسال إشعار لكل من لديه صلاحية notify.tenants.create
-		$notifiables = User::permission('notify.tenants.create')->get();
-		Notification::send($notifiables, new NewTenantNotification($tenant->name));
+	// ✅ إنشاء المستأجر
+	$tenant = Tenant::create([
+		'tenant_status' => 'active',
+		'name' => $request->name,
+		'phone' => $request->phone,
+		'id_number' => $request->id_number,
+		'family_type' => $request->family_type,
+		'email' => $request->email,
+		'notes' => $request->notes,
+		'debt' => $request->debt ?? 0,
+		'id_front' => $idFrontPath,
+		'id_back' => $idBackPath,
+	]);
 
-		return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
-	}
+	// 🔔 إرسال إشعار للمستخدمين اللي عندهم صلاحية التنبيه
+	$notifiables = User::permission('notify.tenants.create')->get();
+	Notification::send($notifiables, new NewTenantNotification($tenant->name));
+
+	return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+}
+
 
 	public function edit(Tenant $tenant)
 	{
@@ -104,43 +118,58 @@ class TenantController extends Controller
 	}
 
 	public function update(Request $request, Tenant $tenant)
-	{
-		$request->validate([
-			'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
-			'unit_id' => 'nullable|exists:units,id',
-			'name' => 'required|string|max:100',
-			'phone' => 'nullable|string|max:20',
-			'id_number' => 'nullable|string|max:50',
-			'family_type' => 'required|in:individual,family',
-			'email' => 'nullable|email|max:100',
-			'move_in_date' => 'nullable|date',
-			'notes' => 'nullable|string|max:500',
-			'debt' => 'nullable|numeric|min:0',
-		]);
+{
+	$request->validate([
+		'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+		'unit_id' => 'nullable|exists:units,id',
+		'name' => 'required|string|max:100',
+		'phone' => 'nullable|string|max:20',
+		'id_number' => 'nullable|string|max:50',
+		'family_type' => 'required|in:individual,family',
+		'email' => 'nullable|email|max:100',
+		'move_in_date' => 'nullable|date',
+		'notes' => 'nullable|string|max:500',
+		'debt' => 'nullable|numeric|min:0',
+		'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+		'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+	]);
 
-		if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
-			Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
-		}
-
-		$tenant->update([
-			'tenant_status' => $request->tenant_status,
-			'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
-			'name' => $request->name,
-			'phone' => $request->phone,
-			'id_number' => $request->id_number,
-			'family_type' => $request->family_type,
-			'email' => $request->email,
-			'move_in_date' => $request->move_in_date,
-			'notes' => $request->notes,
-			'debt' => $request->debt ?? 0,
-		]);
-
-		if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
-			Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
-		}
-
-		return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
+	// 🏠 تحديث حالة الوحدة القديمة لو اتغيرت
+	if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
+		Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
 	}
+
+	// 🖼️ رفع الصور الجديدة إن وجدت
+	$idFrontPath = $request->hasFile('id_front')
+		? $request->file('id_front')->store('tenant_ids', 'public')
+		: $tenant->id_front;
+
+	$idBackPath = $request->hasFile('id_back')
+		? $request->file('id_back')->store('tenant_ids', 'public')
+		: $tenant->id_back;
+
+	$tenant->update([
+		'tenant_status' => $request->tenant_status,
+		'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+		'name' => $request->name,
+		'phone' => $request->phone,
+		'id_number' => $request->id_number,
+		'family_type' => $request->family_type,
+		'email' => $request->email,
+		'move_in_date' => $request->move_in_date,
+		'notes' => $request->notes,
+		'debt' => $request->debt ?? 0,
+		'id_front' => $idFrontPath,
+		'id_back' => $idBackPath,
+	]);
+
+	// 🏠 تحديث حالة الوحدة الجديدة لو تم التخصيص
+	if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
+		Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
+	}
+
+	return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
+}
 
 	public function search(Request $request)
 	{
