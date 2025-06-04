@@ -106,13 +106,13 @@ public function getCurrentRentPriceAttribute()
 	
 	
 	
-	
-	public function activeContract()
-    {
-    return $this->hasOne(\App\Models\Contract::class)
-        ->where('end_date', '>', now()); // العقد لسه شغال
-    }
-	
+public function activeContract()
+{
+    return $this->hasOne(Contract::class)
+        ->where('status', 'active')
+        ->whereDate('start_date', '<=', now())
+        ->whereDate('end_date', '>=', now());
+}
 	
 	
 	public function latestActiveContract()

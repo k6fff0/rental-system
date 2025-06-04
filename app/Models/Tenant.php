@@ -95,4 +95,6 @@ class Tenant extends Model
                     ->whereDate('start_date', '<=', now())
                     ->whereDate('end_date', '>=', now());
     }
+	
+	
 }

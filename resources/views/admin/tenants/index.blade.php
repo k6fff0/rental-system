@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-4 py-4 sm:mx-auto max-w-7xl" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+    <div class="mx-4 py-4 sm:mx-auto max-w-screen-2xl" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
         {{-- ✅ العنوان وزر الإضافة --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -68,39 +68,39 @@
         @else
             <div
                 class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm rounded-xl border border-gray-100 dark:border-gray-700">
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto w-full">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     {{ __('messages.full_name') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell">
                                     {{ __('messages.id_number') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     {{ __('messages.phone') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
                                     {{ __('messages.unit_number') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
                                     {{ __('messages.created_at') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     {{ __('messages.status') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">
                                     {{ __('messages.has_debt') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden xl:table-cell">
                                     {{ __('messages.has_account') }}</th>
                                 <th
-                                    class="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                                    class="px-6 py-4 text-start text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider hidden 2xl:table-cell">
                                     {{ __('messages.tenant_type') }}</th>
                                 <th
-                                    class="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    class="px-6 py-4 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                     {{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
@@ -120,7 +120,7 @@
                                     ];
                                 @endphp
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
-                                    <td class="px-4 py-3 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div
                                                 class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center mr-3">
@@ -140,10 +140,10 @@
                                         </div>
                                     </td>
                                     <td
-                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                                         {{ $tenant->id_number ?? '-' }}
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-2">
                                             <a href="tel:{{ $tenant->phone }}"
                                                 class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
@@ -161,7 +161,7 @@
                                         </div>
                                     </td>
                                     <td
-                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
                                         @if ($tenant->activeContracts->isNotEmpty())
                                             <div class="flex flex-wrap gap-1">
                                                 @foreach ($tenant->activeContracts as $contract)
@@ -178,7 +178,7 @@
                                         @endif
                                     </td>
                                     <td
-                                        class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden lg:table-cell">
                                         <div class="flex items-center gap-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,13 +188,13 @@
                                             {{ $tenant->created_at->format('Y-m-d') }}
                                         </div>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         <span
                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $colors[$status] ?? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">
                                             {{ __('messages.tenant_status_' . $status) }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm hidden lg:table-cell">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm hidden xl:table-cell">
                                         @if ($tenant->debt > 0)
                                             <span
                                                 class="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300">
@@ -207,13 +207,13 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm hidden lg:table-cell">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm hidden xl:table-cell">
                                         <span
                                             class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium {{ $tenant->user ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300' }}">
                                             {{ $tenant->user ? __('messages.yes') : __('messages.no') }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm hidden lg:table-cell">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm hidden 2xl:table-cell">
                                         <span
                                             class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium 
         {{ $tenant->family_type === 'family'
@@ -223,7 +223,7 @@
                                         </span>
                                     </td>
 
-                                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex justify-center items-center gap-2">
                                             {{-- زر العرض --}}
                                             @can('view full tenant details')

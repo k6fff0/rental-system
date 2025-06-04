@@ -83,6 +83,11 @@
                     'label' => __('messages.technicians_department'),
                     'icon' => 'heroicon-o-user-group',
                 ],
+				        [
+            'route' => 'admin.maintenance_requests.archive',
+            'label' => __('messages.maintenance_archive'),
+            'icon' => 'heroicon-o-archive-box',
+        ],
             ],
         ],
         [

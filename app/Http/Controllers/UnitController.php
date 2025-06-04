@@ -215,5 +215,16 @@ public function deleteImage(UnitImage $image)
 
     return back()->with('success', 'تم حذف الصورة بنجاح');
 }
+public function search(Request $request)
+{
+    $q = $request->get('q');
+
+    $units = \App\Models\Unit::with('building')
+        ->where('unit_number', 'LIKE', '%' . $q . '%')
+        ->limit(10)
+        ->get(['id', 'unit_number', 'building_id']);
+
+    return response()->json($units);
+}
 
 }

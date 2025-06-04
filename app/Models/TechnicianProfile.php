@@ -11,7 +11,7 @@ class TechnicianProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'specialty',
+        'main_specialty_id',
         'status',
         'notes',
     ];
@@ -19,5 +19,10 @@ class TechnicianProfile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function mainSpecialty()
+    {
+        return $this->belongsTo(Specialty::class, 'main_specialty_id');
     }
 }

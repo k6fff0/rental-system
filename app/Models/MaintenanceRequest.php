@@ -13,7 +13,7 @@ class MaintenanceRequest extends Model
         'building_id',
         'unit_id',
         'tenant_id',
-        'category_id', // ✅ مضاف جديد
+        'sub_specialty_id', // 🆕 بدل category_id
         'description',
         'image',
         'status',
@@ -24,45 +24,63 @@ class MaintenanceRequest extends Model
         'note',
         'cost',
         'created_by',
+        'assigned_manually',
     ];
 
-    // 🔗 العلاقات
-    public function category()
+    // 🔗 التخصص الفرعي (نوع العطل)
+    public function subSpecialty()
     {
-        return $this->belongsTo(MaintenanceCategory::class);
-    }
-    public function getCategorySlugAttribute()
-    {
-    return $this->category?->slug ?? 'other';
+        return $this->belongsTo(Specialty::class, 'sub_specialty_id');
     }
 
+    // 🔗 المبنى
     public function building()
     {
         return $this->belongsTo(Building::class);
     }
 
+    // 🔗 الوحدة
     public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
 
+    // 🔗 المستأجر
     public function tenant()
+{
+    return $this->belongsTo(Tenant::class, 'tenant_id');
+}
+
+
+    // 🔗 الفني المعين
+    public function technician()
     {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(User::class, 'assigned_worker_id');
     }
 
-    public function worker()
-    {
-        return $this->belongsTo(MaintenanceWorker::class, 'assigned_worker_id');
-    }
-
+    // 🔗 من قام بإنشاء البلاغ
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function technician()
+    // 🔎 لو عايز تجيب اسم التخصص الفرعي كـ slug
+    public function getCategorySlugAttribute()
     {
-        return $this->belongsTo(User::class, 'technician_id');
+        return $this->subSpecialty?->name ?? 'other';
     }
+	public function inProgressBy()
+{
+    return $this->belongsTo(User::class, 'in_progress_by');
+}
+
+public function completedBy()
+{
+    return $this->belongsTo(User::class, 'completed_by');
+}
+
+public function rejectedBy()
+{
+    return $this->belongsTo(User::class, 'rejected_by');
+}
 }

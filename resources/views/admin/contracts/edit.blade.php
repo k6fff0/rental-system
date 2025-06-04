@@ -2,14 +2,34 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+{{-- 🔧 عنوان الصفحة مع زر الرجوع --}}
+<div class="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+    
+    {{-- 📝 العنوان في اليمين --}}
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
+        <svg class="w-6 h-6 text-blue-600 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+        {{ __('messages.edit_contract') }}
+    </h1>
 
-    {{-- 🔙 زر الرجوع --}}
+    {{-- 🔙 زر الرجوع في اليسار --}}
     <a href="{{ url()->previous() }}"
-       class="inline-block mb-4 text-sm text-blue-600 hover:underline">
-        ← {{ __('messages.back') }}
-    </a>
+   class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition">
 
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('messages.edit_contract') }}</h1>
+    {{-- 🔁 سهم الرجوع يتعكس حسب اللغة --}}
+    <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2 rotate-180' }}" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+              clip-rule="evenodd"/>
+    </svg>
+
+    {{ __('messages.back') }}
+</a>
+
+</div>
+
 
     <form action="{{ route('admin.contracts.update', $contract->id) }}" method="POST" enctype="multipart/form-data"
           class="bg-white shadow rounded-lg p-6">

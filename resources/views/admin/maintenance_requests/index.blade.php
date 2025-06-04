@@ -81,25 +81,26 @@
                 </div>
             </div>
 
-            {{-- نوع العطل --}}
-            <div class="relative">
-                <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('messages.all_categories') }}</label>
-                <div class="relative">
-                    <select name="category_id" class="filter-select w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
-                        <option value="">{{ __('messages.all_categories') }}</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ __('maintenance_categories.' . $category->slug) }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-2' : 'right-2' }} flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+           {{-- نوع العطل (المهمة الفرعية) --}}
+<div class="relative">
+    <label class="block text-xs font-medium text-gray-500 mb-1">{{ __('messages.sub_specialty') }}</label>
+    <div class="relative">
+        <select name="sub_specialty_id" class="filter-select w-full border rounded px-3 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500 appearance-none bg-white">
+            <option value="">{{ __('messages.all_sub_specialties') }}</option>
+            @foreach($subSpecialties as $sub)
+                <option value="{{ $sub->id }}" {{ request('sub_specialty_id') == $sub->id ? 'selected' : '' }}>
+                    {{ $sub->parent->name ?? '❓' }} - {{ $sub->name }}
+                </option>
+            @endforeach
+        </select>
+        <div class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-2' : 'right-2' }} flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+    </div>
+</div>
+
 
             {{-- الفني --}}
             <div class="relative">
@@ -220,7 +221,7 @@
                         </div>
                         <div>
                             <span class="text-gray-500">{{ __('messages.category') }}:</span>
-                            <span>{{ __('maintenance_categories.' . ($request->category->slug ?? 'other')) }}</span>
+                            <span>{{ $request->subSpecialty->parent->name ?? '-' }} - {{ $request->subSpecialty->name ?? '-' }}</span>
                         </div>
                         <div>
                             <span class="text-gray-500">{{ __('messages.technician') }}:</span>
@@ -328,7 +329,7 @@
                             <td class="px-4 py-3">{{ $request->building->name ?? '-' }}</td>
                             <td class="px-4 py-3">{{ $request->unit->unit_number ?? '-' }}</td>
                             <td class="px-4 py-3">
-                                {{ __('maintenance_categories.' . ($request->category->slug ?? 'other')) }}
+                                {{ $request->subSpecialty->parent->name ?? '-' }} - {{ $request->subSpecialty->name ?? '-' }}
                             </td>
                             <td class="px-4 py-3">
                                 <span class="inline-flex items-center gap-1">

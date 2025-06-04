@@ -11,49 +11,36 @@
         @csrf
         @method('PUT')
 
-        {{-- المبنى --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
-            <select name="building_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                @foreach($buildings as $building)
-                    <option value="{{ $building->id }}" {{ $maintenance->building_id == $building->id ? 'selected' : '' }}>
-                        {{ $building->name }}
-                    </option>
-                @endforeach
-            </select>
+        {{-- 🔒 عرض فقط - معلومات الطلب --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
+                <input type="text" value="{{ $maintenance->building->name ?? '-' }}" disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
+                <input type="text" value="{{ $maintenance->unit->unit_number ?? '-' }}" disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ __('messages.sub_specialty') }}</label>
+                <input type="text" value="{{ $maintenance->subSpecialty->parent->name ?? '---' }} → {{ $maintenance->subSpecialty->name ?? '-' }}" disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">{{ __('messages.created_by') }}</label>
+                <input type="text" value="{{ $maintenance->creator->name ?? '-' }}" disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+            </div>
         </div>
 
-        {{-- الوحدة --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
-            <select name="unit_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                @foreach($units as $unit)
-                    <option value="{{ $unit->id }}" {{ $maintenance->unit_id == $unit->id ? 'selected' : '' }}>
-                        {{ $unit->unit_number }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- نوع العطل --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.category') }}</label>
-            <select name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ $maintenance->category_id == $category->id ? 'selected' : '' }}>
-                        {{ __('maintenance_categories.' . $category->slug) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- وصف المشكلة --}}
+        {{-- 📝 الملاحظات العامة --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.description') }}</label>
             <textarea name="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">{{ $maintenance->description }}</textarea>
         </div>
 
-        {{-- تعيين الفني --}}
+        {{-- 👨‍🔧 تغيير الفني (اختياري) --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.technician') }}</label>
             <select name="technician_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
@@ -66,7 +53,7 @@
             </select>
         </div>
 
-        {{-- الحالة --}}
+        {{-- 🔁 تغيير الحالة --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.status') }}</label>
             <select name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
@@ -78,54 +65,29 @@
             </select>
         </div>
 
-        {{-- ملاحظات البداية --}}
+        {{-- 📸 صورة جديدة (بعد الإنجاز مثلاً) --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.start_notes') }}</label>
-            <textarea name="start_notes" rows="2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">{{ $maintenance->start_notes }}</textarea>
+            <label class="block text-sm font-medium text-gray-700">{{ __('messages.image') }}</label>
+            @if($maintenance->image)
+                <div class="mb-2">
+                    <img src="{{ asset('storage/' . $maintenance->image) }}" class="h-32 w-auto rounded shadow border" alt="Image">
+                </div>
+            @endif
+            <input type="file" name="image" accept="image/*" class="mt-1 block w-full text-sm text-gray-700 border-gray-300 rounded-md shadow-sm">
         </div>
 
-        {{-- ملاحظات النهاية --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.end_notes') }}</label>
-            <textarea name="end_notes" rows="2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">{{ $maintenance->end_notes }}</textarea>
-        </div>
-
-        {{-- ملاحظات عامة --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.note') }}</label>
-            <textarea name="note" rows="2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">{{ $maintenance->note }}</textarea>
-        </div>
-
-        {{-- التكلفة --}}
+        {{-- 💸 التكلفة (اختياري) --}}
         <div>
             <label class="block text-sm font-medium text-gray-700">{{ __('messages.cost') }}</label>
             <input type="number" name="cost" step="0.01" value="{{ $maintenance->cost }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
         </div>
 
-   {{-- صورة العطل --}}
-<div>
-    <label class="block text-sm font-medium text-gray-700">{{ __('messages.image') }}</label>
-
-    {{-- عرض الصورة الحالية إن وجدت --}}
-    @if($maintenance->image)
-        <div class="mb-2">
-            <img src="{{ asset('storage/' . $maintenance->image) }}"
-                 class="h-32 w-auto rounded shadow border" alt="Current Image">
-        </div>
-    @endif
-
-    <input type="file" name="image" accept="image/*"
-           class="mt-1 block w-full text-sm text-gray-700 border-gray-300 rounded-md shadow-sm">
-</div>
-
-
-        {{-- زر الحفظ --}}
+        {{-- 💾 زر الحفظ --}}
         <div class="pt-4">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow text-sm font-semibold">
                 {{ __('messages.save_changes') }}
             </button>
         </div>
     </form>
-
 </div>
 @endsection

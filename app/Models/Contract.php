@@ -51,10 +51,11 @@ public function payments()
     /**
      * علاقة العقد بالمستأجر
      */
-    public function tenant()
-    {
-        return $this->belongsTo(\App\Models\Tenant::class);
-    }
+public function tenant()
+{
+    return $this->belongsTo(Tenant::class);
+}
+
 
     /**
      * علاقة العقد بالوحدة

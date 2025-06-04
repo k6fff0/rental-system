@@ -6,37 +6,35 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    // 🧾 الحقول القابلة للتعبئة
+   protected $fillable = [
+    'name',
+    'email',
+    'phone',
+    'preferred_language',
+    'technician_status',
+    'department',
+    'notes',
+    'photo_url',
+    'password',
+];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // 🔒 الحقول المخفية من JSON
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    // 🔁 تحويل أنواع الحقول
     protected function casts(): array
     {
         return [
@@ -45,27 +43,87 @@ class User extends Authenticatable
         ];
     }
 
-    public function tenant()
+    /*
+    |--------------------------------------------------------------------------
+    | 👥 العلاقات
+    |--------------------------------------------------------------------------
+    */
+
+    // 🔗 علاقة المستأجر (لو يوزر ساكن)
+    public function tenant(): HasOne
     {
         return $this->hasOne(Tenant::class);
     }
 
-    public function technicianProfile()
+    // 🔗 التخصص الرئيسي للفني
+    public function mainSpecialty(): BelongsTo
     {
-        return $this->hasOne(TechnicianProfile::class);
+        return $this->belongsTo(Specialty::class, 'main_specialty_id');
     }
 
-    /**
-     * Determine if the user is the system super admin.
-     */
+    // 🔗 المباني اللي مرتبط بيها
+    public function buildings(): BelongsToMany
+    {
+        return $this->belongsToMany(Building::class)->withTimestamps();
+    }
+
+    // 🔗 الطلبات المسندة لهذا الفني
+    public function assignedMaintenanceRequests(): HasMany
+    {
+        return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 🔍 سكوبات واستعلامات مخصصة
+    |--------------------------------------------------------------------------
+    */
+
+    // 🔍 سكوب لفلترة الفنيين
+    public function scopeTechnicians($query)
+    {
+        return $query->role('technician');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 🔧 دوال منطق السيستم للفنيين
+    |--------------------------------------------------------------------------
+    */
+
+    // ✅ هل هو سوبر أدمن؟
     public function isSuperAdmin(): bool
     {
         return $this->email === config('app.super_admin_email');
     }
-	
-	public function buildings()
-{
-    return $this->belongsToMany(Building::class)->withTimestamps();
-}
 
+    // ✅ تحديث حالة الفني إلى busy لو عدد الطلبات النشطة 10 أو أكثر
+    public function updateTechnicianBusyStatus(): void
+    {
+        if ($this->user_type !== 'technician') return;
+
+        $activeOrders = $this->assignedMaintenanceRequests()
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->count();
+
+        if ($this->technician_status === 'available' && $activeOrders >= 10) {
+            $this->technician_status = 'busy';
+            $this->save();
+        }
+    }
+
+    // ✅ إعادة حالة الفني إلى available لو الطلبات قلت عن 10
+    public function recalculateTechnicianStatus(): void
+    {
+        if ($this->user_type !== 'technician') return;
+
+        $activeOrders = $this->assignedMaintenanceRequests()
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->count();
+
+        if ($this->technician_status === 'busy' && $activeOrders < 10) {
+            $this->technician_status = 'available';
+            $this->save();
+        }
+    }
 }

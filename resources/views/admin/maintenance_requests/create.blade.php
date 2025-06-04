@@ -6,6 +6,18 @@
     {{-- 🔧 عنوان الصفحة --}}
     <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ __('messages.add_maintenance_request') }}</h1>
 
+    {{-- ⚠️ رسائل الخطأ أو النجاح --}}
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
     {{-- 📋 فورم الإضافة --}}
     <form action="{{ route('admin.maintenance_requests.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6 bg-white p-6 rounded-lg shadow">
         @csrf
@@ -36,27 +48,14 @@
             </select>
         </div>
 
-        {{-- نوع العطل --}}
+        {{-- نوع العطل بناءً على التخصصات الفرعية --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.category') }}</label>
-            <select name="category_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                <option value="">{{ __('messages.select_category') }}</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                        {{ __('maintenance_categories.' . $category->slug) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- اسم الفني --}}
-        <div>
-            <label class="block text-sm font-medium text-gray-700">{{ __('messages.technician') }}</label>
-            <select name="technician_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
-                <option value="">{{ __('messages.select_technician') }}</option>
-                @foreach($technicians as $technician)
-                    <option value="{{ $technician->id }}" {{ old('technician_id') == $technician->id ? 'selected' : '' }}>
-                        {{ $technician->name }}
+            <label class="block text-sm font-medium text-gray-700">{{ __('messages.issue_type') }}</label>
+            <select name="sub_specialty_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-sm">
+                <option value="">{{ __('messages.select_issue_type') }}</option>
+                @foreach($subSpecialties as $subtask)
+                    <option value="{{ $subtask->id }}" {{ old('sub_specialty_id') == $subtask->id ? 'selected' : '' }}>
+                        {{ $subtask->name }} ({{ $subtask->parent?->name ?? __('messages.unspecified') }})
                     </option>
                 @endforeach
             </select>
@@ -74,15 +73,14 @@
             <input type="file" name="image" class="mt-1 block w-full text-sm text-gray-700" accept="image/*">
         </div>
 
-        {{-- زر الحفظ --}}
-        <div class="pt-4">
-            <button type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow text-sm font-semibold">
+        {{-- الأزرار --}}
+        <div class="pt-4 flex justify-between items-center">
+            <a href="{{ url()->previous() }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm">{{ __('messages.back') }}</a>
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow text-sm font-semibold">
                 {{ __('messages.save') }}
             </button>
         </div>
     </form>
-
 </div>
 
 {{-- 🔄 سكريبت فلترة الوحدات بناءً على المبنى --}}

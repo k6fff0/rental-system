@@ -8,7 +8,6 @@
 
     {{-- 🧾 بيانات الفني --}}
     <div class="bg-white shadow rounded-lg p-6 space-y-6 text-sm text-gray-800">
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <strong>{{ __('messages.name') }}:</strong>
@@ -24,8 +23,28 @@
             </div>
             <div>
                 <strong>{{ __('messages.specialty') }}:</strong>
-                {{ $technician->technicianProfile->specialty ?? '-' }}
+                {{ $technician->mainSpecialty->name ?? '-' }}
             </div>
+
+            <div class="col-span-1 sm:col-span-2">
+                <strong>المهام الإضافية:</strong>
+                @php
+                    $subTasks = $technician->mainSpecialty?->subSpecialties;
+                @endphp
+
+                @if ($subTasks && $subTasks->isNotEmpty())
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        @foreach ($subTasks as $task)
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                {{ $task->name }}
+                            </span>
+                        @endforeach
+                    </div>
+                @else
+                    <span class="text-gray-500">لا توجد مهام إضافية</span>
+                @endif
+            </div>
+
             <div>
                 <strong>{{ __('messages.status') }}:</strong>
                 @php
@@ -34,7 +53,7 @@
                         'busy' => 'text-yellow-600',
                         'unavailable' => 'text-red-600',
                     ];
-                    $status = $technician->technicianProfile->status ?? 'unavailable';
+                    $status = $technician->technician_status ?? 'unavailable';
                 @endphp
                 <span class="font-semibold {{ $colors[$status] ?? '' }}">
                     {{ __('messages.status_' . $status) }}
@@ -42,14 +61,12 @@
             </div>
         </div>
 
-            @if($technician->technicianProfile && $technician->technicianProfile->notes)
-              <div>
-                   <strong>{{ __('messages.notes') }}:</strong>
-                   <p class="mt-1 text-gray-700">{{ $technician->technicianProfile->notes }}</p>
-              </div>
-            @endif
-
-
+        @if($technician->notes)
+            <div>
+                <strong>{{ __('messages.notes') }}:</strong>
+                <p class="mt-1 text-gray-700">{{ $technician->notes }}</p>
+            </div>
+        @endif
 
         {{-- زر الرجوع --}}
         <div class="pt-4">

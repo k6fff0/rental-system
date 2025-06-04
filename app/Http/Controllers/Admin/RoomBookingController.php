@@ -86,7 +86,7 @@ class RoomBookingController extends Controller
 
         Notification::send(User::all(), new RoomBooked($message));
 
-        return redirect()->route('admin.units.index')->with('success', 'تم حجز الغرفة مؤقتاً بنجاح. يجب تأكيده خلال 24 ساعة.');
+        return redirect()->route('admin.bookings.index')->with('success', 'تم حجز الغرفة مؤقتاً بنجاح. يجب تأكيده خلال 24 ساعة.');
     }
 
     // ✅ صفحة إنشاء حجز

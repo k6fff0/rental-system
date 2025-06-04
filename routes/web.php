@@ -8,17 +8,15 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\admin\PaymentController;
-//use App\Http\Controllers\MaintenanceWorkerController;
 use App\Http\Controllers\Admin\MaintenanceRequestController;
 use App\Http\Controllers\ExpenseController;
-//use App\Http\Controllers\InventoryItemController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\TechnicianController;
 use App\Http\Controllers\Admin\BackupController;
+use App\Http\Controllers\Admin\TechnicianController;
 use App\Http\Controllers\PdfTestController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\BuildingUtilityController;
@@ -30,6 +28,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
+
+
 Route::get('lang/{lang}', function ($lang) {
     Session::put('locale', $lang);
     App::setLocale($lang);
@@ -37,9 +37,13 @@ Route::get('lang/{lang}', function ($lang) {
     return Redirect::to($redirectTo);
 })->name('lang.switch');
 
+
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+
 
 Route::redirect('/admin', '/admin/dashboard');
 
@@ -52,13 +56,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         ->name('contracts.print');
 
     Route::resource('building-utilities', BuildingUtilityController::class);
-    Route::post('building-utilities/{utility}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
+    Route::delete('building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
 
-    // ✅ الفنيين
-    Route::get('technicians', [TechnicianController::class, 'index'])->name('technicians.index');
-    Route::get('technicians/{id}', [TechnicianController::class, 'show'])->name('technicians.show');
-    Route::get('technicians/{id}/edit', [\App\Http\Controllers\Admin\TechnicianController::class, 'edit'])->name('technicians.edit');
-    Route::put('technicians/{id}', [\App\Http\Controllers\Admin\TechnicianController::class, 'update'])->name('technicians.update');
 
     // ✅ API للمستأجر
     Route::get('/api/tenant/{id}', [TenantController::class, 'getTenantData']);
@@ -78,7 +77,22 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         ->middleware('can:edit buildings');
 
 
+    Route::prefix('technicians')->name('technicians.')->group(function () {
 
+        // ✅ التخصصات أولاً
+        Route::get('/specialties', [TechnicianController::class, 'specialtiesIndex'])->name('specialties.index');
+        Route::get('/specialties/create', [TechnicianController::class, 'createSpecialty'])->name('specialties.create');
+        Route::post('/specialties', [TechnicianController::class, 'storeSpecialty'])->name('specialties.store');
+        Route::get('/specialties/{id}/edit', [TechnicianController::class, 'editSpecialty'])->name('specialties.edit');
+        Route::put('/specialties/{id}', [TechnicianController::class, 'updateSpecialty'])->name('specialties.update');
+        Route::delete('/specialties/{id}', [TechnicianController::class, 'destroySpecialty'])->name('specialties.destroy');
+
+        // ✅ الفنيين بعد التخصصات
+        Route::get('/', [TechnicianController::class, 'index'])->name('index');
+        Route::get('/{id}', [TechnicianController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [TechnicianController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [TechnicianController::class, 'update'])->name('update');
+    });
 
 
     // ✅ المستأجرين
@@ -88,14 +102,30 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('tenants/{tenant}/attach-user', [TenantController::class, 'attachUser'])->name('tenants.attach-user');
     Route::post('tenants/{tenant}/create-user', [TenantController::class, 'createUser'])->name('tenants.create-user');
 
+
+
+
+    Route::get('maintenance-requests/archive', [MaintenanceRequestController::class, 'archive'])->name('maintenance_requests.archive');
+    Route::get('maintenance-requests/archive/export/pdf', [MaintenanceRequestController::class, 'exportPdf'])
+        ->name('maintenance_requests.exportPdf');
+
+    Route::get('maintenance-requests/archive/export/excel', [MaintenanceRequestController::class, 'exportExcel'])
+        ->name('maintenance_requests.exportExcel');
+    Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
+    Route::get('technicians/search', [TechnicianController::class, 'search'])->name('technicians.search');
+
+
+
+
+
     // ✅ العقود والدفع والصيانة
     Route::resource('contracts', ContractController::class);
     Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
-    //Route::resource('payments', PaymentController::class);
-    //Route::resource('maintenance-workers', MaintenanceWorkerController::class);
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
     Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
+
+
 
 
     // ✅ المصروفات والمخزون
@@ -223,7 +253,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     })->name('queue.restart');
 });
 
-
 // ✅ بروفايل المستخدم
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
@@ -280,10 +309,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/bookings/create', [RoomBookingController::class, 'create'])->name('admin.bookings.create');
     Route::post('/bookings', [RoomBookingController::class, 'store'])->name('admin.bookings.store');
     Route::patch('/bookings/{booking}/cancel', [RoomBookingController::class, 'cancel'])->name('admin.bookings.cancel');
-	Route::post('/bookings/{booking}/confirm', [RoomBookingController::class, 'confirm'])->name('admin.bookings.confirm');
-	Route::get('/bookings/{booking}', [RoomBookingController::class, 'show'])->name('admin.bookings.show');
-
-
+    Route::post('/bookings/{booking}/confirm', [RoomBookingController::class, 'confirm'])->name('admin.bookings.confirm');
+    Route::get('/bookings/{booking}', [RoomBookingController::class, 'show'])->name('admin.bookings.show');
 });
 // notifications
 Route::prefix('admin')->middleware(['auth'])->group(function () {
