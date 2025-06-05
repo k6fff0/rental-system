@@ -1,31 +1,35 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Models\Unit;
-use App\Models\Building;
-use App\Models\Tenant;
+use App\Models\MaintenanceRequest;
 
-Route::get('/units-by-building/{building}', function (Building $building, Request $request) {
-    $tenantId = $request->query('tenant_id');
+Route::post('/login', function (Request $request) {
+    $credentials = $request->only('email', 'password');
 
-    $currentUnitId = null;
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
 
-    if ($tenantId) {
-        $tenant = Tenant::find($tenantId);
-        $currentUnitId = $tenant?->unit_id;
+        return response()->json([
+            'token' => 'dummy-token',
+            'user' => $user,
+        ]);
     }
 
-    $units = $building->units()
-        ->where(function ($query) use ($currentUnitId) {
-            $query->whereDoesntHave('tenant');
+    return response()->json(['message' => 'Unauthorized'], 401);
+});
 
-            if ($currentUnitId) {
-                $query->orWhere('id', $currentUnitId);
-            }
-        })
-        ->select('id', 'unit_number')
-        ->get();
+Route::get('/maintenance', function () {
+    $requests = MaintenanceRequest::latest()->take(10)->get()->map(function ($item) {
+        return [
+            'id' => $item->id,
+            'issue_name' => optional($item->subSpecialty)->name ?? 'غير محدد',
+            'unit_name' => optional($item->unit)->name ?? 'غير معروف',
+            'status' => $item->status,
+            'created_at' => $item->created_at->format('Y-m-d H:i'),
+        ];
+    })->values(); // ✅ هنا الإغلاق الصح
 
-    return response()->json($units);
+    return response()->json(['data' => $requests]);
 });

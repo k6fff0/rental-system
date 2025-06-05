@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\InstallController;
 
 
 
@@ -318,7 +319,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('admin.notifications.show');
     Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 });
-
+Route::get('/install', [InstallController::class, 'showForm'])->name('install.form');
+Route::post('/install', [InstallController::class, 'submit'])->name('install.submit');
 Route::get('/phpinfo', fn() => phpinfo());
 
 require __DIR__ . '/auth.php';

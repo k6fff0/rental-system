@@ -15,4 +15,12 @@ class DatabaseSeeder extends Seeder
             MaintenanceCategorySeeder::class,
         ]);
     }
+	public function run(): void
+{
+    $this->call([
+        // باقي السييدرز...
+        SystemSettingsSeeder::class,
+    ]);
+}
+
 }
