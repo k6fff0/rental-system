@@ -179,6 +179,8 @@ return [
     'profile_photo_help' => 'Upload a clear photo of yourself (max 2MB)',
     'name' => 'Full Name',
     'email' => 'Email Address',
+    'get_started_by_adding_a_new_utility' => 'Get started by adding a new utility.',
+    'no_utilities_found' => 'No utilities found.',
     'phone' => 'Phone Number',
     'department' => 'Department',
     'status' => 'Availability Status',

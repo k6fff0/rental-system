@@ -870,6 +870,8 @@ return [
     'results' => 'نتيجة',
     'previous' => 'السابق',
     'next' => 'التالي',
+    'get_started_by_adding_a_new_utility' => 'ابدأ بإضافة خدمة جديدة.',
+    'no_utilities_found' => 'لا توجد أي خدمات مضافة حتى الآن.',
     'active' => 'نشط',
     'inactive' => 'غير نشط',
     'online' => 'متصل',
