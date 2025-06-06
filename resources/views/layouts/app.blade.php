@@ -7,21 +7,34 @@
             display: none !important;
         }
     </style>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>{{ settings()->app_name }}</title>
+
     @if (settings()->favicon)
         <link rel="icon" href="{{ asset('storage/' . ltrim(settings()->favicon, '/')) }}" type="image/x-icon">
     @endif
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Alpine.js -->
     <script src="//unpkg.com/alpinejs" defer></script>
 
-    <!-- Styles -->
+    <!-- Fancybox -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+
+    <!-- Laravel Styles + Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @stack('styles')
 </head>
 
@@ -179,6 +192,7 @@
 
     {{-- ✅ السكريبتات --}}
     @stack('scripts')
+
 </body>
 
 </html>

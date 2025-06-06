@@ -137,12 +137,6 @@
                            value="{{ old('rent_price', $unit->rent_price) }}">
                 </div>
             </div>
-			@if ($unit->status === 'cleaning')
-    <a href="{{ route('admin.units.images', $unit) }}"
-       class="inline-block bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
-        {{ __('messages.unit_images') }}
-    </a>
-@endif
 
                      {{-- ⚠️ تحذير بوجود عقد مرتبط بالغرفة --}}
                 @if ($unit->status === 'occupied' && isset($activeContract))

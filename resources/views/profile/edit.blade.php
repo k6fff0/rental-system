@@ -25,7 +25,7 @@
                 </label>
                 <div class="flex items-center">
                     <div class="relative">
-                        <img src="{{ auth()->user()->photo_url ? asset('storage/' . auth()->user()->photo_url) : asset('images/default-avatar.jpg') }}" 
+                        <img src="{{ $user->photo_url }}" 
                              alt="{{ __('messages.profile_photo') }}"
                              class="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600">
                         <div class="absolute bottom-0 right-0 bg-gray-200 dark:bg-gray-600 rounded-full p-1">

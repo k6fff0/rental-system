@@ -139,17 +139,18 @@
                 @csrf
                 @method('PATCH')
 
-                <div class="flex items-center gap-4">
-                    <button type="submit"
-                            class="w-12 h-6 rounded-full p-0 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition {{ $building->families_only ? 'bg-green-500' : 'bg-gray-300' }}">
-                        <span class="sr-only">Toggle</span>
-                        <span aria-hidden="true"
-                              class="{{ $building->families_only ? 'ml-auto' : 'mr-auto' }} block h-5 w-5 rounded-full bg-white shadow transform transition-all duration-200"></span>
-                    </button>
-                    <span class="text-sm text-gray-700">
-                        {{ $building->families_only ? 'النظام مخصص للعائلات فقط' : 'النظام يسمح بعائلات وأفراد' }}
-                    </span>
-                </div>
+               <div class="flex items-center gap-4">
+    <button type="submit"
+            class="w-12 h-6 rounded-full p-0 border-none focus:outline-none focus:ring-2 focus:ring-green-500 transition {{ $building->families_only ? 'bg-green-500' : 'bg-gray-300' }}">
+        <span class="sr-only">{{ __('messages.toggle') }}</span>
+        <span aria-hidden="true"
+              class="{{ $building->families_only ? 'ml-auto' : 'mr-auto' }} block h-5 w-5 rounded-full bg-white shadow transform transition-all duration-200"></span>
+    </button>
+    <span class="text-sm text-gray-700">
+        {{ $building->families_only ? __('messages.only_families_enabled') : __('messages.families_and_individuals') }}
+    </span>
+</div>
+
             </form>
         </div>
 

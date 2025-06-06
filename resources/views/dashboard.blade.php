@@ -90,45 +90,7 @@
 
     <!-- Main Dashboard -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Quick Stats Banner -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div class="flex items-center">
-                    <div class="p-3 bg-green-100 rounded-lg">
-                        <i class="fas fa-home text-green-600 text-xl"></i>
-                    </div>
-                    <div class="mr-4 rtl:mr-0 rtl:ml-4">
-                        <p class="text-sm text-gray-600" id="available-units">الوحدات المتاحة</p>
-                        <p class="text-2xl font-bold text-gray-900">24</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div class="flex items-center">
-                    <div class="p-3 bg-blue-100 rounded-lg">
-                        <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
-                    </div>
-                    <div class="mr-4 rtl:mr-0 rtl:ml-4">
-                        <p class="text-sm text-gray-600" id="active-bookings">الحجوزات النشطة</p>
-                        <p class="text-2xl font-bold text-gray-900">156</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div class="flex items-center">
-                    <div class="p-3 bg-purple-100 rounded-lg">
-                        <i class="fas fa-chart-line text-purple-600 text-xl"></i>
-                    </div>
-                    <div class="mr-4 rtl:mr-0 rtl:ml-4">
-                        <p class="text-sm text-gray-600" id="monthly-revenue">الإيرادات الشهرية</p>
-                        <p class="text-2xl font-bold text-gray-900">45K</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+      
         <!-- Shortcuts Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
@@ -196,21 +158,24 @@
                 </div>
             </a>
 
-            <!-- Financial Reports -->
-            <a href="#reports"
-                class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
-                <div class="text-center">
-                    <div
-                        class="mx-auto w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-blue-200 transition-colors">
-                        <i class="fas fa-chart-bar text-blue-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2" id="reports-title">التقارير المالية</h3>
-                    <p class="text-sm text-gray-600" id="reports-desc">عرض تقارير مفصلة للإيرادات والمصروفات</p>
-                    <div class="mt-4 text-xs text-blue-600 font-medium">
-                        <span id="quick-access-5">وصول سريع</span> →
-                    </div>
-                </div>
-            </a>
+           <!-- Cleaning Dashboard -->
+	   
+<a href="{{ route('admin.cleaning.dashboard') }}"
+    class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
+    <div class="text-center">
+        <div
+            class="mx-auto w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-200 transition-colors">
+            <i class="fas fa-broom text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">داشبورد النظافة</h3>
+        <p class="text-sm text-gray-600">متابعة وتنفيذ مهام تنظيف الغرف تحت الصيانة</p>
+        <div class="mt-4 text-xs text-green-600 font-medium">
+            <span>وصول سريع</span> →
+        </div>
+    </div>
+</a>
+
+
 
             <!-- Tenant Management -->
             <a href="#tenants"

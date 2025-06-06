@@ -1,5 +1,7 @@
 @extends('layouts.app')
-@section('title', 'الوحدات المتاحة')
+
+@section('title', __('الوحدات المتاحة'))
+
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
     <!-- Header Section -->
@@ -8,20 +10,21 @@
         <div class="relative max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                    {{ ('الوحدات المتاحة') }}
+                    {{ __('الوحدات المتاحة') }}
                 </h1>
                 <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    {{ ('اكتشف مجموعة متنوعة من الوحدات السكنية المتاحة للإيجار بأفضل الأسعار') }}
+                    {{ __('اكتشف مجموعة متنوعة من الوحدات السكنية المتاحة للإيجار بأفضل الأسعار') }}
                 </p>
             </div>
         </div>
     </div>
+
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <!-- Smart Search Filter -->
+        <!-- Search and Filters -->
         <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300">
             <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div class="w-full md:w-auto">
+                <div class="w-full md:w-auto flex-1">
                     <div class="relative">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +33,7 @@
                         </div>
                         <input type="text" id="smart-search" 
                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pr-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                               placeholder="ابحث برقم الغرفة أو اسم المبنى..." 
+                               placeholder="{{ __('ابحث برقم الغرفة أو اسم المبنى...') }}" 
                                onkeyup="filterUnits()">
                     </div>
                 </div>
@@ -44,22 +47,8 @@
                     </span>
                 </div>
             </div>
-            <!-- Grid/Layout Toggle -->
-             <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                <div class="inline-flex rounded-md shadow-sm" role="group">
-                    <button type="button" onclick="toggleLayout('grid')" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                        </svg>
-                    </button>
-                    <button type="button" onclick="toggleLayout('list')" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
         </div>
+
         <!-- Units Grid -->
         <div id="units-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @forelse($units as $unit)
@@ -69,24 +58,23 @@
                      data-floor="{{ $unit->floor }}"
                      data-type="{{ __('messages.' . $unit->unit_type) }}"
                      data-price="{{ $unit->rent_price }}">
-                    <!-- Image Slider -->
+                    
+                    <!-- Image Gallery with Fancybox -->
                     <div class="relative h-48 overflow-hidden rounded-t-2xl">
                         @if ($unit->images->isNotEmpty())
-                            <div class="unit-slider swiper-container">
-                                <div class="swiper-wrapper">
-                                    @foreach($unit->images as $image)
-                                        <div class="swiper-slide">
-                                            <img src="{{ asset('storage/' . $image->image_path) }}" class="w-full h-full object-cover" alt="Room Image">
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <!-- Add Pagination -->
-                                <div class="swiper-pagination"></div>
-                                <!-- Add Navigation -->
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
+                            <div class="grid grid-cols-2 gap-1 h-full">
+                                @foreach($unit->images->take(4) as $image)
+                                    <a href="{{ asset('storage/' . $image->image_path) }}" 
+                                       data-fancybox="gallery-{{ $unit->id }}" 
+                                       data-caption="{{ __('وحدة') }} {{ $unit->unit_number }} - {{ __('صورة') }} {{ $loop->iteration }}"
+                                       class="@if($loop->first) row-span-2 col-span-2 @else h-full @endif">
+                                        <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                             class="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                                             alt="{{ __('صورة الوحدة') }}">
+                                    </a>
+                                @endforeach
                             </div>
-                            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+                            <div class="absolute inset-0 bg-black bg-opacity-10"></div>
                         @else
                             <div class="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
                                 <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,27 +83,27 @@
                             </div>
                         @endif
 
+                        <!-- Status Badge -->
                         <div class="absolute top-4 right-4">
                             <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
                                 {{ __('متاحة') }}
                             </span>
                         </div>
 
+                        <!-- Building Name -->
                         <div class="absolute bottom-4 left-4 text-white">
-						<a href="{{ $unit->building->location_url }}" target="_blank" class="flex items-center space-x-2 rtl:space-x-reverse hover:underline">
-                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                            <a href="{{ $unit->building->location_url }}" target="_blank" class="flex items-center space-x-2 rtl:space-x-reverse hover:underline">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-sm">{{ $unit->building->name }}</span>
-                            </div>
-					    </a>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Unit Details -->
                     <div class="p-6">
-                        <!-- Unit Number & Building -->
+                        <!-- Unit Number & Rating -->
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-xl font-bold text-gray-900 dark:text-white">
                                 {{ __('وحدة') }} {{ $unit->unit_number }}
@@ -166,17 +154,13 @@
                             </div>
                         </div>
 
-                        <!-- Action Button -->
+                        <!-- Action Buttons -->
                         <div class="flex space-x-3 rtl:space-x-reverse">
                             <a href="{{ route('admin.units.show', $unit->id) }}" 
                                class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 text-center text-sm shadow-lg hover:shadow-xl transform hover:scale-105">
                                 {{ __('عرض التفاصيل') }}
                             </a>
-                            <button class="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
-                                </svg>
-                            </button>
+                                                     
                         </div>
                     </div>
                 </div>
@@ -220,9 +204,6 @@
     </div>
 </div>
 
-<!-- Swiper JS -->
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 <style>
 /* RTL Support */
@@ -230,9 +211,9 @@
     --tw-space-x-reverse: 1;
 }
 
-/* Custom Pagination Styling */
+/* Custom Pagination */
 .pagination {
-    @apply flex items-center space-x-1;
+    @apply flex items-center space-x-1 rtl:space-x-reverse;
 }
 
 .pagination .page-link {
@@ -253,13 +234,14 @@
 }
 
 /* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    .dark\:from-gray-900 {
-        background-image: linear-gradient(to bottom right, rgb(17 24 39), var(--tw-gradient-to));
-    }
-    .dark\:to-gray-800 {
-        --tw-gradient-to: rgb(31 41 55);
-    }
+.dark .dark\:from-gray-900 {
+    --tw-gradient-from: #111827;
+    --tw-gradient-to: rgba(17, 24, 39, 0);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.dark .dark\:to-gray-800 {
+    --tw-gradient-to: #1f2937;
 }
 
 /* Mobile Responsiveness */
@@ -301,71 +283,21 @@
     }
 }
 
-.slide-up {
-    animation: slideUp 0.6s ease-out;
+/* Fancybox Custom Styles */
+.fancybox__toolbar {
+    @apply bg-gray-800 bg-opacity-70;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.fancybox__nav {
+    @apply bg-gray-800 bg-opacity-50;
 }
 
-/* Swiper Custom Styles */
-.swiper-container {
-    width: 100%;
-    height: 100%;
+.fancybox__thumbs {
+    @apply bg-gray-100 dark:bg-gray-800;
 }
 
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.swiper-slide img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.swiper-button-next, .swiper-button-prev {
-    color: white;
-    background: rgba(0,0,0,0.3);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.swiper-button-next:after, .swiper-button-prev:after {
-    font-size: 16px;
-}
-
-.swiper-button-next:hover, .swiper-button-prev:hover {
-    background: rgba(0,0,0,0.5);
-}
-
-.swiper-pagination-bullet {
-    background: white;
-    opacity: 0.6;
-}
-
-.swiper-pagination-bullet-active {
-    background: #3b82f6;
-    opacity: 1;
+.fancybox__button {
+    @apply text-white hover:bg-gray-700;
 }
 
 /* Grid Layout */
@@ -373,40 +305,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
-}
-
-/* List Layout */
-.list-layout .unit-card {
-    display: flex;
-    flex-direction: row;
-    max-width: 100%;
-    height: auto;
-}
-
-.list-layout .unit-card > div:first-child {
-    width: 40%;
-    height: auto;
-    border-radius: 0.5rem 0 0 0.5rem;
-}
-
-.list-layout .unit-card > div:last-child {
-    width: 60%;
-    padding: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .list-layout .unit-card {
-        flex-direction: column;
-    }
-    
-    .list-layout .unit-card > div:first-child {
-        width: 100%;
-        border-radius: 0.5rem 0.5rem 0 0;
-    }
-    
-    .list-layout .unit-card > div:last-child {
-        width: 100%;
-    }
 }
 
 /* Search Highlight */
@@ -448,25 +346,19 @@
 </style>
 
 <script>
-// Initialize Swiper sliders for unit images
+// Initialize Fancybox
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all image sliders
-    document.querySelectorAll('.unit-slider').forEach(function(slider) {
-        new Swiper(slider, {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
+    Fancybox.bind("[data-fancybox]", {
+        Thumbs: {
+            autoStart: false,
+        },
+        Toolbar: {
+            display: {
+                left: [],
+                middle: [],
+                right: ["close"],
             },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+        },
     });
     
     // Add fade-in animation to cards on scroll
@@ -492,9 +384,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
-    
-    // Initialize network status
-    initNetworkStatus();
 });
 
 // Smart search filter function
@@ -515,72 +404,13 @@ function filterUnits() {
             type.includes(searchTerm) || 
             price.includes(searchTerm)) {
             card.style.display = 'block';
-            
-            // Highlight matching text (optional)
-            if (searchTerm.length > 0) {
-                highlightText(card, searchTerm);
-            }
         } else {
             card.style.display = 'none';
         }
     });
 }
 
-// Highlight matching text in cards
-function highlightText(element, searchTerm) {
-    const textNodes = [];
-    const walker = document.createTreeWalker(
-        element,
-        NodeFilter.SHOW_TEXT,
-        null,
-        false
-    );
-    
-    let node;
-    while (node = walker.nextNode()) {
-        if (node.nodeValue.trim().length > 0) {
-            textNodes.push(node);
-        }
-    }
-    
-    textNodes.forEach(textNode => {
-        const content = textNode.nodeValue;
-        const regex = new RegExp(searchTerm, 'gi');
-        const newContent = content.replace(regex, match => 
-            `<span class="highlight">${match}</span>`
-        );
-        
-        if (newContent !== content) {
-            const span = document.createElement('span');
-            span.innerHTML = newContent;
-            textNode.parentNode.replaceChild(span, textNode);
-        }
-    });
-}
-
-// Toggle between grid and list layout
-function toggleLayout(layoutType) {
-    const container = document.getElementById('units-container');
-    
-    if (layoutType === 'list') {
-        container.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'xl:grid-cols-4', 'gap-8');
-        container.classList.add('list-layout', 'space-y-6');
-    } else {
-        container.classList.remove('list-layout', 'space-y-6');
-        container.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'xl:grid-cols-4', 'gap-8');
-    }
-    
-    // Save preference to localStorage
-    localStorage.setItem('unitsLayoutPreference', layoutType);
-}
-
-// Initialize layout from localStorage
-function initLayout() {
-    const savedLayout = localStorage.getItem('unitsLayoutPreference') || 'grid';
-    toggleLayout(savedLayout);
-}
-
-// Network status detection
+// Initialize network status
 function initNetworkStatus() {
     const networkStatus = document.createElement('div');
     networkStatus.className = 'network-status';
@@ -598,47 +428,41 @@ function initNetworkStatus() {
         networkStatus.classList.remove('network-offline');
         networkStatus.classList.add('network-online');
         networkStatus.querySelector('span').textContent = 'متصل بالإنترنت';
-        
-        // Show notification
-        showNetworkNotification('تم استعادة الاتصال بالإنترنت', 'success');
     });
     
     window.addEventListener('offline', () => {
         networkStatus.classList.remove('network-online');
         networkStatus.classList.add('network-offline');
         networkStatus.querySelector('span').textContent = 'غير متصل';
-        
-        // Show notification
-        showNetworkNotification('فقدان الاتصال بالإنترنت', 'error');
     });
 }
 
-// Show network status notification
-function showNetworkNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `fixed bottom-4 left-4 px-4 py-2 rounded-lg shadow-lg text-white ${
-        type === 'success' ? 'bg-green-500' : 'bg-red-500'
-    }`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('opacity-0', 'transition-opacity', 'duration-500');
-        setTimeout(() => notification.remove(), 500);
-    }, 3000);
-}
-
-// Language Toggle Function (if needed)
-function toggleLanguage() {
-    const currentLang = document.documentElement.lang || 'ar';
-    const newLang = currentLang === 'ar' ? 'en' : 'ar';
-    
-    // Update document direction
-    document.documentElement.setAttribute('dir', newLang === 'ar' ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', newLang);
-    
-    // You can add more language switching logic here
-    // such as updating text content, API calls, etc.
-}
+// Initialize network status on load
+initNetworkStatus();
+</script>
+<script>
+// تفعيل Fancybox للمعرض
+$(document).ready(function() {
+    $('[data-fancybox]').fancybox({
+        loop: true,
+        animationEffect: "zoom-in-out",
+        transitionEffect: "slide",
+        thumbs: {
+            autoStart: true,
+            hideOnClose: true
+        },
+        toolbar: {
+            display: ["zoom", "slideShow", "fullScreen", "thumbs", "close"]
+        },
+        lang: 'ar',
+        i18n: {
+            'ar': {
+                'CLOSE': 'إغلاق',
+                'NEXT': 'التالي', 
+                'PREV': 'السابق'
+            }
+        }
+    });
+});
 </script>
 @endsection

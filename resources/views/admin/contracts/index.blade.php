@@ -183,7 +183,7 @@
 
         {{-- 🛑 إنهاء العقد --}}
         @can('end contract')
-        @if ($status !== 'expired')
+        @if (!in_array($status, ['expired', 'terminated']))
         <form action="{{ route('admin.contracts.end', $contract->id) }}" method="POST" class="inline">
             @csrf
             @method('PATCH')

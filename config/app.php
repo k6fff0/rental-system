@@ -60,17 +60,13 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-		
-
-		
-
 
         /*
         |--------------------------------------------------------------------------
         | Package Service Providers...
         |--------------------------------------------------------------------------
         */
-        // مثال: Blade UI أو غيره
+        
 
         /*
         |--------------------------------------------------------------------------
@@ -82,11 +78,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\NotificationServiceProvider::class, // ✅ أضفته هنا
-		App\Providers\MiddlewarePriorityProvider::class,
-
+        App\Providers\NotificationServiceProvider::class,
+        App\Providers\MiddlewarePriorityProvider::class,
     ],
-	
+
 
 ];
 

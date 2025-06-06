@@ -12,16 +12,29 @@ use Spatie\Permission\Models\Role;
 
 class BuildingSupervisorController extends Controller
 {
-    public function index()
-    {
-        // فقط المستخدمين اللي عندهم دور Building Supervisor
-        $users = User::whereHas('roles', function ($q) {
-            $q->where('name', 'Building Supervisor');
-        })->with('buildings')->orderByDesc('id')->paginate(10);
+   public function index(Request $request)
+{
+    // فقط المستخدمين اللي عندهم دور Building Supervisor
+    $query = User::whereHas('roles', function ($q) {
+        $q->where('name', 'Building Supervisor');
+    });
 
-
-        return view('admin.building_supervisors.index', compact('users'));
+    // 🔍 فلترة بالاسم أو رقم الهاتف
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
+        });
     }
+
+    // جلب البيانات مع عدد المباني
+    $users = $query->withCount('buildings')
+                   ->orderByDesc('id')
+                   ->paginate(10);
+
+    return view('admin.building_supervisors.index', compact('users'));
+}
 
     public function edit(User $user)
     {

@@ -62,8 +62,9 @@ class RoomBooking extends Model
         return $this->user_id === $user->id || $user->hasRole('admin');
     }
 
-    public function contract()
-    {
-        return $this->hasOne(Contract::class);
-    }
+   public function contract()
+{
+    return $this->hasOne(Contract::class, 'unit_id', 'unit_id');
+}
+
 }

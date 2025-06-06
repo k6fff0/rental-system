@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // ✅ Middleware عالمي بيجبر Laravel يستخدم Guard الصحيح (web)
         $middleware->append(\App\Http\Middleware\ForceWebGuard::class);
+		
 
         // ✅ Middleware aliases الخاصة بـ Spatie Permission
         $middleware->alias([

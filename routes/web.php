@@ -57,7 +57,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         ->name('contracts.print');
 
     Route::resource('building-utilities', BuildingUtilityController::class);
-    Route::delete('building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
+	
+	
+	Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
+    Route::delete('/building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
+
+
+Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
+
+
 
 
     // ✅ API للمستأجر
@@ -73,9 +81,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
     Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
     Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
-    Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])
-        ->name('buildings.toggleFamiliesOnly')
-        ->middleware('can:edit buildings');
+    Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])->name('buildings.toggleFamiliesOnly')->middleware('can:edit buildings');
 
 
     Route::prefix('technicians')->name('technicians.')->group(function () {
@@ -260,6 +266,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+	
 });
 
 Route::middleware(['auth', 'permission:super-admin'])->group(function () {
@@ -299,10 +306,13 @@ Route::prefix('admin/building-supervisors')
         Route::put('/{user}', [BuildingSupervisorController::class, 'update'])->name('update');
     });
 
-//room images 
-Route::get('units/{unit}/images', [UnitController::class, 'images'])->name('admin.units.images');
-Route::post('units/{unit}/images', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
+//cleaningDashboard 
+Route::get('cleaning-dashboard', [UnitController::class, 'cleaningDashboard'])->name('admin.cleaning.dashboard');
+Route::post('units/{unit}/mark-cleaned', [UnitController::class, 'markAsCleaned'])->name('admin.units.mark.cleaned');
+Route::post('units/{unit}/upload-image', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
 Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
+
+
 
 // booking 
 Route::prefix('admin')->middleware(['auth'])->group(function () {

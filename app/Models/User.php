@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     // 🧾 الحقول القابلة للتعبئة
    protected $fillable = [
@@ -126,4 +127,14 @@ class User extends Authenticatable
             $this->save();
         }
     }
+	
+	public function getPhotoUrlAttribute($value)
+{
+    if ($value && file_exists(public_path('storage/' . $value))) {
+        return asset('storage/' . $value);
+    }
+
+    return asset('images/default-user.png');
+}
+
 }

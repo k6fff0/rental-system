@@ -51,10 +51,19 @@
             </a>
         </div>
 
-        {{-- ✅ Footer --}}
-        <div class="pt-8 text-gray-500 text-xs border-t">
-            © {{ date('Y') }} جميع الحقوق محفوظة لـ <strong>{{ config('CORVITA', 'CORVITA') }}</strong>. تصميم وتنفيذ فريق التقنية.
-        </div>
+      {{-- ✅ Footer --}}
+<footer class="bg-gray-100 text-center py-6 mt-12 text-sm text-gray-500 border-t">
+    &copy; {{ date('Y') }} All rights reserved to 
+    <strong class="text-gray-700">Corvita.net</strong>. 
+    Developed by 
+    <a href="https://wa.me/971503660507" target="_blank" class="font-semibold text-blue-600 hover:underline">
+        Amr Mohammed
+    </a>.
+</footer>
+
+
+
+
     </div>
 </body>
 </html>

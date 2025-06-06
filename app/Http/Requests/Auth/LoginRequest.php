@@ -37,20 +37,35 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+  public function authenticate(): void
+{
+    $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+    $user = \App\Models\User::where('email', $this->email)->first();
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
+    // ❌ لو المستخدم مش موجود أو الباسورد غلط
+    if (! $user || ! \Hash::check($this->password, $user->password)) {
+        RateLimiter::hit($this->throttleKey());
 
-        RateLimiter::clear($this->throttleKey());
+        throw ValidationException::withMessages([
+            'email' => trans('auth.failed'),
+        ]);
     }
+
+    // ⛔ لو الحساب غير مفعل
+    if (! $user->is_active) {
+        throw ValidationException::withMessages([
+            'email' => __('messages.account_disabled'),
+        ]);
+    }
+
+    // ✅ تسجيل الدخول لو كل حاجة تمام
+    Auth::login($user, $this->boolean('remember'));
+
+    RateLimiter::clear($this->throttleKey());
+}
+
+
 
     /**
      * Ensure the login request is not rate limited.

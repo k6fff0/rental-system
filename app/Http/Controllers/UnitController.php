@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 use App\Models\UnitImage;
+use App\Services\ImageService;
 
 class UnitController extends Controller
 {
@@ -79,7 +80,7 @@ class UnitController extends Controller
         return view('admin.units.create', compact('buildings', 'unitTypes'));
     }
 
-   public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'building_id'  => 'required|exists:buildings,id',
@@ -89,9 +90,10 @@ class UnitController extends Controller
         'status'       => 'required|string|in:' . implode(',', UnitStatus::values()),
         'notes'        => 'nullable|string|max:1000',
         'rent_price'   => 'required|numeric|min:0',
+        'image'        => 'nullable|image|max:20480',
     ]);
 
-    Unit::create($request->only([
+    $unit = Unit::create($request->only([
         'building_id',
         'unit_number',
         'floor',
@@ -101,8 +103,15 @@ class UnitController extends Controller
         'rent_price',
     ]));
 
+    // ✅ لو فيه صورة، اضغط وخزنها
+    if ($request->hasFile('image')) {
+        $filename = ImageService::uploadAndOptimize($request->file('image'), 'units');
+        $unit->images()->create(['image_path' => $filename]);
+    }
+
     return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
 }
+
 
 
  public function edit(Unit $unit)
@@ -137,18 +146,6 @@ public function update(Request $request, Unit $unit)
         }
     }
 
-    // ✅ لو الحالة القديمة cleaning والجديدة available، تأكد من وجود 5 صور على الأقل
-    if (
-        $unit->status === 'cleaning' &&
-        $request->has('status') &&
-        $request->status === 'available'
-    ) {
-        if ($unit->images()->count() < 5) {
-            return back()->withErrors([
-                'status' => 'لا يمكن تحويل الوحدة إلى متاحة بدون رفع 5 صور على الأقل.',
-            ])->withInput();
-        }
-    }
 
     // ✅ التحقق من البيانات
     $validated = $request->validate([
@@ -184,37 +181,74 @@ public function update(Request $request, Unit $unit)
     return view('admin.units.available', compact('units'));
 }
 
-public function images(Unit $unit)
+
+
+
+
+// 🧼 صفحة داشبورد النظافة: فقط الغرف تحت التنظيف
+public function cleaningDashboard(Request $request)
 {
-    if ($unit->status !== 'cleaning') {
-        return redirect()->back()->with('error', 'يمكن رفع الصور فقط عندما تكون الوحدة تحت التنظيف.');
+    $query = Unit::where('status', 'cleaning')->with('images', 'building');
+
+    if ($request->filled('unit_number')) {
+        $query->where('unit_number', 'like', '%' . $request->unit_number . '%');
     }
 
-    $images = $unit->images()->orderBy('order')->get();
-    return view('admin.units.images', compact('unit', 'images'));
+    if ($request->filled('building_id')) {
+        $query->where('building_id', $request->building_id);
+    }
+
+    $units = $query->withCount('images')->get();
+    $buildings = Building::all();
+
+    return view('admin.units.cleaning-dashboard', compact('units', 'buildings'));
 }
+
+// 🖼 رفع الصور (يدعم رفع أكثر من صورة)
 public function uploadImage(Request $request, Unit $unit)
 {
     $request->validate([
-        'image' => 'required|image|max:2048',
+        'images' => 'required|array|min:1',
+        'images.*' => 'image|max:20000',
     ]);
 
-    $path = $request->file('image')->store('unit_images', 'public');
+    foreach ($request->file('images') as $file) {
+        $path = $file->store('unit_images', 'public');
 
-    $unit->images()->create([
-        'image_path' => $path,
-        'order' => $unit->images()->count() + 1,
-    ]);
+        $unit->images()->create([
+            'image_path' => $path,
+            'order' => $unit->images()->count() + 1,
+        ]);
+    }
 
-    return back()->with('success', 'تم رفع الصورة بنجاح');
+    return back()->with('success', 'تم رفع الصور بنجاح.');
 }
+
+// ❌ حذف صورة واحدة
 public function deleteImage(UnitImage $image)
 {
     \Storage::disk('public')->delete($image->image_path);
     $image->delete();
 
-    return back()->with('success', 'تم حذف الصورة بنجاح');
+    return back()->with('success', 'تم حذف الصورة بنجاح.');
 }
+
+// ✅ زر إنهاء التنظيف: يتحقق من رفع 5 صور
+public function markAsCleaned(Unit $unit)
+{
+    if ($unit->images()->count() < 5) {
+        return back()->with('error', 'يجب رفع 5 صور على الأقل قبل إنهاء التنظيف.');
+    }
+
+    $unit->update(['status' => 'available']);
+    return back()->with('success', 'تم إنهاء التنظيف بنجاح.');
+}
+
+
+
+
+
+
 public function search(Request $request)
 {
     $q = $request->get('q');
@@ -226,5 +260,8 @@ public function search(Request $request)
 
     return response()->json($units);
 }
+
+
+
 
 }

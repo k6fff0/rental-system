@@ -155,19 +155,20 @@ class RoomBookingController extends Controller
     // ✅ انتهاء الحجوزات القديمة
     public function expireOldBookings()
     {
-        RoomBooking::where('status', BookingStatus::Tentative->value)
-            ->where('auto_expire_at', '<', now())
-            ->where('deposit_paid', false)
-            ->get()
-            ->each(function ($booking) {
-                $booking->update([
-                    'status'         => BookingStatus::Expired->value,
-                    'expired_reason' => 'broker_no_deposit',
-                    'cancelled_at'   => now(),
-                ]);
+        RoomBooking::where('status', BookingStatus::Confirmed->value)
+    ->where('expires_at', '<', now())
+    ->whereDoesntHave('contract') // ⬅️ دي شغالة على حسب العلاقة اللي فوق
+    ->get()
+    ->each(function ($booking) {
+        $booking->update([
+            'status'         => BookingStatus::Expired->value,
+            'expired_reason' => 'no_contract_signed',
+            'cancelled_at'   => now(),
+        ]);
 
-                $booking->unit->update(['status' => 'available']);
-            });
+        $booking->unit->update(['status' => 'available']);
+    });
+
 
         RoomBooking::where('status', BookingStatus::Confirmed->value)
             ->where('expires_at', '<', now())

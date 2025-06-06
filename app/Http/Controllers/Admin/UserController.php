@@ -72,7 +72,7 @@ class UserController extends Controller
             'role'              => 'nullable|exists:roles,name',
             'permissions'       => 'array',
             'permissions.*'     => 'exists:permissions,id',
-            'photo'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'photo'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:10048',
         ]);
 
         $user = User::create([
@@ -170,18 +170,44 @@ class UserController extends Controller
             ->with('success', __('messages.user_updated_successfully'));
     }
 
-    public function destroy(string $id)
-    {
-        $user = User::findOrFail($id);
 
-        if ($user->isSuperAdmin()) {
-            return redirect()->route('admin.users.index')
-                ->with('error', 'لا يمكن حذف مالك النظام.');
-        }
-
-        $user->delete();
-
-        return redirect()->route('admin.users.index')
-            ->with('success', __('messages.user_deleted_successfully'));
+public function toggleActive(User $user)
+{
+	
+    if (!auth()->user()->hasRole("Admin's")) {
+        abort(403, __('messages.unauthorized'));
     }
+
+    // لو المستخدم متعطل بالفعل، هنفعّله
+    if (!$user->is_active) {
+        $user->is_active = true;
+        $user->save();
+
+        return back()->with('success', __('messages.user_enabled_successfully'));
+    }
+
+    // لو المستخدم شغّال، هنعطله
+    $user->is_active = false;
+    $user->save();
+
+    return back()->with('error', __('messages.user_disabled_successfully'));
+}
+
+public function destroy(string $id)
+{
+    $user = User::findOrFail($id);
+
+    if ($user->isSuperAdmin()) {
+        return redirect()->route('admin.users.index')
+            ->with('error', __('messages.cannot_delete_super_admin'));
+    }
+
+    $user->delete(); // soft delete
+
+    return redirect()->route('admin.users.index')
+        ->with('success', __('messages.user_deleted_successfully'));
+}
+
+
+
 }
