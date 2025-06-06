@@ -1,19 +1,43 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ __('messages.monthly_due_report') }}</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #999; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        h2 { text-align: center; }
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <h2>
-        📊 {{ __('messages.monthly_due_report_for') }} {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->translatedFormat('F Y') }}
+        📊 {{ __('messages.monthly_due_report_for') }}
+        {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->translatedFormat('F Y') }}
     </h2>
 
     <table>
@@ -45,4 +69,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

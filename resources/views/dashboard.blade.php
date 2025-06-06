@@ -90,7 +90,7 @@
 
     <!-- Main Dashboard -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      
+
         <!-- Shortcuts Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
@@ -158,22 +158,22 @@
                 </div>
             </a>
 
-           <!-- Cleaning Dashboard -->
-	   
-<a href="{{ route('admin.cleaning.dashboard') }}"
-    class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
-    <div class="text-center">
-        <div
-            class="mx-auto w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-200 transition-colors">
-            <i class="fas fa-broom text-green-600 text-2xl"></i>
-        </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-2">داشبورد النظافة</h3>
-        <p class="text-sm text-gray-600">متابعة وتنفيذ مهام تنظيف الغرف تحت الصيانة</p>
-        <div class="mt-4 text-xs text-green-600 font-medium">
-            <span>وصول سريع</span> →
-        </div>
-    </div>
-</a>
+            <!-- Cleaning Dashboard -->
+
+            <a href="{{ route('admin.cleaning.dashboard') }}"
+                class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
+                <div class="text-center">
+                    <div
+                        class="mx-auto w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-green-200 transition-colors">
+                        <i class="fas fa-broom text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">داشبورد النظافة</h3>
+                    <p class="text-sm text-gray-600">متابعة وتنفيذ مهام تنظيف الغرف تحت الصيانة</p>
+                    <div class="mt-4 text-xs text-green-600 font-medium">
+                        <span>وصول سريع</span> →
+                    </div>
+                </div>
+            </a>
 
 
 

@@ -28,6 +28,10 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\InstallController;
+use App\Http\Controllers\UnitImageController;
+use App\Settings\SystemSettings;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -57,13 +61,13 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         ->name('contracts.print');
 
     Route::resource('building-utilities', BuildingUtilityController::class);
-	
-	
-	Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
+
+
+    Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
     Route::delete('/building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
 
 
-Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
+    Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
 
 
 
@@ -202,8 +206,9 @@ Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'
 
         // مثال لو بتستخدم config أو جدول Settings مخصص
         if (function_exists('settings')) {
-            settings()->set('maintenance_mode', $value);
-            settings()->save();
+            $settings = settings(SystemSettings::class);
+            $settings->maintenance_mode = $value;
+            $settings->save();
         }
 
         // ممكن كمان تشغل مود الصيانة بتاع لارافيل نفسه:
@@ -266,7 +271,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-	
 });
 
 Route::middleware(['auth', 'permission:super-admin'])->group(function () {
@@ -276,9 +280,13 @@ Route::middleware(['auth', 'permission:super-admin'])->group(function () {
 
 // تمييز الإشعارات كمقروء
 Route::post('/notifications/mark-all-read', function () {
-    auth()->user()?->unreadNotifications->markAsRead();
+    $user = Auth::user();
+    if ($user) {
+        $user->unreadNotifications->markAsRead();
+    }
     return back();
-})->name('notifications.markAllRead');
+})->middleware('auth')->name('notifications.markAllRead');
+
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('admin.payments.create');

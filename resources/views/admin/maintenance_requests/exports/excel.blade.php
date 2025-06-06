@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <title>تصدير أرشيف الصيانة - Excel</title>
 </head>
+
 <body>
     <table>
         <thead>
@@ -18,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($requests as $req)
+            @foreach ($requests as $req)
                 <tr>
                     <td>{{ $req->id }}</td>
                     <td>{{ $req->building->name ?? '-' }}</td>
@@ -32,4 +34,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

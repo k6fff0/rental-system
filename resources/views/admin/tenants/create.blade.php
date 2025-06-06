@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-6 px-4 sm:px-6 lg:px-8" 
-         dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-        
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-6 px-4 sm:px-6 lg:px-8"
+        dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+
         <div class="max-w-5xl mx-auto">
             <!-- Header Section -->
             <div class="text-center mb-8">
@@ -14,15 +14,16 @@
 
             <!-- Main Form -->
             <form action="{{ route('admin.tenants.store') }}" method="POST" enctype="multipart/form-data"
-      class="bg-white shadow-2xl rounded-2xl overflow-hidden">
+                class="bg-white shadow-2xl rounded-2xl overflow-hidden">
                 @csrf
-                
+
                 <!-- Form Header -->
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
                     <h2 class="text-xl font-semibold text-white flex items-center gap-3">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
                         </svg>
                         بيانات المستأجر
                     </h2>
@@ -37,14 +38,16 @@
                             </div>
                             المعلومات الشخصية
                         </h3>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Full Name -->
                             <div class="space-y-2">
-                                <label for="name" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                <label for="name"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
                                     {{ __('messages.full_name') }}
                                     <span class="text-red-500">*</span>
@@ -59,10 +62,13 @@
 
                             <!-- ID Number -->
                             <div class="space-y-2">
-                                <label for="id_number" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                                <label for="id_number"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2">
+                                        </path>
                                     </svg>
                                     {{ __('messages.id_number') }}
                                 </label>
@@ -76,10 +82,13 @@
 
                             <!-- Family Type -->
                             <div class="space-y-2">
-                                <label for="family_type" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                <label for="family_type"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
                                     </svg>
                                     نوع المستأجر
                                     <span class="text-red-500">*</span>
@@ -87,50 +96,57 @@
                                 <select name="family_type" id="family_type" required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white">
                                     <option value="" disabled selected>اختر نوع المستأجر</option>
-                                    <option value="individual" {{ old('family_type') == 'individual' ? 'selected' : '' }}>فرد</option>
-                                    <option value="family" {{ old('family_type') == 'family' ? 'selected' : '' }}>عائلة</option>
+                                    <option value="individual" {{ old('family_type') == 'individual' ? 'selected' : '' }}>
+                                        فرد</option>
+                                    <option value="family" {{ old('family_type') == 'family' ? 'selected' : '' }}>عائلة
+                                    </option>
                                 </select>
                                 @error('family_type')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 
-<!-- Identity Images (Front + Back) -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Front Image -->
-    <div class="space-y-2">
-        <label for="id_front" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 10-2.828-2.828z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M16 4l3.5 3.5"></path>
-            </svg>
-            {{ __('messages.id_front') ?? 'صورة الهوية (الوجه)' }}
-        </label>
-        <input type="file" name="id_front" id="id_front" accept="image/*"
-               class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all duration-200" />
-        @error('id_front')
-            <p class="text-red-500 text-xs mt-1">{{   $message }}</p>
-        @enderror
-    </div>
+                            <!-- Identity Images (Front + Back) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Front Image -->
+                                <div class="space-y-2">
+                                    <label for="id_front"
+                                        class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 10-2.828-2.828z">
+                                            </path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 4l3.5 3.5"></path>
+                                        </svg>
+                                        {{ __('messages.id_front') ?? 'صورة الهوية (الوجه)' }}
+                                    </label>
+                                    <input type="file" name="id_front" id="id_front" accept="image/*"
+                                        class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all duration-200" />
+                                    @error('id_front')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
 
-    <!-- Back Image -->
-    <div class="space-y-2">
-        <label for="id_back" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 4v16m8-8H4"></path>
-            </svg>
-            {{ __('messages.id_back') ?? 'صورة الهوية (الظهر)' }}
-        </label>
-        <input type="file" name="id_back" id="id_back" accept="image/*"
-               class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all duration-200" />
-        @error('id_back')
-            <p class="text-red-500 text-xs mt-1">{{   $message }}</p>
-        @enderror
-    </div>
-</div>
+                                <!-- Back Image -->
+                                <div class="space-y-2">
+                                    <label for="id_back"
+                                        class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        {{ __('messages.id_back') ?? 'صورة الهوية (الظهر)' }}
+                                    </label>
+                                    <input type="file" name="id_back" id="id_back" accept="image/*"
+                                        class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all duration-200" />
+                                    @error('id_back')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
 
 
                         </div>
@@ -144,14 +160,17 @@
                             </div>
                             معلومات التواصل
                         </h3>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Phone -->
                             <div class="space-y-2">
-                                <label for="phone" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                <label for="phone"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.phone') }}
                                 </label>
@@ -165,10 +184,13 @@
 
                             <!-- Email -->
                             <div class="space-y-2">
-                                <label for="email" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                <label for="email"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.email') }}
                                 </label>
@@ -184,10 +206,13 @@
                             <div class="space-y-2 md:col-span-2" x-data="{ showExtra: {{ old('secondary_phone') ? 'true' : 'false' }} }">
                                 <template x-if="showExtra">
                                     <div class="space-y-2">
-                                        <label for="secondary_phone" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                      d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        <label for="secondary_phone"
+                                            class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                </path>
                                             </svg>
                                             {{ __('messages.secondary_phone') }}
                                         </label>
@@ -201,7 +226,8 @@
                                 <button type="button" @click="showExtra = true" x-show="!showExtra"
                                     class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4"></path>
                                     </svg>
                                     {{ __('messages.add_another_phone') }}
                                 </button>
@@ -217,20 +243,23 @@
                             </div>
                             المعلومات المالية
                         </h3>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Debt -->
                             <div class="space-y-2">
-                                <label for="debt" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <label for="debt"
+                                    class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.debt') }}
                                 </label>
                                 <div class="relative">
                                     <input type="number" name="debt" id="debt" step="0.01" min="0"
-                                        value="{{ old('debt', 0) }}" 
+                                        value="{{ old('debt', 0) }}"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 pr-12"
                                         placeholder="0.00">
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -252,13 +281,16 @@
                             </div>
                             معلومات إضافية
                         </h3>
-                        
+
                         <!-- Notes -->
                         <div class="space-y-2">
-                            <label for="notes" class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            <label for="notes"
+                                class="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
                                 </svg>
                                 {{ __('messages.notes') }}
                             </label>
@@ -278,16 +310,16 @@
                         <a href="{{ route('admin.tenants.index') }}"
                             class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 order-2 sm:order-1">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                      d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
                             {{ __('messages.back') }}
                         </a>
                         <button type="submit"
                             class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl order-1 sm:order-2">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                      d="M5 13l4 4L19 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                                </path>
                             </svg>
                             {{ __('messages.save') }}
                         </button>
@@ -424,7 +456,7 @@
             .iti__selected-flag {
                 padding: 0 8px 0 12px;
             }
-            
+
             [dir="ltr"] .iti--allow-dropdown input {
                 padding-right: 60px !important;
                 padding-left: 12px !important;
@@ -481,13 +513,13 @@
             // Form validation and submission
             const form = phoneInput ? phoneInput.closest('form') : document.querySelector('form');
             const submitBtn = form.querySelector('button[type="submit"]');
-            
+
             if (form && submitBtn) {
                 form.addEventListener('submit', function(e) {
                     // Show loading state
                     submitBtn.classList.add('btn-loading');
                     submitBtn.disabled = true;
-                    
+
                     // Handle phone number formatting
                     if (phoneInput && phoneInput.value && iti) {
                         if (iti.isValidNumber()) {
@@ -496,18 +528,18 @@
                             e.preventDefault();
                             submitBtn.classList.remove('btn-loading');
                             submitBtn.disabled = false;
-                            
+
                             // Show error message
                             showNotification('يرجى إدخال رقم هاتف صحيح', 'error');
                             phoneInput.focus();
                             return;
                         }
                     }
-                    
+
                     // Basic form validation
                     const requiredFields = form.querySelectorAll('[required]');
                     let hasErrors = false;
-                    
+
                     requiredFields.forEach(field => {
                         if (!field.value.trim()) {
                             field.classList.add('border-red-500');
@@ -516,13 +548,13 @@
                             field.classList.remove('border-red-500');
                         }
                     });
-                    
+
                     if (hasErrors) {
                         e.preventDefault();
                         submitBtn.classList.remove('btn-loading');
                         submitBtn.disabled = false;
                         showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
-                        
+
                         // Focus on first error field
                         const firstError = form.querySelector('.border-red-500');
                         if (firstError) {
@@ -538,7 +570,7 @@
                 input.addEventListener('blur', function() {
                     validateField(this);
                 });
-                
+
                 input.addEventListener('input', function() {
                     if (this.classList.contains('border-red-500')) {
                         validateField(this);
@@ -550,15 +582,15 @@
             function validateField(field) {
                 const value = field.value.trim();
                 const isRequired = field.hasAttribute('required');
-                
+
                 // Remove existing validation classes
                 field.classList.remove('border-red-500', 'border-green-500');
-                
+
                 if (isRequired && !value) {
                     field.classList.add('border-red-500');
                     return false;
                 }
-                
+
                 // Email validation
                 if (field.type === 'email' && value) {
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -567,7 +599,7 @@
                         return false;
                     }
                 }
-                
+
                 // ID number validation (assuming Saudi ID format)
                 if (field.name === 'id_number' && value) {
                     const idRegex = /^[0-9]{10}$/;
@@ -576,12 +608,12 @@
                         return false;
                     }
                 }
-                
+
                 // If validation passes and field has value
                 if (value) {
                     field.classList.add('border-green-500');
                 }
-                
+
                 return true;
             }
 
@@ -591,12 +623,12 @@
                 idInput.addEventListener('input', function(e) {
                     // Remove non-numeric characters
                     let value = e.target.value.replace(/\D/g, '');
-                    
+
                     // Limit to 10 digits
                     if (value.length > 10) {
                         value = value.substring(0, 10);
                     }
-                    
+
                     e.target.value = value;
                 });
             }
@@ -606,21 +638,21 @@
             if (debtInput) {
                 debtInput.addEventListener('input', function(e) {
                     let value = e.target.value;
-                    
+
                     // Remove invalid characters (keep only numbers and one decimal point)
                     value = value.replace(/[^0-9.]/g, '');
-                    
+
                     // Ensure only one decimal point
                     const parts = value.split('.');
                     if (parts.length > 2) {
                         value = parts[0] + '.' + parts.slice(1).join('');
                     }
-                    
+
                     // Limit decimal places to 2
                     if (parts[1] && parts[1].length > 2) {
                         value = parts[0] + '.' + parts[1].substring(0, 2);
                     }
-                    
+
                     e.target.value = value;
                 });
             }
@@ -632,11 +664,12 @@
                 if (existingNotification) {
                     existingNotification.remove();
                 }
-                
+
                 // Create notification
                 const notification = document.createElement('div');
-                notification.className = `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
-                
+                notification.className =
+                    `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+
                 // Set colors based on type
                 if (type === 'error') {
                     notification.className += ' bg-red-500 text-white';
@@ -645,7 +678,7 @@
                 } else {
                     notification.className += ' bg-blue-500 text-white';
                 }
-                
+
                 notification.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="flex-shrink-0">
@@ -666,14 +699,14 @@
                         </button>
                     </div>
                 `;
-                
+
                 document.body.appendChild(notification);
-                
+
                 // Animate in
                 setTimeout(() => {
                     notification.classList.remove('translate-x-full');
                 }, 100);
-                
+
                 // Auto remove after 5 seconds
                 setTimeout(() => {
                     notification.classList.add('translate-x-full');
@@ -690,9 +723,9 @@
             sectionTitles.forEach(title => {
                 title.style.cursor = 'pointer';
                 title.addEventListener('click', function() {
-                    this.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start' 
+                    this.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
                 });
             });
@@ -700,7 +733,7 @@
             // Auto-save to localStorage (if needed for draft functionality)
             let autoSaveTimeout;
             const formData = {};
-            
+
             inputs.forEach(input => {
                 input.addEventListener('input', function() {
                     clearTimeout(autoSaveTimeout);
@@ -713,13 +746,13 @@
             function saveFormData() {
                 const formElements = form.querySelectorAll('input, select, textarea');
                 const data = {};
-                
+
                 formElements.forEach(element => {
                     if (element.name && element.value) {
                         data[element.name] = element.value;
                     }
                 });
-                
+
                 // Note: localStorage is not supported in Claude artifacts
                 // This would work in a real application
                 // localStorage.setItem('tenant_form_draft', JSON.stringify(data));
@@ -732,7 +765,7 @@
                     e.preventDefault();
                     form.dispatchEvent(new Event('submit'));
                 }
-                
+
                 // Escape to go back
                 if (e.key === 'Escape') {
                     const backButton = document.querySelector('a[href*="tenants.index"]');

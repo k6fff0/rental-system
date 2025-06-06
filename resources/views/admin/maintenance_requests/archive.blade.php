@@ -547,7 +547,7 @@
                 techSearchTimeout = setTimeout(() => {
                     fetch(
                             `{{ route('admin.technicians.search') }}?q=${encodeURIComponent(query)}`
-                            )
+                        )
                         .then(response => response.json())
                         .then(data => {
                             technicianSuggestions.innerHTML = '';
