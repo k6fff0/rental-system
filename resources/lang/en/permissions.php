@@ -113,4 +113,8 @@ return [
     'cancel bookings' => 'Cancel bookings',
     'view booking owner' => 'View booking owner',
     'notify.tenants.create' => 'Send notification to tenants',
+    'confirm booking' => 'Confirm Booking',
+    'view booking details' => 'View Booking Details',
+    'view all bookings' => 'View All Bookings',
+    'view navbar' => 'View Navbar',
 ];

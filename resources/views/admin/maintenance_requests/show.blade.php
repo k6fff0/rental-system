@@ -116,6 +116,11 @@
                                     {{ $request->description ?? 'لا يوجد وصف متاح' }}
                                 </div>
                             </div>
+@if($request->status === 'rejected' && $request->rejection_note)
+    <p class="text-sm text-red-700 mt-2 font-medium">
+        📝 {{ __('messages.rejection_note') }}: {{ $request->rejection_note }}
+    </p>
+@endif
 
                             <div class="bg-green-50 rounded-xl p-4">
                                 <div class="text-sm text-green-600 mb-1">التكلفة المقدرة</div>

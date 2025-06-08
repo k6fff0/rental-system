@@ -216,6 +216,7 @@
                                                     <a href="{{ asset('storage/' . $image->image_path) }}"
                                                         data-fancybox="gallery-{{ $unit->id }}" class="block">
                                                         <img src="{{ asset('storage/' . $image->image_path) }}"
+														    loading="lazy"
                                                             alt="Unit Image"
                                                             class="w-full aspect-square object-cover rounded-xl shadow-sm hover:shadow-md transition duration-300">
                                                     </a>

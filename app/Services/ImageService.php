@@ -2,25 +2,23 @@
 
 namespace App\Services;
 
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class ImageService
 {
-    public static function uploadAndOptimize(UploadedFile $file, string $folder = 'unit_images'): string
+    public static function uploadAndOptimize($file, $folder = 'uploads')
     {
-        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-        $relativePath = "$folder/$filename";
+        // ✅ 1. رفع الصورة في storage/app/public/{folder}
+        $path = $file->store($folder, 'public');
 
-        // ✅ احفظ الصورة باستخدام Laravel Storage
-        Storage::disk('public')->put($relativePath, file_get_contents($file));
+        // ✅ 2. الحصول على المسار الكامل الفعلي (مش symlink)
+        $fullPath = Storage::disk('public')->path($path);
 
-        // ✅ اضغط الصورة فيزيائيًا
-        $fullPath = public_path("storage/$relativePath");
-        ImageOptimizer::optimize($fullPath);
+        // ✅ 3. ضغط الصورة فعليًا
+        OptimizerChainFactory::create()->optimize($fullPath);
 
-        // ✅ رجع المسار المناسب للعرض
-        return "storage/$relativePath";
+        // ✅ 4. رجع المسار النسبي لحفظه في قاعدة البيانات
+        return $path;
     }
 }

@@ -125,6 +125,21 @@
                     </div>
                 </div>
             </a>
+<!-- My Bookings -->
+<a href="{{ route('admin.bookings.index', ['my' => true]) }}"
+    class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
+    <div class="text-center">
+        <div
+            class="mx-auto w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+            <i class="fas fa-calendar-check text-gray-600 text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2" id="my-bookings-title">حجوزاتي</h3>
+        <p class="text-sm text-gray-600" id="my-bookings-desc">عرض حجوزاتك الخاصة</p>
+        <div class="mt-4 text-xs text-gray-600 font-medium">
+            <span id="quick-access-my">وصول سريع</span> →
+        </div>
+    </div>
+</a>
 
             <!-- Add Payment -->
             <a href="{{ route('admin.payments.create') }}"
@@ -194,36 +209,25 @@
             </a>
 
             <!-- Maintenance -->
-            <a href="#maintenance"
-                class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
-                <div class="text-center">
-                    <div
-                        class="mx-auto w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-200 transition-colors">
-                        <i class="fas fa-tools text-orange-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2" id="maintenance-title">طلبات الصيانة</h3>
-                    <p class="text-sm text-gray-600" id="maintenance-desc">إدارة ومتابعة طلبات الصيانة</p>
-                    <div class="mt-4 text-xs text-orange-600 font-medium">
-                        <span id="quick-access-7">وصول سريع</span> →
-                    </div>
-                </div>
-            </a>
-
-            <!-- Settings -->
-            <a href="#settings"
-                class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
-                <div class="text-center">
-                    <div
-                        class="mx-auto w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
-                        <i class="fas fa-cog text-gray-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2" id="settings-title">الإعدادات</h3>
-                    <p class="text-sm text-gray-600" id="settings-desc">إعدادات النظام والتخصيص</p>
-                    <div class="mt-4 text-xs text-gray-600 font-medium">
-                        <span id="quick-access-8">وصول سريع</span> →
-                    </div>
-                </div>
-            </a>
+<a href="{{ route('admin.technician.maintenance') }}"
+    class="card-hover bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-gray-100 group">
+    <div class="text-center">
+        <div
+            class="mx-auto w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-orange-200 transition-colors">
+            <i class="fas fa-tools text-orange-600 text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">
+            {{ __('messages.maintenance_card_title') }}
+        </h3>
+        <p class="text-sm text-gray-600">
+            {{ __('messages.maintenance_card_desc') }}
+        </p>
+        <div class="mt-4 text-xs text-orange-600 font-medium">
+            <span>{{ __('messages.quick_access') }}</span> →
+        </div>
+    </div>
+</a>
+ 
         </div>
 
         <!-- Quick Actions Bar for Mobile -->

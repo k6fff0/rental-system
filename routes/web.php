@@ -104,6 +104,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/{user}/edit', [TechnicianController::class, 'edit'])->name('edit');
         Route::put('/{user}', [TechnicianController::class, 'update'])->name('update');
     });
+Route::get('/technician/maintenance', [MaintenanceRequestController::class, 'myRequests'])
+    ->name('technician.maintenance')
+    ->middleware('auth'); // أو middleware خاص بالفنيين لو عندك
+Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show'])->name('admin.maintenance.show');
+
+
+
+
+
 
 
     // ✅ المستأجرين
@@ -134,6 +143,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
+	//Route::put('maintenance-requests/{id}', [MaintenanceRequestController::class, 'update'])->name('maintenance_requests.update');
     Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
 
 
@@ -320,7 +330,24 @@ Route::post('units/{unit}/mark-cleaned', [UnitController::class, 'markAsCleaned'
 Route::post('units/{unit}/upload-image', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
 Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
 
+Route::prefix('technician/maintenance')
+    ->middleware('auth') // أو middleware خاص بالفنيين لو عندك
+    ->name('maintenance.')
+    ->group(function () {
 
+    // بدء العمل
+    Route::post('/{id}/start', [MaintenanceRequestController::class, 'start'])->whereNumber('id')->name('start');
+
+    // إنهاء العمل
+    Route::post('/{id}/complete', [MaintenanceRequestController::class, 'complete'])->whereNumber('id')->name('complete');
+
+    // رفض الطلب
+    Route::post('/{id}/reject', [MaintenanceRequestController::class, 'reject'])->whereNumber('id')->name('reject');
+		
+	Route::post('/{id}/delay', [MaintenanceRequestController::class, 'updateStatus'])->name('delay');
+
+
+});
 
 // booking 
 Route::prefix('admin')->middleware(['auth'])->group(function () {

@@ -65,70 +65,87 @@ class ContractController extends Controller
         return view('admin.contracts.create', compact('tenants', 'units', 'buildings'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tenant_id'     => 'required|exists:tenants,id',
-            'unit_id'       => 'required|exists:units,id',
-            'start_date'    => 'required|date|before:end_date',
-            'end_date'      => 'required|date|after:start_date',
-            'rent_amount'   => 'required|numeric',
-            'notes'         => 'nullable|string',
-            'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'tenant_id'     => 'required|exists:tenants,id',
+        'unit_id'       => 'required|exists:units,id',
+        'start_date'    => 'required|date|before:end_date',
+        'end_date'      => 'required|date|after:start_date',
+        'rent_amount'   => 'required|numeric',
+        'notes'         => 'nullable|string',
+        'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+    ]);
 
-        $tenant = Tenant::findOrFail($request->tenant_id);
-        $unit = Unit::with('contracts')->findOrFail($request->unit_id);
+    $tenant = Tenant::findOrFail($request->tenant_id);
+    $unit = Unit::with('contracts', 'building')->findOrFail($request->unit_id);
 
-        if (
-            $tenant->family_type === 'individual' &&
-            $unit->building->families_only
-        ) {
-            return back()->withErrors(['tenant_id' => 'هذا المبنى مخصص للعائلات فقط ولا يمكن تسجيل عقد لفرد.'])->withInput();
-        }
-
-        // 🛑 منع توقيع عقد جديد لو فيه أي عقد غير ملغي
-        $hasNonTerminatedContract = $unit->contracts()
-            ->where('status', '!=', 'terminated')
-            ->exists();
-
-        if ($hasNonTerminatedContract) {
-            return back()->withErrors([
-                'unit_id' => 'لا يمكن إنشاء عقد جديد لهذه الوحدة إلا بعد إنهاء العقد السابق يدوياً.',
-            ])->withInput();
-        }
-
-        // ✅ تجهيز البيانات
-        $data = $request->only([
-            'tenant_id',
-            'unit_id',
-            'start_date',
-            'end_date',
-            'rent_amount',
-            'notes',
-        ]);
-
-        $data['contract_number'] = 'C-' . str_pad(Contract::max('id') + 1, 6, '0', STR_PAD_LEFT);
-        $data['status'] = 'active';
-
-        if ($request->hasFile('contract_file')) {
-            $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
-        }
-
-        // ✅ إنشاء العقد
-        $contract = Contract::create($data);
-
-        // ✅ تحديث حالة الغرفة إلى مشغولة
-        $contract->unit->update(['status' => UnitStatus::OCCUPIED->value]);
-
-        // ✅ إلغاء أي حجز فعّال على نفس الغرفة
-        RoomBooking::where('unit_id', $contract->unit_id)
-            ->where('status', 'active')
-            ->update(['status' => 'cancelled_due_to_rent']);
-
-        return redirect()->route('admin.contracts.index')
-            ->with('success', __('messages.contract_created_successfully'));
+    if (
+        $tenant->family_type === 'individual' &&
+        $unit->building->families_only
+    ) {
+        return back()->withErrors(['tenant_id' => 'هذا المبنى مخصص للعائلات فقط ولا يمكن تسجيل عقد لفرد.'])->withInput();
     }
+
+    // 🛑 منع توقيع عقد جديد لو فيه أي عقد غير ملغي
+    $hasNonTerminatedContract = $unit->contracts()
+        ->where('status', '!=', 'terminated')
+        ->exists();
+
+    if ($hasNonTerminatedContract) {
+        return back()->withErrors([
+            'unit_id' => 'لا يمكن إنشاء عقد جديد لهذه الوحدة إلا بعد إنهاء العقد السابق يدوياً.',
+        ])->withInput();
+    }
+
+    // ✅ تجهيز البيانات
+    $data = $request->only([
+        'tenant_id',
+        'unit_id',
+        'start_date',
+        'end_date',
+        'rent_amount',
+        'notes',
+    ]);
+
+    $data['contract_number'] = 'C-' . str_pad(Contract::max('id') + 1, 6, '0', STR_PAD_LEFT);
+    $data['status'] = 'active';
+
+    if ($request->hasFile('contract_file')) {
+        $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
+    }
+
+    // ✅ إنشاء العقد
+    $contract = Contract::create($data);
+
+    // ✅ تحديث حالة الغرفة إلى مشغولة
+    $contract->unit->update(['status' => UnitStatus::OCCUPIED->value]);
+
+    // ✅ البحث عن حجز مؤكد وتحديثه
+    $booking = RoomBooking::where('unit_id', $contract->unit_id)
+        ->where('status', 'confirmed')
+        ->latest()
+        ->first();
+
+    if ($booking) {
+        $booking->status = 'completed';
+        $booking->expires_at = now();
+        $booking->save();
+
+        // ✅ ربط العقد بالحجز
+        $contract->update(['room_booking_id' => $booking->id]);
+    }
+
+    // ✅ إلغاء أي حجوزات أخرى فعالة على نفس الوحدة (لو موجودة)
+    RoomBooking::where('unit_id', $contract->unit_id)
+        ->whereIn('status', ['tentative', 'confirmed']) // لو في غيره
+        ->where('id', '!=', $booking?->id)
+        ->update(['status' => 'cancelled_due_to_rent']);
+
+    return redirect()->route('admin.contracts.index')
+        ->with('success', __('messages.contract_created_successfully'));
+}
+
 
     public function show(Contract $contract)
     {

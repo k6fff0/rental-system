@@ -11,4 +11,5 @@ enum BookingStatus: string
     case CancelledDueToRent = 'cancelled_due_to_rent';
     case Expired = 'expired';
     case Active = 'active';
+    case Completed = 'completed'; // ✅ أضفناها هنا
 }

@@ -17,36 +17,44 @@ class RoomBookingController extends Controller
     {
         $this->middleware('permission:view bookings')->only(['index']);
         $this->middleware('permission:create bookings')->only(['store']);
-        $this->middleware('permission:cancel bookings')->only(['cancel']);
+        //$this->middleware('permission:cancel bookings')->except(['cancel']);
     }
 
     // ✅ عرض كل الحجوزات
-    public function index(Request $request)
-    {
-        $bookings = RoomBooking::with(['unit.building', 'user'])
-            ->when($request->filled('search'), function ($query) use ($request) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->whereHas('user', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
-                    })->orWhereHas('unit', function ($q2) use ($search) {
-                        $q2->where('unit_number', 'like', "%{$search}%");
-                    });
-                });
-            })
-            ->latest()
-            ->paginate(20);
+   public function index(Request $request)
+{
+    $query = RoomBooking::with(['unit.building', 'user']);
 
-           // ✅ الإحصائيات
-    $stats = [
+    // 🛡️ لو المستخدم مش معاه صلاحية عرض كل الحجوزات
+    if (!auth()->user()->can('view all bookings')) {
+        $query->where('user_id', auth()->id());
+    }
+
+    // 🔍 فلترة بحث بالاسم أو رقم الوحدة
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('user', function ($q2) use ($search) {
+                $q2->where('name', 'like', "%{$search}%");
+            })->orWhereHas('unit', function ($q2) use ($search) {
+                $q2->where('unit_number', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    $bookings = $query->latest()->paginate(20);
+
+    // ✅ الإحصائيات (لو معاه صلاحية يشوف الكل فقط)
+    $stats = auth()->user()->can('view all bookings') ? [
         'total'     => RoomBooking::count(),
         'confirmed' => RoomBooking::where('status', BookingStatus::Confirmed->value)->count(),
         'tentative' => RoomBooking::where('status', BookingStatus::Tentative->value)->count(),
         'cancelled' => RoomBooking::where('status', BookingStatus::Cancelled->value)->count(),
-    ];
-	
-        return view('admin.bookings.index', compact('bookings', 'stats'));
-    }
+    ] : null;
+
+    return view('admin.bookings.index', compact('bookings', 'stats'));
+}
+
 
     // ✅ إنشاء حجز جديد
     public function store(Request $request)
@@ -89,44 +97,49 @@ class RoomBookingController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'تم حجز الغرفة مؤقتاً بنجاح. يجب تأكيده خلال 24 ساعة.');
     }
 
-    // ✅ صفحة إنشاء حجز
-    public function create()
-    {
-        $units = Unit::with('building')
-            ->where('status', 'available')
-            ->get();
+  // ✅ صفحة إنشاء حجز
+public function create(Request $request)
+{
+    $units = Unit::with('building')->where('status', 'available')->get();
 
-        return view('admin.bookings.create', compact('units'));
-    }
+    // لو جاي من رابط الحجز ومعاه unit_id
+    $selectedUnitId = $request->input('unit_id');
+
+    return view('admin.bookings.create', compact('units', 'selectedUnitId'));
+}
+
+
 
     // ✅ إلغاء الحجز
-    public function cancel(RoomBooking $booking)
-    {
-        $user = auth()->user();
+   public function cancel(RoomBooking $booking)
+{
+    $user = auth()->user();
 
-        if (in_array($booking->status, [
-            BookingStatus::Cancelled,
-            BookingStatus::Expired,
-            BookingStatus::AutoCancelled,
-        ])) {
-            return back()->withErrors(['error' => 'هذا الحجز لا يمكن إلغاؤه لأنه منتهي أو ملغي بالفعل.']);
-        }
-
-        if ($booking->user_id !== $user->id && !$user->can('cancel bookings')) {
-            abort(403, 'ليس لديك صلاحية إلغاء هذا الحجز.');
-        }
-
-        $booking->update([
-            'status'       => BookingStatus::Cancelled->value,
-            'cancelled_at' => now(),
-        ]);
-
-        if ($booking->unit->status === 'booked') {
-            $booking->unit->update(['status' => 'available']);
-        }
-
-        return back()->with('success', 'تم إلغاء الحجز بنجاح.');
+    if (in_array($booking->status, [
+        BookingStatus::Cancelled,
+        BookingStatus::Expired,
+        BookingStatus::AutoCancelled,
+    ])) {
+        return back()->withErrors(['error' => 'هذا الحجز لا يمكن إلغاؤه لأنه منتهي أو ملغي بالفعل.']);
     }
+
+    // السماح بالإلغاء لو كان صاحب الحجز أو عنده صلاحية
+    if ($booking->user_id !== $user->id && !$user->can('cancel bookings')) {
+        abort(403, 'ليس لديك صلاحية إلغاء هذا الحجز.');
+    }
+
+    $booking->update([
+        'status'       => BookingStatus::Cancelled->value,
+        'cancelled_at' => now(),
+    ]);
+
+    if ($booking->unit->status === 'booked') {
+        $booking->unit->update(['status' => 'available']);
+    }
+
+    return back()->with('success', 'تم إلغاء الحجز بنجاح.');
+}
+
 
     // ✅ تأكيد الحجز
     public function confirm(Request $request, RoomBooking $booking)

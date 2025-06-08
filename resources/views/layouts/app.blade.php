@@ -42,7 +42,18 @@
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
         {{-- 🔘 الوضع الليلي - اللغة - الحساب --}}
-        <div class="flex justify-end items-center px-4 py-2 bg-white dark:bg-gray-800 shadow text-sm relative z-[100]">
+        <div class="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-800 shadow text-sm relative z-[100]">
+
+            {{-- زر لوحة التحكم --}}
+            <div>
+                <a href="{{ route('dashboard') }}"
+                   class="inline-flex items-center px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition">
+                    <x-heroicon-o-home class="w-5 h-5 mr-2" />
+                    {{ __('messages.home_page') }}
+                </a>
+            </div>
+
+            {{-- 🌙 الوضع الليلي - الحساب - اللغة --}}
             <div class="flex items-center gap-3">
 
                 {{-- 🌙 الوضع الليلي --}}

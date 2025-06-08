@@ -119,7 +119,7 @@
         ],
     ];
 @endphp
-
+@can('view navbar')
 <nav x-data="{ open: false, notificationsOpen: false, activeDropdown: null }"
     class="relative w-full z-[9999] bg-white dark:bg-gray-900 border-b border-gray-200/50 dark:border-gray-700/50">
 
@@ -477,3 +477,4 @@
 
 {{-- مساحة للمحتوى تحت شريط التنقل --}}
 <div class="h-16 lg:h-18"></div>
+@endcan

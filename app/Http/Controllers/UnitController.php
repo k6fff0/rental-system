@@ -9,6 +9,10 @@ use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 use App\Models\UnitImage;
 use App\Services\ImageService;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 
 class UnitController extends Controller
 {
@@ -171,15 +175,29 @@ public function update(Request $request, Unit $unit)
         $unit->delete();
         return redirect()->route('admin.units.index')->with('success', __('messages.deleted_successfully'));
     }
+	
+	
 	public function available(Request $request)
 {
-    $units = Unit::with(['building', 'images']) // ✅ تحميل المبنى والصور معًا
-        ->where('status', 'available')
-        ->latest()
-        ->paginate(20);
+    $query = Unit::with(['building', 'images'])
+        ->where('status', 'available');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('unit_number', 'like', "%{$search}%")
+              ->orWhereHas('building', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%{$search}%");
+              });
+        });
+    }
+
+    $units = $query->latest()->paginate(20);
 
     return view('admin.units.available', compact('units'));
 }
+
 
 
 
@@ -213,17 +231,24 @@ public function uploadImage(Request $request, Unit $unit)
     ]);
 
     foreach ($request->file('images') as $file) {
+        // ✅ 1. رفع الصورة إلى المسار الصحيح
         $path = $file->store('unit_images', 'public');
 
+        // ✅ 2. المسار الحقيقي الفعلي للصورة
+        $fullPath = Storage::disk('public')->path($path);
+         Log::info('📏 قبل: ' . filesize($fullPath));
+        // ✅ 3. ضغط الصورة فعليًا
+        OptimizerChainFactory::create()->optimize($fullPath);
+        Log::info('✅ بعد: ' . filesize($fullPath));
+        // ✅ 4. حفظ الصورة في قاعدة البيانات
         $unit->images()->create([
             'image_path' => $path,
             'order' => $unit->images()->count() + 1,
         ]);
     }
 
-    return back()->with('success', 'تم رفع الصور بنجاح.');
+    return back()->with('success', 'تم رفع وضغط الصور بنجاح.');
 }
-
 // ❌ حذف صورة واحدة
 public function deleteImage(UnitImage $image)
 {

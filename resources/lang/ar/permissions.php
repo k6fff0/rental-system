@@ -114,5 +114,9 @@ return [
     'cancel bookings' => 'إلغاء حجز',
     'view booking owner' => 'عرض صاحب الحجز',
     'notify.tenants.create' => 'إرسال إشعار للمستأجرين',
+    'confirm booking' => ' تأكيد الحجز',
+    'view booking details' => 'عرض تفاصيل الحجز',
+    'view all bookings' => 'عرض كل الحجوزات',
+    'view navbar' => 'عرض شريط التنقل',
 
 ];

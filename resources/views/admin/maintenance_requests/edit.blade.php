@@ -12,18 +12,21 @@
             @csrf
             @method('PUT')
 
-            {{-- 🔒 عرض فقط - معلومات الطلب --}}
+            {{-- 🔒 معلومات الطلب --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- عرض فقط --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700">{{ __('messages.building') }}</label>
                     <input type="text" value="{{ $maintenance->building->name ?? '-' }}" disabled
                         class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+                    <input type="hidden" name="building_id" value="{{ $maintenance->building_id }}">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">{{ __('messages.unit') }}</label>
                     <input type="text" value="{{ $maintenance->unit->unit_number ?? '-' }}" disabled
                         class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+                    <input type="hidden" name="unit_id" value="{{ $maintenance->unit_id }}">
                 </div>
 
                 <div>
@@ -31,6 +34,7 @@
                     <input type="text"
                         value="{{ $maintenance->subSpecialty->parent->name ?? '---' }} → {{ $maintenance->subSpecialty->name ?? '-' }}"
                         disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm text-sm">
+                    <input type="hidden" name="sub_specialty_id" value="{{ $maintenance->sub_specialty_id }}">
                 </div>
 
                 <div>
@@ -53,7 +57,7 @@
                     <option value="">{{ __('messages.select_technician') }}</option>
                     @foreach ($technicians as $technician)
                         <option value="{{ $technician->id }}"
-                            {{ $maintenance->technician_id == $technician->id ? 'selected' : '' }}>
+                            {{ $maintenance->assigned_worker_id == $technician->id ? 'selected' : '' }}>
                             {{ $technician->name }}
                         </option>
                     @endforeach
@@ -72,7 +76,7 @@
                 </select>
             </div>
 
-            {{-- 📸 صورة جديدة (بعد الإنجاز مثلاً) --}}
+            {{-- 📸 صورة جديدة --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">{{ __('messages.image') }}</label>
                 @if ($maintenance->image)
@@ -85,7 +89,7 @@
                     class="mt-1 block w-full text-sm text-gray-700 border-gray-300 rounded-md shadow-sm">
             </div>
 
-            {{-- 💸 التكلفة (اختياري) --}}
+            {{-- 💸 التكلفة --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">{{ __('messages.cost') }}</label>
                 <input type="number" name="cost" step="0.01" value="{{ $maintenance->cost }}"

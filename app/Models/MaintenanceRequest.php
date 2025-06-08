@@ -13,7 +13,7 @@ class MaintenanceRequest extends Model
         'building_id',
         'unit_id',
         'tenant_id',
-        'sub_specialty_id', // 🆕 بدل category_id
+        'sub_specialty_id',
         'description',
         'image',
         'status',
@@ -26,6 +26,17 @@ class MaintenanceRequest extends Model
         'created_by',
         'assigned_manually',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'in_progress_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'rejected_at' => 'datetime',
+    ];
+
+    // ... بقية العلاقات زي ما هي
+
 
     // 🔗 التخصص الفرعي (نوع العطل)
     public function subSpecialty()
