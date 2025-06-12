@@ -124,6 +124,10 @@ public function activeContract()
                 ->latestOfMany('start_date');
 }
 
+public function expenses()
+{
+    return $this->morphMany(Expense::class, 'expensable');
+}
 
 
 }

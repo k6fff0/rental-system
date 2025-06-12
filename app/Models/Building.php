@@ -63,6 +63,10 @@ public function users()
 {
     return $this->belongsToMany(User::class);
 }
+public function expenses()
+{
+    return $this->morphMany(Expense::class, 'expensable');
+}
 
 
 }

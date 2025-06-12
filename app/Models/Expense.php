@@ -17,6 +17,8 @@ class Expense extends Model
         'expense_date',
         'description',
 		'invoice_image',
+		'expensable_id',
+        'expensable_type',
     ];
 
     public function building()
@@ -32,5 +34,10 @@ class Expense extends Model
     {
     return $this->hasMany(ExpenseImage::class);
     }
+	
+public function expensable()
+{
+    return $this->morphTo();
+}
 
 }

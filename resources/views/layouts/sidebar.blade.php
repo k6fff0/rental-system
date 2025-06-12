@@ -25,9 +25,9 @@
                     'icon' => 'heroicon-o-bolt',
                 ],
                 [
-                     'route' => 'vehicles.index',
-                     'label' => __('messages.cars'),
-                     'icon' => 'heroicon-o-truck',
+                    'route' => '#',
+                    'label' => __('messages.cars'),
+                    'icon' => 'heroicon-o-truck',
                 ],
             ],
         ],
@@ -118,6 +118,7 @@
             ],
         ],
     ];
+	$isRtl = app()->getLocale() === 'ar' || in_array(app()->getLocale(), ['ar', 'he', 'fa', 'ur']);
 @endphp
 @can('view navbar')
 <nav x-data="{ open: false, notificationsOpen: false, activeDropdown: null }"

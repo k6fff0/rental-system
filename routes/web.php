@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\BuildingController;
@@ -28,8 +29,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\InstallController;
-use App\Http\Controllers\UnitImageController;
+//use App\Http\Controllers\UnitImageController;
 use App\Settings\SystemSettings;
+use App\Http\Controllers\Admin\VehicleController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -50,6 +52,7 @@ Route::get('/', function () {
 
 
 
+
 Route::redirect('/admin', '/admin/dashboard');
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -63,12 +66,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('building-utilities', BuildingUtilityController::class);
 
 
-    Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
+    //Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
     Route::delete('/building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
 
 
     Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
-
 
 
 
@@ -346,8 +348,76 @@ Route::prefix('technician/maintenance')
 		
 	Route::post('/{id}/delay', [MaintenanceRequestController::class, 'updateStatus'])->name('delay');
 
-
 });
+
+
+//Cars
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    // إدارة السيارات
+    Route::resource('vehicles', VehicleController::class);
+
+    // تقرير المصاريف والمخالفات
+    Route::get('/admin/vehicles/reports', [VehicleController::class, 'reports'])->name('vehicles.reports');
+
+    Route::get('vehicles/reports/pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.reports.pdf');
+    Route::get('vehicles/reports/excel', [VehicleController::class, 'exportExcel'])->name('vehicles.reports.excel');
+
+    // حذف مصروف أو مخالفة
+    Route::delete('vehicles/expenses/{expense}', function (VehicleExpense $expense) {
+        $expense->delete();
+        return back()->with('success', 'تم حذف المصروف بنجاح');
+    })->name('vehicles.expenses.destroy');
+
+    Route::delete('vehicles/violations/{violation}', function (Violation $violation) {
+        $violation->delete();
+        return back()->with('success', 'تم حذف المخالفة بنجاح');
+    })->name('vehicles.violations.destroy');
+
+    // ✅ إضافة مصروف ومخالفة (خليهم جوا الجروب)
+   Route::post('vehicles/{vehicle}/expenses', function (Request $request, $vehicleId) {
+    $request->validate([
+        'type'          => 'required|string|max:255',
+        'expense_date'  => 'required|date',
+        'amount'        => 'required|numeric|min:0',
+        'description'   => 'nullable|string',
+    ]);
+
+    $vehicle = \App\Models\Vehicle::findOrFail($vehicleId);
+
+    $vehicle->expenses()->create([
+        'type'          => $request->type,
+        'expense_date'  => $request->expense_date,
+        'amount'        => $request->amount,
+        'description'   => $request->description,
+    ]);
+
+    return back()->with('success', '✅ تمت إضافة المصروف للعربية بنجاح');
+})->name('vehicles.expenses.store');
+
+
+    Route::post('vehicles/{vehicle}/violations', function (Request $request, $vehicleId) {
+        $request->validate([
+            'violation_type' => 'required|string|max:255',
+            'cost' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'notes' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        \App\Models\Violation::create([
+            'vehicle_id' => $vehicleId,
+            'user_id' => $request->user_id,
+            'violation_type' => $request->violation_type,
+            'cost' => $request->cost,
+            'date' => $request->date,
+            'notes' => $request->notes,
+        ]);
+
+        return back()->with('success', 'تمت إضافة المخالفة بنجاح');
+    })->name('vehicles.violations.store');
+});
+
+
 
 // booking 
 Route::prefix('admin')->middleware(['auth'])->group(function () {

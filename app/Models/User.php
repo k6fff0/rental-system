@@ -73,6 +73,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
     }
+     //العلاقه مع السياره 
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+     //   العلاقه مع المخالفات 
+    public function violations()
+    {
+       return $this->hasMany(Violation::class);
+    }
 
     /*
     |--------------------------------------------------------------------------
