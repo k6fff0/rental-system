@@ -97,35 +97,34 @@
                                     {{ $tenant->email ?? '-' }}
                                 </div>
                             </div>
-                            @if ($tenant->id_front || $tenant->id_back)
-                                <div class="mt-6">
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">صور الهوية</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        @if ($tenant->id_front)
-                                            <div>
-                                                <p class="text-sm text-gray-600 mb-1">الوجه</p>
-                                                <a href="{{ asset('storage/' . $tenant->id_front) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $tenant->id_front) }}"
-                                                        alt="صورة الهوية (الوجه)"
-                                                        class="rounded shadow w-full max-h-72 object-contain hover:scale-105 transition-transform duration-200">
-                                                </a>
-                                            </div>
-                                        @endif
+                           @if ($tenant->id_front || $tenant->id_back)
+    <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">صور الهوية</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @if ($tenant->id_front)
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">الوجه</p>
+                    <a data-fancybox="id_card" href="{{ asset('storage/' . $tenant->id_front) }}">
+                        <img src="{{ asset('storage/' . $tenant->id_front) }}"
+                             alt="صورة الهوية (الوجه)"
+                             class="rounded shadow w-full max-h-72 object-contain hover:scale-105 transition-transform duration-200">
+                    </a>
+                </div>
+            @endif
 
-                                        @if ($tenant->id_back)
-                                            <div>
-                                                <p class="text-sm text-gray-600 mb-1">الظهر</p>
-                                                <a href="{{ asset('storage/' . $tenant->id_back) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $tenant->id_back) }}"
-                                                        alt="صورة الهوية (الظهر)"
-                                                        class="rounded shadow w-full max-h-72 object-contain hover:scale-105 transition-transform duration-200">
-                                                </a>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
+            @if ($tenant->id_back)
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">الظهر</p>
+                    <a data-fancybox="id_card" href="{{ asset('storage/' . $tenant->id_back) }}">
+                        <img src="{{ asset('storage/' . $tenant->id_back) }}"
+                             alt="صورة الهوية (الظهر)"
+                             class="rounded shadow w-full max-h-72 object-contain hover:scale-105 transition-transform duration-200">
+                    </a>
+                </div>
+            @endif
+        </div>
+    </div>
+@endif
 
                             <div class="md:col-span-2">
                                 <label

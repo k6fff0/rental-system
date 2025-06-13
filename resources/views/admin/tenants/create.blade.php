@@ -72,9 +72,18 @@
                                     </svg>
                                     {{ __('messages.id_number') }}
                                 </label>
-                                <input type="text" name="id_number" id="id_number" value="{{ old('id_number') }}"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                                    placeholder="رقم الهوية">
+                                <input type="text"
+    name="id_number"
+    id="id_number"
+    value="{{ old('id_number') }}"
+    minlength="15"
+    maxlength="15"
+    pattern="\d{15}"
+    inputmode="numeric"
+    title="يجب أن يكون 15 رقمًا"
+    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+    placeholder="رقم الهوية">
+
                                 @error('id_number')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -174,14 +183,26 @@
                                     </svg>
                                     {{ __('messages.phone') }}
                                 </label>
-                                <input type="tel" name="phone" id="phone" value="{{ old('phone') }}"
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                                    placeholder="رقم الجوال">
+                                <input type="tel"
+       name="phone"
+       id="phone"
+       value="{{ old('phone', $tenant->phone ?? '') }}"
+       pattern="0\d{9}"
+       maxlength="10"
+       inputmode="numeric"
+       title="رقم الجوال يجب أن يبدأ بـ 0 ويحتوي على 10 أرقام"
+       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+       placeholder="0501234567">
+<div class="mb-4">
+    <label class="inline-flex items-center">
+        <input type="checkbox" name="is_whatsapp" value="1" class="form-checkbox text-green-500">
+        <span class="ml-2 text-sm text-gray-700">رقم الجوال عليه واتساب</span>
+    </label>
+</div>
                                 @error('phone')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-
                             <!-- Email -->
                             <div class="space-y-2">
                                 <label for="email"
@@ -203,7 +224,7 @@
                             </div>
 
                             <!-- Secondary Phone -->
-                            <div class="space-y-2 md:col-span-2" x-data="{ showExtra: {{ old('secondary_phone') ? 'true' : 'false' }} }">
+                            <div class="space-y-2 md:col-span-2" x-data="{ showExtra: {{ old('phone_secondary') ? 'true' : 'false' }} }">
                                 <template x-if="showExtra">
                                     <div class="space-y-2">
                                         <label for="secondary_phone"
@@ -216,8 +237,8 @@
                                             </svg>
                                             {{ __('messages.secondary_phone') }}
                                         </label>
-                                        <input type="text" name="secondary_phone" id="secondary_phone"
-                                            value="{{ old('secondary_phone') }}"
+                                        <input type="text" name="secondary_phone" id="phone_secondary"
+                                            value="{{ old('phone_secondary') }}"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                                             placeholder="رقم إضافي">
                                     </div>
@@ -602,7 +623,7 @@
 
                 // ID number validation (assuming Saudi ID format)
                 if (field.name === 'id_number' && value) {
-                    const idRegex = /^[0-9]{10}$/;
+                    const idRegex = /^[0-9]{15}$/;
                     if (!idRegex.test(value)) {
                         field.classList.add('border-red-500');
                         return false;
@@ -625,8 +646,8 @@
                     let value = e.target.value.replace(/\D/g, '');
 
                     // Limit to 10 digits
-                    if (value.length > 10) {
-                        value = value.substring(0, 10);
+                    if (value.length > 15) {
+                        value = value.substring(0, 15);
                     }
 
                     e.target.value = value;

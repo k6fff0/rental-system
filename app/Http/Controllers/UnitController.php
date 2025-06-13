@@ -33,7 +33,7 @@ class UnitController extends Controller
     }
 
 
-   public function index(Request $request)
+ public function index(Request $request)
 {
     $query = Unit::with(['building', 'contracts.tenant', 'latestContract']);
 
@@ -49,25 +49,22 @@ class UnitController extends Controller
         $query->where('unit_type', $request->unit_type);
     }
 
-    // ✅ جلب البيانات الأصلية
-    $unitsRaw = $query->get();
+    // ✅ جلب النتائج مع pagination فعلي
+    $units = $query->paginate(10);
 
-    // ✅ تجهيز البيانات مع السعر الفعلي
-    $units = $unitsRaw->map(function ($unit) {
+    // ✅ أضف الحقول المساعدة لكل عنصر من غير ما تغيّر نوع العنصر
+    $units->getCollection()->transform(function ($unit) {
         $contract = $unit->latestContract;
 
-        $actualRent = ($contract && $contract->status !== 'terminated')
+        $unit->actual_rent = ($contract && $contract->status !== 'terminated')
             ? $contract->rent_amount
             : $unit->rent_price;
 
-        return [
-            'unit' => $unit,
-            'building' => optional($unit->building)->name,
-            'rent' => $actualRent,
-            'original_rent' => $unit->rent_price,
-            'has_discount' => $actualRent != $unit->rent_price,
-            'contract_status' => $contract?->status,
-        ];
+        $unit->has_discount = $unit->actual_rent != $unit->rent_price;
+        $unit->contract_status = $contract?->status;
+        $unit->building_name = optional($unit->building)->name;
+
+        return $unit;
     });
 
     $buildings = Building::all();

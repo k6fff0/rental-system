@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Building;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewTenantNotification;
 use Illuminate\Http\Request;
@@ -59,51 +60,62 @@ class TenantController extends Controller
 	}
 
 
+//---------------------------------------------------------------------------------------------------------
 
 	public function store(Request $request)
 {
-	
-	$request->validate([
-		'name' => 'required|string|max:100',
-		'phone' => 'nullable|string|max:20',
-		'id_number' => 'nullable|string|max:50',
-		'family_type' => 'required|in:individual,family',
-		'email' => 'nullable|email|max:100',
-		'notes' => 'nullable|string|max:500',
-		'debt' => 'nullable|numeric|min:0',
-		'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-		'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-	]);
+    $request->validate([
+        'name' => 'required|string|max:100',
+        'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
+        'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
+        'id_number' => 'nullable|digits:15|unique:tenants,id_number',
+        'family_type' => 'required|in:individual,family',
+        'email' => 'nullable|email|max:100',
+        'notes' => 'nullable|string|max:500',
+        'debt' => 'nullable|numeric|min:0',
+        'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+        'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+    ]);
 
-	// 🖼️ رفع الصور لو موجودة
-	$idFrontPath = $request->hasFile('id_front')
-		? $request->file('id_front')->store('tenant_ids', 'public')
-		: null;
+    // تحقق من خيار واتساب
+    $isWhatsapp = $request->has('is_whatsapp');
 
-	$idBackPath = $request->hasFile('id_back')
-		? $request->file('id_back')->store('tenant_ids', 'public')
-		: null;
+    // رفع الصور
+    $idFrontPath = $request->hasFile('id_front')
+        ? $request->file('id_front')->store('tenant_ids', 'public')
+        : null;
 
-	// ✅ إنشاء المستأجر
-	$tenant = Tenant::create([
-		'tenant_status' => 'active',
-		'name' => $request->name,
-		'phone' => $request->phone,
-		'id_number' => $request->id_number,
-		'family_type' => $request->family_type,
-		'email' => $request->email,
-		'notes' => $request->notes,
-		'debt' => $request->debt ?? 0,
-		'id_front' => $idFrontPath,
-		'id_back' => $idBackPath,
-	]);
+    $idBackPath = $request->hasFile('id_back')
+        ? $request->file('id_back')->store('tenant_ids', 'public')
+        : null;
 
-	// 🔔 إرسال إشعار للمستخدمين اللي عندهم صلاحية التنبيه
-	$notifiables = User::permission('notify.tenants.create')->get();
-	Notification::send($notifiables, new NewTenantNotification($tenant->name));
+    // إنشاء المستأجر
+    $tenant = Tenant::create([
+        'tenant_status' => 'active',
+        'name' => $request->name,
+        'phone' => $request->phone,
+        'phone_secondary' => $request->phone_secondary,
+        'is_whatsapp' => $isWhatsapp,
+        'id_number' => $request->id_number,
+        'family_type' => $request->family_type,
+        'email' => $request->email,
+        'notes' => $request->notes,
+        'debt' => $request->debt ?? 0,
+        'id_front' => $idFrontPath,
+        'id_back' => $idBackPath,
+    ]);
 
-	return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+    // إشعار للمستخدمين بصلاحية تنبيه
+    $notifiables = User::permission('notify.tenants.create')->get();
+    Notification::send($notifiables, new NewTenantNotification($tenant->name));
+
+    return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
 }
+
+
+
+//-------------------------------------------------------------------------------------------------------------------------------
+
 
 
 	public function edit(Tenant $tenant)
@@ -117,14 +129,20 @@ class TenantController extends Controller
 		return view('admin.tenants.edit', compact('tenant', 'buildings', 'units'));
 	}
 
+
+//-------------------------------------------------------------------------------------------------------------------------------
+
+
+
 	public function update(Request $request, Tenant $tenant)
 {
 	$request->validate([
-		'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue',
+		'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue,blocked', 
 		'unit_id' => 'nullable|exists:units,id',
 		'name' => 'required|string|max:100',
-		'phone' => 'nullable|string|max:20',
-		'id_number' => 'nullable|string|max:50',
+		'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
+		'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
+		'id_number' => ['nullable', 'string', 'max:50', Rule::unique('tenants', 'id_number')->ignore($tenant->id)],
 		'family_type' => 'required|in:individual,family',
 		'email' => 'nullable|email|max:100',
 		'move_in_date' => 'nullable|date',
@@ -153,6 +171,8 @@ class TenantController extends Controller
 		'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
 		'name' => $request->name,
 		'phone' => $request->phone,
+		'phone_secondary' => $request->phone_secondary,
+		'is_whatsapp' => $request->has('is_whatsapp'),
 		'id_number' => $request->id_number,
 		'family_type' => $request->family_type,
 		'email' => $request->email,
@@ -170,6 +190,9 @@ class TenantController extends Controller
 
 	return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------
+
 
 	public function search(Request $request)
 	{
@@ -316,4 +339,7 @@ class TenantController extends Controller
 
 		return redirect()->route('admin.tenants.index')->with('success', 'تم إلغاء ربط الوحدة بنجاح');
 	}
+	
+
+
 }

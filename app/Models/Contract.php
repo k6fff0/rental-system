@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+
 
 class Contract extends Model
 {
@@ -83,6 +85,48 @@ public function getVisualStatusAttribute(): string
     }
 
     return 'active';
+}
+public function getFormattedDurationAttribute()
+{
+    if (!$this->start_date || !$this->end_date) {
+        return null;
+    }
+
+    $start = \Carbon\Carbon::parse($this->start_date);
+    $end = \Carbon\Carbon::parse($this->end_date);
+
+    $diff = $start->diff($end);
+
+    $months = $diff->m + ($diff->y * 12); // عدد الشهور الكلي
+    $days = $diff->d; // باقي الأيام
+
+    $output = '';
+
+    if ($months > 0) {
+        $output .= $months . ' ' . __('messages.months');
+    }
+
+    if ($days > 0) {
+        $output .= ($months > 0 ? ' ' : '') . $days . ' ' . __('messages.days');
+    }
+
+    return $output ?: __('messages.no_duration');
+}
+public function getDaysRemainingTextAttribute()
+{
+    if (!$this->end_date) {
+        return __('messages.no_duration');
+    }
+
+    $now = \Carbon\Carbon::now();
+    $end = \Carbon\Carbon::parse($this->end_date);
+
+    if ($end->isPast()) {
+        return __('messages.expired');
+    }
+
+    $daysLeft = $now->diffInDays($end, false);
+    return __('messages.remaining_in', ['days' => $daysLeft]);
 }
 
 }

@@ -8,7 +8,6 @@ use App\Models\Contract;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 
-
 class Unit extends Model
 {
     use HasFactory;
@@ -32,6 +31,7 @@ class Unit extends Model
 
             if ($wasOccupied && $nowNotOccupied) {
                 $activeContract = Contract::where('unit_id', $unit->id)
+                    ->where('status', 'active') // ✅ تأكيد حالة العقد
                     ->whereDate('start_date', '<=', now())
                     ->whereDate('end_date', '>=', now())
                     ->first();
@@ -48,12 +48,12 @@ class Unit extends Model
     {
         return $this->belongsTo(Building::class);
     }
-	// images
-	public function images()
-    {
-    return $this->hasMany(UnitImage::class);
-    }
 
+    // ✅ صور الوحدة
+    public function images()
+    {
+        return $this->hasMany(UnitImage::class);
+    }
 
     // ✅ العلاقة مع العقود
     public function contracts()
@@ -67,67 +67,62 @@ class Unit extends Model
         return $this->hasOne(Contract::class)->latestOfMany('start_date');
     }
 
-public function getStatusLabelAttribute()
-{
-    $contract = $this->latestContract;
+    // ✅ عرض اسم الحالة حسب العقد
+    public function getStatusLabelAttribute()
+    {
+        $contract = $this->latestContract;
 
-    // لو فيه عقد غير مفسوخ
-    if ($contract && $contract->status !== 'terminated') {
-        return match ($contract->status) {
-            'active', 'expiring_soon' => UnitStatus::OCCUPIED->value,
-            'ended'                   => UnitStatus::EXPIRED_CONTRACT->value,
-            default                   => $this->status,
-        };
+        if ($contract && $contract->status !== 'terminated') {
+            return match ($contract->status) {
+                'active', 'expiring_soon' => UnitStatus::OCCUPIED->value,
+                'ended'                   => UnitStatus::EXPIRED_CONTRACT->value,
+                default                   => $this->status,
+            };
+        }
+
+        return $this->status;
     }
 
-    // مفيش عقد مرتبط أو مفسوخ → نرجع الحالة الأصلية
-    return $this->status;
-}
+    // ✅ السعر الحالي حسب العقد
+    public function getCurrentRentPriceAttribute()
+    {
+        $contract = $this->latestContract;
 
+        if ($contract && $contract->status !== 'terminated') {
+            return (float) $contract->rent_amount;
+        }
 
-public function getCurrentRentPriceAttribute()
-{
-    $contract = $this->latestContract;
-
-    if ($contract && $contract->status !== 'terminated') {
-        return (float) $contract->rent_amount; // نرجع قيمة فعلية
+        return (float) $this->rent_price;
     }
-
-    return (float) $this->rent_price;
-}
-
-
 
     // ✅ آخر مستأجر
     public function latestTenant()
     {
         return $this->latestContract?->tenant;
     }
-	
-	
-	
-public function activeContract()
-{
-    return $this->hasOne(Contract::class)
-        ->where('status', 'active')
-        ->whereDate('start_date', '<=', now())
-        ->whereDate('end_date', '>=', now());
-}
-	
-	
-	public function latestActiveContract()
-{
-    return $this->hasOne(\App\Models\Contract::class)
-                ->where('status', 'active')
-                ->whereDate('start_date', '<=', now())
-                ->whereDate('end_date', '>=', now())
-                ->latestOfMany('start_date');
-}
 
-public function expenses()
-{
-    return $this->morphMany(Expense::class, 'expensable');
-}
+    // ✅ عقد نشط حاليًا
+    public function activeContract()
+    {
+        return $this->hasOne(Contract::class)
+            ->where('status', 'active')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now());
+    }
 
+    // ✅ أحدث عقد نشط
+    public function latestActiveContract()
+    {
+        return $this->hasOne(Contract::class)
+            ->where('status', 'active')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latestOfMany('start_date');
+    }
 
+    // ✅ مصروفات الوحدة
+    public function expenses()
+    {
+        return $this->morphMany(Expense::class, 'expensable');
+    }
 }

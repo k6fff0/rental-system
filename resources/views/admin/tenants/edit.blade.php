@@ -16,31 +16,37 @@
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
             </div>
 
-            {{-- الحالة --}}
-            <div class="mb-4">
-                <label for="tenant_status"
-                    class="block text-sm font-medium text-gray-700">{{ __('messages.tenant_status') }}</label>
-                <select name="tenant_status" id="tenant_status" required
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-                    <option value="active" {{ old('tenant_status', $tenant->tenant_status) == 'active' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_active') }}</option>
-                    <option value="late_payer"
-                        {{ old('tenant_status', $tenant->tenant_status) == 'late_payer' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_late_payer') }}</option>
-                    <option value="has_debt"
-                        {{ old('tenant_status', $tenant->tenant_status) == 'has_debt' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_has_debt') }}</option>
-                    <option value="absent"
-                        {{ old('tenant_status', $tenant->tenant_status) == 'absent' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_absent') }}</option>
-                    <option value="abroad"
-                        {{ old('tenant_status', $tenant->tenant_status) == 'abroad' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_abroad') }}</option>
-                    <option value="legal_issue"
-                        {{ old('tenant_status', $tenant->tenant_status) == 'legal_issue' ? 'selected' : '' }}>
-                        {{ __('messages.tenant_status_legal_issue') }}</option>
-                </select>
-            </div>
+           {{-- الحالة --}}
+<div class="mb-4">
+    <label for="tenant_status" class="block text-sm font-medium text-gray-700">
+        {{ __('messages.tenant_status') }}
+    </label>
+    <select name="tenant_status" id="tenant_status" required
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+        
+        <option value="active" {{ old('tenant_status', $tenant->tenant_status) == 'active' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_active') }}</option>
+
+        <option value="late_payer" {{ old('tenant_status', $tenant->tenant_status) == 'late_payer' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_late_payer') }}</option>
+
+        <option value="has_debt" {{ old('tenant_status', $tenant->tenant_status) == 'has_debt' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_has_debt') }}</option>
+
+        <option value="absent" {{ old('tenant_status', $tenant->tenant_status) == 'absent' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_absent') }}</option>
+
+        <option value="abroad" {{ old('tenant_status', $tenant->tenant_status) == 'abroad' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_abroad') }}</option>
+
+        <option value="legal_issue" {{ old('tenant_status', $tenant->tenant_status) == 'legal_issue' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_legal_issue') }}</option>
+
+        <option value="blocked" {{ old('tenant_status', $tenant->tenant_status) == 'blocked' ? 'selected' : '' }}>
+            {{ __('messages.tenant_status_blocked') }}</option>
+    </select>
+</div>
+
 
             {{-- المديونية --}}
             <div class="mb-4">
@@ -73,12 +79,42 @@
                 </select>
             </div>
 
-            {{-- الجوال --}}
-            <div class="mb-4">
-                <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('messages.phone') }}</label>
-                <input type="text" name="phone" id="phone" value="{{ old('phone', $tenant->phone) }}"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
-            </div>
+         {{-- الجوال الأساسي --}}
+<div class="mb-4">
+    <label for="phone" class="block text-sm font-medium text-gray-700">{{ __('messages.phone') }}</label>
+    <input type="tel"
+           name="phone"
+           id="phone"
+           value="{{ old('phone', $tenant->phone ?? '') }}"
+           pattern="^\+\d{6,15}$"
+           title="يرجى إدخال الرقم مع مفتاح الدولة مثل: +971501234567"
+           placeholder="+971501234567"
+           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+</div>
+
+{{-- زر لإظهار رقم إضافي --}}
+<div class="mb-4">
+    <button type="button"
+        onclick="document.getElementById('phone-secondary-wrapper').classList.remove('hidden'); this.classList.add('hidden');"
+        class="text-blue-600 text-sm hover:underline">
+        ➕ إضافة رقم آخر
+    </button>
+</div>
+
+{{-- الجوال الثانوي (مخفي افتراضيًا) --}}
+<div id="phone-secondary-wrapper" class="mb-4 {{ old('phone_secondary') ? '' : 'hidden' }}">
+    <label for="phone_secondary" class="block text-sm font-medium text-gray-700">
+        رقم جوال إضافي (اختياري)
+    </label>
+    <input type="tel"
+           name="phone_secondary"
+           id="phone_secondary"
+           value="{{ old('phone_secondary', $tenant->phone_secondary ?? '') }}"
+           pattern="^\+\d{6,15}$"
+           title="يرجى إدخال الرقم مع مفتاح الدولة مثل: +971501234567"
+           placeholder="+971501234567"
+           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
+</div>
 
             {{-- الإيميل --}}
             <div class="mb-4">

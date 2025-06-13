@@ -1142,6 +1142,32 @@ return [
     'add_first_vehicle'     => 'Add First Vehicle',
     'select_employee'       => 'Select Employee',
     'browse'                => 'Browse',
+    'expired_contracts' => 'Expired Contracts',
+    'monthly_rent' => 'Monthly Rent',
+    'entries' => 'Entries',
+    'tenant_status_blocked' => 'Blocked',
+    'back_to_contracts'      => 'Back to Contracts',
+    'days_remaining'         => 'Days Remaining',
+    'contract_duration'      => 'Contract Duration',
+    'tenant_information'     => 'Tenant Information',
+    'national_id'            => 'National ID',
+    'contract_actions'       => 'Contract Actions',
+    'print_contract'         => 'Print Contract',
+    'delete_contract'        => 'Delete Contract',
+    'unit_information'       => 'Unit Information',
+    'payment_history'        => 'Payment History',
+    'contract_duration' => 'Contract Duration',
+    'months' => 'month',
+    'days' => 'day',
+    'collected_by' => 'Collected by',
+    'no_duration' => 'Not specified',
+    'days_remaining' => 'Days Remaining',
+    'expired' => 'Expired',
+    'remaining_in' => ':days days remaining',
+    'no_attachments' => 'No attachments available',
+
+
+
 
     'status_labels' => [
         'new' => 'New',

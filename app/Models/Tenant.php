@@ -15,6 +15,8 @@ class Tenant extends Model
         'uuid',
         'name',
         'phone',
+		'phone_secondary',
+		'is_whatsapp',
         'id_number',
         'type',
         'family_type',
@@ -39,6 +41,7 @@ class Tenant extends Model
         'absent',
         'abroad',
         'legal_issue',
+		'blocked',
     ];
 
     /**

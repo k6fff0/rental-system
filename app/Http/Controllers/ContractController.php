@@ -24,37 +24,94 @@ class ContractController extends Controller
         $this->middleware('permission:delete contracts')->only(['destroy']);
     }
 
-    public function index(Request $request)
-    {
-        $query = Contract::with(['tenant', 'unit']);
+ public function index(Request $request)
+{
+    $query = Contract::with(['tenant', 'unit']);
 
-        if ($request->filled('q')) {
-            $search = $request->q;
+    // 🔍 فلتر البحث
+    if ($request->filled('q')) {
+        $search = $request->q;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('contract_number', 'like', "%$search%")
-                    ->orWhereHas('tenant', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%$search%")
-                            ->orWhere('id_number', 'like', "%$search%");
-                    })
-                    ->orWhereHas('unit', function ($q3) use ($search) {
-                        $q3->where('unit_number', 'like', "%$search%");
-                    });
-            });
-        }
-
-        $contracts = $query->latest()->paginate(10);
-        $activeContractsCount = Contract::where('end_date', '>', now()->addDays(30))->count();
-        $expiringSoonCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])->count();
-        $contractTypes = ContractType::orderBy('updated_at', 'desc')->get();
-
-        return view('admin.contracts.index', compact(
-            'contracts',
-            'activeContractsCount',
-            'expiringSoonCount',
-            'contractTypes'
-        ));
+        $query->where(function ($q) use ($search) {
+            $q->where('contract_number', 'like', "%$search%")
+                ->orWhereHas('tenant', function ($q2) use ($search) {
+                    $q2->where('name', 'like', "%$search%")
+                        ->orWhere('id_number', 'like', "%$search%");
+                })
+                ->orWhereHas('unit', function ($q3) use ($search) {
+                    $q3->where('unit_number', 'like', "%$search%");
+                });
+        });
     }
+
+    // ✅ فلتر الحالة
+    if ($request->filled('status')) {
+        switch ($request->status) {
+            case 'active':
+                $query->whereDate('end_date', '>', now())
+                      ->where(function ($q) {
+                          $q->whereNull('status')->orWhere('status', 'active');
+                      });
+                break;
+
+            case 'expired':
+                $query->whereDate('end_date', '<', now())
+                      ->where(function ($q) {
+                          $q->whereNull('status')->orWhere('status', 'active');
+                      });
+                break;
+
+            case 'expiring':
+                $query->whereBetween('end_date', [now(), now()->addDays(30)])
+                      ->where(function ($q) {
+                          $q->whereNull('status')->orWhere('status', 'active');
+                      });
+                break;
+
+            case 'terminated':
+                $query->where('status', 'terminated');
+                break;
+        }
+    }
+
+    // 📅 فلتر التاريخ
+    if ($request->filled('from_date')) {
+        $query->whereDate('start_date', '>=', $request->from_date);
+    }
+
+    if ($request->filled('to_date')) {
+        $query->whereDate('end_date', '<=', $request->to_date);
+    }
+
+    $contracts = $query->latest()->paginate(10);
+
+    // إحصائيات الكروت
+    $activeCount = Contract::whereDate('end_date', '>', now())
+        ->where(function ($q) {
+            $q->whereNull('status')->orWhere('status', 'active');
+        })->count();
+
+    $expiringCount = Contract::whereBetween('end_date', [now(), now()->addDays(30)])
+        ->where(function ($q) {
+            $q->whereNull('status')->orWhere('status', 'active');
+        })->count();
+
+    $expiredCount = Contract::whereDate('end_date', '<', now())
+        ->where(function ($q) {
+            $q->whereNull('status')->orWhere('status', 'active');
+        })->count();
+
+    $contractTypes = ContractType::orderBy('updated_at', 'desc')->get();
+
+    return view('admin.contracts.index', compact(
+        'contracts',
+        'activeCount',
+        'expiringCount',
+        'expiredCount',
+        'contractTypes'
+    ));
+}
+
 
     public function create()
     {
@@ -78,6 +135,13 @@ class ContractController extends Controller
     ]);
 
     $tenant = Tenant::findOrFail($request->tenant_id);
+	
+	    // 🛑 منع إنشاء عقد للمستأجر المحظور
+    if ($tenant->tenant_status === 'blocked') {
+        return back()->withErrors(['tenant_id' => 'لا يمكن إنشاء عقد لهذا المستأجر لأنه محظور.'])->withInput();
+    }
+	
+	
     $unit = Unit::with('contracts', 'building')->findOrFail($request->unit_id);
 
     if (
