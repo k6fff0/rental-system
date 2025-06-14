@@ -65,6 +65,25 @@
                     @endforeach
                 </select>
             </div>
+<!-- رقم هاتف إضافي -->
+<div class="mt-4">
+    <label for="extra_phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        {{ __('messages.extra_contact_number') }}
+    </label>
+    <input type="text" name="extra_phone" id="extra_phone"
+        value="{{ old('extra_phone') }}"
+        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm dark:bg-gray-800 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+</div>
+
+<!-- هل واتساب؟ -->
+<div class="mt-2 flex items-center gap-2">
+    <input type="checkbox" name="is_whatsapp" id="is_whatsapp" value="1"
+        {{ old('is_whatsapp') ? 'checked' : '' }}
+        class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500 dark:bg-gray-800 dark:border-gray-600">
+    <label for="is_whatsapp" class="text-sm text-gray-700 dark:text-gray-300">
+        {{ __('messages.is_whatsapp') }}
+    </label>
+</div>
 
             {{-- وصف المشكلة --}}
             <div>

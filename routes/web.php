@@ -88,6 +88,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
     Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
     Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])->name('buildings.toggleFamiliesOnly')->middleware('can:edit buildings');
+	Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
+
 
 
     Route::prefix('technicians')->name('technicians.')->group(function () {

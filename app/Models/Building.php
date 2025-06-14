@@ -14,10 +14,10 @@ class Building extends Model
      */
     protected $fillable = [
         'name',
-		'building_number',
+        'building_number',
         'address',
-		'location_url',
-        'number_of_units',       
+        'location_url',
+        'image', 
         'owner_name',
         'owner_nationality',
         'owner_id_number',
@@ -25,48 +25,47 @@ class Building extends Model
         'municipality_number',
         'rent_amount',
         'initial_renovation_cost',
-        'electric_meters',
-        'internet_lines',
+        'families_only', 
     ];
 
-    /**
-     * تحويل بعض الحقول تلقائياً إلى Array عند القراءة
-     */
+
+
     protected $casts = [
         'electric_meters' => 'array',
         'internet_lines'  => 'array',
     ];
-	
-		protected static function booted()
+
+    protected static function booted()
     {
-      static::deleting(function ($building) {
-        foreach ($building->units as $unit) {
-            $unit->contracts()->delete(); // حذف العقود المرتبطة بالغرفة
-            $unit->delete(); // حذف الغرفة
-        }
-    });
+        static::deleting(function ($building) {
+            foreach ($building->units as $unit) {
+                $unit->contracts()->delete(); // حذف العقود المرتبطة بالغرفة
+                $unit->delete(); // حذف الغرفة
+            }
+        });
     }
-    /**
-     * علاقة المبنى بالوحدات
-     * كل مبنى يحتوي على وحدات متعددة
-     */
+
     public function units()
     {
         return $this->hasMany(Unit::class);
     }
-	
-	public function utilities()
+
+    public function utilities()
     {
-    return $this->hasMany(BuildingUtility::class);
+        return $this->hasMany(BuildingUtility::class);
     }
-public function users()
-{
-    return $this->belongsToMany(User::class);
-}
-public function expenses()
-{
-    return $this->morphMany(Expense::class, 'expensable');
-}
-
-
+	
+	
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+	
+	
+    public function expenses()
+    {
+        return $this->morphMany(Expense::class, 'expensable');
+    }
+	
+	
 }

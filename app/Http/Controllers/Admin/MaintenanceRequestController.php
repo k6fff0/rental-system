@@ -80,90 +80,100 @@ class MaintenanceRequestController extends Controller
 
 
 
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
+   public function store(Request $request)
+{
+    // ✅ 1. فحص البيانات المطلوبة
+    $request->validate([
+        'building_id'      => 'required|exists:buildings,id',
+        'unit_id'          => 'required|exists:units,id',
+        'sub_specialty_id' => 'required|exists:specialties,id',
+        'description'      => 'nullable|string',
+        'image'            => 'nullable|image|max:20480',
+        'technician_id'    => 'nullable|exists:users,id',
+        'extra_phone'      => 'nullable|string|max:20',
+        'is_whatsapp'      => 'nullable|boolean',
+    ]);
 
-    public function store(Request $request)
-    {
-        // ✅ 1. فحص البيانات المطلوبة
-        $request->validate([
-            'building_id'      => 'required|exists:buildings,id',
-            'unit_id'          => 'required|exists:units,id',
-            'sub_specialty_id' => 'required|exists:specialties,id',
-            'description'      => 'nullable|string',
-            'image'            => 'nullable|image|max:20480',
-            'technician_id'    => 'nullable|exists:users,id',
-        ]);
+    // ✅ 🔁 تحقق من وجود أوردر نشط لنفس الغرفة والعطل
+    $exists = MaintenanceRequest::where('unit_id', $request->unit_id)
+        ->where('sub_specialty_id', $request->sub_specialty_id)
+        ->whereNotIn('status', ['completed', 'cancelled', 'rejected'])
+        ->exists();
 
-        // ✅ 🔁 تحقق من وجود أوردر نشط لنفس الغرفة والعطل
-        $exists = MaintenanceRequest::where('unit_id', $request->unit_id)
-            ->where('sub_specialty_id', $request->sub_specialty_id)
-            ->whereNotIn('status', ['completed', 'cancelled', 'rejected']) // حالات شغالة
-            ->exists();
-
-        if ($exists) {
-            return back()->with('error', 'يوجد بلاغ جاري لهذا العطل في هذه الوحدة بالفعل.');
-        }
-
-        // ✅ 2. تجهيز البيانات الأساسية
-        $data = $request->only(['building_id', 'unit_id', 'sub_specialty_id', 'description']);
-        $data['created_by'] = auth()->id();
-		
-		    // ✅ ⏺️ نحفظ الساكن الحالي وقت البلاغ
-        $unit = \App\Models\Unit::with('latestContract.tenant')->find($request->unit_id);
-        $data['tenant_id'] = $unit->latestContract?->tenant?->id;
-
-        // ✅ 3. رفع الصورة لو موجودة
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('maintenance_images', 'public');
-        }
-
-        // ✅ 4. تعيين فني يدوي
-        if ($request->filled('technician_id')) {
-            $technician = User::find($request->technician_id);
-
-            if ($technician->technician_status === 'unavailable') {
-                return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
-            }
-
-            $data['assigned_worker_id'] = $technician->id;
-            $data['assigned_manually'] = true;
-        } else {
-            // ✅ 5. تعيين تلقائي
-            $subSpecialty = Specialty::find($request->sub_specialty_id);
-
-            if ($subSpecialty && $subSpecialty->parent_id) {
-                $mainSpecialtyId = $subSpecialty->parent_id;
-
-                $technician = User::role('technician')
-                    ->where('main_specialty_id', $mainSpecialtyId)
-                    ->whereIn('technician_status', ['available', 'busy'])
-                    ->withCount(['assignedMaintenanceRequests as active_requests_count' => function ($q) {
-                        $q->whereNotIn('status', ['completed', 'cancelled']);
-                    }])
-                    ->orderBy('active_requests_count')
-                    ->inRandomOrder()
-                    ->first();
-
-                if ($technician) {
-                    $data['assigned_worker_id'] = $technician->id;
-                    $data['assigned_manually'] = false;
-                }
-            }
-        }
-
-        // ✅ 6. إنشاء البلاغ
-        $maintenanceRequest = MaintenanceRequest::create($data);
-
-        // ✅ 7. تحديث حالة الفني
-        if ($maintenanceRequest->technician) {
-            $maintenanceRequest->technician->updateTechnicianBusyStatus();
-        }
-
-        return redirect()->route('admin.maintenance_requests.index')
-            ->with('success', 'تم تسجيل البلاغ بنجاح');
+    if ($exists) {
+        return back()->with('error', 'يوجد بلاغ جاري لهذا العطل في هذه الوحدة بالفعل.');
     }
 
+    // ✅ 2. تجهيز البيانات الأساسية
+    $data = $request->only([
+    'building_id',
+    'unit_id',
+    'sub_specialty_id',
+    'description',
+    ]);
+    $data['extra_phone'] = $request->input('extra_phone');
+    $data['is_whatsapp'] = $request->boolean('is_whatsapp');
+    $data['created_by'] = auth()->id();
+
+    // ✅ ⏺️ نحفظ الساكن الحالي وقت البلاغ
+    $unit = \App\Models\Unit::with('latestContract.tenant')->find($request->unit_id);
+    $data['tenant_id'] = $unit->latestContract?->tenant?->id;
+
+    // ✅ 3. رفع الصورة لو موجودة
+    if ($request->hasFile('image')) {
+        $data['image'] = $request->file('image')->store('maintenance_images', 'public');
+    }
+
+    // ✅ 4. تعيين فني يدوي
+    if ($request->filled('technician_id')) {
+        $technician = User::find($request->technician_id);
+
+        if ($technician->technician_status === 'unavailable') {
+            return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
+        }
+
+        $data['assigned_worker_id'] = $technician->id;
+        $data['assigned_manually'] = true;
+    } else {
+        // ✅ 5. تعيين تلقائي
+        $subSpecialty = Specialty::find($request->sub_specialty_id);
+
+        if ($subSpecialty && $subSpecialty->parent_id) {
+            $mainSpecialtyId = $subSpecialty->parent_id;
+
+            $technician = User::role('technician')
+                ->where('main_specialty_id', $mainSpecialtyId)
+                ->whereIn('technician_status', ['available', 'busy'])
+                ->withCount(['assignedMaintenanceRequests as active_requests_count' => function ($q) {
+                    $q->whereNotIn('status', ['completed', 'cancelled']);
+                }])
+                ->orderBy('active_requests_count')
+                ->inRandomOrder()
+                ->first();
+
+            if ($technician) {
+                $data['assigned_worker_id'] = $technician->id;
+                $data['assigned_manually'] = false;
+            }
+        }
+    }
+
+    // ✅ 6. إنشاء البلاغ
+    $maintenanceRequest = MaintenanceRequest::create($data);
+
+    // ✅ 7. تحديث حالة الفني
+    if ($maintenanceRequest->technician) {
+        $maintenanceRequest->technician->updateTechnicianBusyStatus();
+    }
+
+    return redirect()->route('admin.maintenance_requests.index')
+        ->with('success', 'تم تسجيل البلاغ بنجاح');
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 
 
     public function edit($id)
@@ -183,12 +193,11 @@ class MaintenanceRequestController extends Controller
         ));
     }
 
+//-------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-  public function update(Request $request, $id)
+ public function update(Request $request, $id)
 {
-	
     $request->validate([
         'building_id'       => 'required|exists:buildings,id',
         'unit_id'           => 'required|exists:units,id',
@@ -198,6 +207,8 @@ class MaintenanceRequestController extends Controller
         'image'             => 'nullable|image|max:20480',
         'cost'              => 'nullable|numeric',
         'technician_id'     => 'nullable|exists:users,id',
+        'extra_phone'       => 'nullable|string|max:20',
+        'is_whatsapp'       => 'nullable|boolean',
     ]);
 
     $maintenance = MaintenanceRequest::findOrFail($id);
@@ -212,13 +223,14 @@ class MaintenanceRequestController extends Controller
         'note',
         'cost',
         'status',
+
     ]);
+	$data['extra_phone'] = $request->input('extra_phone');
+    $data['is_whatsapp'] = $request->boolean('is_whatsapp');
 
     // ✅ التحقق من الفني الجديد
     if ($request->filled('technician_id')) {
         $technician = User::find($request->technician_id);
-		
-		
 
         if ($technician->technician_status === 'unavailable') {
             return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
@@ -231,7 +243,6 @@ class MaintenanceRequestController extends Controller
 
             \Log::info('Requested technician_id: ' . $request->technician_id);
             \Log::info('Old technician: ' . $maintenance->assigned_worker_id);
-			
         }
     }
 
@@ -264,12 +275,14 @@ class MaintenanceRequestController extends Controller
                 $data['rejected_at'] = $now;
                 $data['rejected_by'] = $userId;
                 break;
+            case 'delayed':
+                $data['delayed_at'] = $now;
+                break;
         }
     }
 
     $maintenance->fill($data);
-$maintenance->save();
-
+    $maintenance->save();
 
     // ✅ تحديث حالة الفني الجديد
     if ($maintenance->technician) {
@@ -286,9 +299,11 @@ $maintenance->save();
         ->with('success', 'تم تحديث البلاغ بنجاح');
 }
 
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+
 public function updateStatus(Request $request, $id)
 {
-    // ✅ السماح للأدمن أو للفني يدخل هنا
     if (!auth()->user()->can('change maintenance status') && auth()->user()->user_type !== 'technician') {
         abort(403);
     }
@@ -296,7 +311,7 @@ public function updateStatus(Request $request, $id)
     $request->validate([
         'status' => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
         'note' => 'nullable|string|max:1000',
-        'completed_image' => 'nullable|image|max:20480', // ✅ إضافة التحقق من الصورة
+        'completed_image' => 'nullable|image|max:20480',
     ]);
 
     $maintenance = MaintenanceRequest::findOrFail($id);
@@ -314,7 +329,6 @@ public function updateStatus(Request $request, $id)
             $maintenance->completed_at = $now;
             $maintenance->completed_by = $userId;
 
-            // ✅ حفظ صورة الإنجاز لو موجودة
             if ($request->hasFile('completed_image')) {
                 $path = $request->file('completed_image')->store('maintenance_images', 'public');
                 $maintenance->completed_image = $path;
@@ -326,18 +340,17 @@ public function updateStatus(Request $request, $id)
             $maintenance->rejected_by = $userId;
             $maintenance->rejection_note = $request->note;
             break;
-			
-		case 'delayed':
-        // ✅ فقط خزن الملاحظة بتاعة التأجيل في نفس الحقل "note"
-        $maintenance->note = $request->note;
-        break;	
+
+        case 'delayed':
+            $maintenance->note = $request->note;
+            $maintenance->delayed_at = $now; // ✅ تم تسجيل وقت التأجيل
+			$maintenance->delayed_by = $userId;
+            break;
     }
-	
 
     $maintenance->status = $newStatus;
     $maintenance->save();
 
-    // ✅ إعادة احتساب حالة الفني
     if ($maintenance->technician) {
         $maintenance->technician->recalculateTechnicianStatus();
     }
@@ -347,17 +360,19 @@ public function updateStatus(Request $request, $id)
     return redirect()->back()->with('success', 'تم تحديث حالة البلاغ بنجاح');
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------	
 
 
-    public function show($id)
+ public function show($id)
     {
         $request = MaintenanceRequest::with([
             'building',
-            'unit.latestContract.tenant', // 👈 مهم برضو هنا
+            'unit.latestContract.tenant', 
             'subSpecialty.parent',
             'technician',
             'creator',
             'inProgressBy',
+			'delayedBy',
             'completedBy',
             'rejectedBy'
         ])->findOrFail($id);
@@ -365,7 +380,11 @@ public function updateStatus(Request $request, $id)
         return view('admin.maintenance_requests.show', compact('request'));
     }
 	
-	
+
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------	
 	
     public function archive(Request $request)
     {
@@ -395,6 +414,9 @@ public function updateStatus(Request $request, $id)
 
         return view('admin.maintenance_requests.archive', compact('requests'));
     }
+
+
+
 
 public function myRequests(Request $request)
 {

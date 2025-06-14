@@ -3,230 +3,322 @@
 @section('title', __('messages.my_maintenance_requests'))
 
 @section('content')
-    <div class="container mx-auto px-4 py-6 dark:bg-gray-900 min-h-screen">
-        {{-- Header Section --}}
-        <div class="mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-                {{ __('messages.my_maintenance_requests') }}
-            </h1>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-3 py-4">
+            {{-- Header Section --}}
+            <div class="mb-4">
+                <h1 class="text-xl font-bold text-gray-800 dark:text-white mb-3">
+                    {{ __('messages.my_maintenance_requests') }}
+                </h1>
 
-            {{-- Total Count --}}
-            <div class="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-4">
-                <p class="text-blue-800 dark:text-blue-100 font-semibold">
-                    {{ __('messages.total_requests') }}: <span class="text-2xl">{{ $requests->total() }}</span>
-                </p>
-            </div>
-
-            {{-- Filter Section --}}
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
-                <form method="GET" action="{{ request()->url() }}" id="filterForm"
-                    class="space-y-4 md:space-y-0 md:flex md:items-end md:gap-4">
-                    <div class="flex-1">
-                        <label for="building_filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {{ __('messages.filter_by_building') }}
-                        </label>
-                        <select name="building_id" id="building_filter" onchange="document.getElementById('filterForm').submit()"
-                            class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                            <option value="">{{ __('messages.all_buildings') }}</option>
-                            @foreach ($buildings ?? [] as $building)
-                                <option value="{{ $building->id }}"
-                                    {{ request('building_id') == $building->id ? 'selected' : '' }}>
-                                    {{ $building->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- Quick Filter Buttons --}}
-                    <div class="flex flex-wrap gap-2 items-end">
-                        <a href="{{ request()->fullUrlWithQuery(['status' => 'new']) }}"
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors text-sm">
-                            جديد
-                        </a>
-                        <a href="{{ request()->fullUrlWithQuery(['status' => 'delayed']) }}"
-                            class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors text-sm">
-                            المؤجل
-                        </a>
-                        <a href="{{ request()->url() }}"
-                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors text-sm">
-                            {{ __('messages.clear_filter') }}
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        {{-- Requests List --}}
-        @forelse ($requests as $request)
-            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 md:p-6 mb-4 border border-gray-200 dark:border-gray-700 transition-all hover:shadow-lg">
-                {{-- Header --}}
-                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <h2 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white flex-1">
-                        #{{ $request->id }} — {{ __('messages.fault_type') }}: {{ $request->subSpecialty->name ?? '-' }}
-                    </h2>
-                    <span
-                        class="inline-block px-3 py-1 text-xs md:text-sm rounded-full font-medium   
-                        @if ($request->status === 'new') bg-yellow-300 dark:bg-yellow-600 text-blue-800 dark:text-white
-                        @elseif($request->status === 'in_progress') bg-yellow-200 dark:bg-yellow-700 text-yellow-800 dark:text-white
-                        @elseif($request->status === 'completed') bg-green-200 dark:bg-green-700 text-green-800 dark:text-white
-                        @elseif($request->status === 'delayed') bg-orange-400 dark:bg-orange-600 text-red-800 dark:text-white
-                        @elseif($request->status === 'rejected') bg-red-100 dark:bg-red-700 text-red-800 dark:text-white
-                        @else bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-white @endif">
-                        {{ __('messages.status_labels.' . $request->status) }}
-                    </span>
+                {{-- Total Count Card --}}
+                <div
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl p-3 mb-4 shadow-lg">
+                    <p class="text-white font-semibold text-sm">
+                        {{ __('messages.total_requests') }}:
+                        <span class="text-xl font-bold">{{ $requests->total() }}</span>
+                    </p>
                 </div>
 
-                {{-- Details Section --}}
-                <div class="mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-300">
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                        <span class="font-medium">{{ __('messages.unit') }}:</span>
-                        <span class="flex items-center gap-2">
-                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white text-sm font-bold shadow">
-                                {{ $request->unit->unit_number ?? '-' }}
-                            </span>
-                            <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($request->unit->building->location ?? '') }}"
-                                target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">
-                                {{ $request->unit->building->name ?? '-' }}
+                {{-- Compact Filter Section --}}
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-3 mb-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                    <form method="GET" action="{{ request()->url() }}" id="filterForm">
+                        {{-- Building Filter --}}
+                        <div class="mb-3">
+                            <select name="building_id" id="building_filter"
+                                onchange="document.getElementById('filterForm').submit()"
+                                class="w-full text-sm border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">{{ __('messages.all_buildings') }}</option>
+                                @foreach ($buildings ?? [] as $building)
+                                    <option value="{{ $building->id }}"
+                                        {{ request('building_id') == $building->id ? 'selected' : '' }}>
+                                        {{ $building->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Quick Filter Buttons --}}
+                        <div class="flex gap-2">
+                            <a href="{{ request()->fullUrlWithQuery(['status' => 'new']) }}"
+                                class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-medium py-2 px-3 rounded-lg text-center transition-colors">
+                                {{ __('messages.new') }}
                             </a>
+                            <a href="{{ request()->fullUrlWithQuery(['status' => 'delayed']) }}"
+                                class="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-medium py-2 px-3 rounded-lg text-center transition-colors">
+                                {{ __('messages.delayed') }}
+                            </a>
+                            <a href="{{ request()->url() }}"
+                                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium py-2 px-3 rounded-lg text-center transition-colors">
+                                {{ __('messages.clear') }}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Professional Requests List --}}
+            @forelse ($requests as $request)
+                <div
+                    class="bg-gray-200 dark:bg-gray-800 rounded-xl p-4 mb-3 shadow-sm border border-gray-400 dark:border-gray-100 transition-all duration-300">
+                    {{-- Header Row --}}
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-lg font-bold text-blue-600 dark:text-blue-400">#{{ $request->id }}</span>
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-500 text-white text-sm font-bold">
+                                    {{ $request->unit->unit_number ?? '-' }}
+                                </span>
+                                <div class="flex flex-col">
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($request->unit->building->location ?? '') }}"
+                                        target="_blank"
+                                        class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">
+                                        {{ $request->unit->building->name ?? '-' }}
+                                    </a>
+                                    <span
+                                        class="inline-block bg-gray-400 dark:bg-blue-700 text-sm font-semibold text-gray-800 dark:text-gray-400 px-2 py-1 rounded">
+                                        {{ $request->subSpecialty->name ?? 'غير محدد' }}
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <span
+                            class="text-xs px-3 py-1 rounded-full font-medium whitespace-nowrap   
+                        @if ($request->status === 'new') bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300
+                        @elseif($request->status === 'in_progress') bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+                        @elseif($request->status === 'completed') bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300
+                        @elseif($request->status === 'delayed') bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300
+                        @elseif($request->status === 'rejected') bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300
+                        @else bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 @endif">
+                            {{ __('messages.status_labels.' . $request->status) }}
                         </span>
                     </div>
 
-                    @if ($request->unit->status === 'occupied' && $request->unit->latestContract && $request->unit->latestContract->tenant)
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="font-medium">{{ __('messages.tenant_phone') }}:</span>
-                            <div class="flex items-center gap-2">
-                                <a href="tel:{{ $request->unit->latestContract->tenant->phone }}"
-                                    class="text-blue-600 dark:text-blue-400 hover:underline">
-                                    {{ $request->unit->latestContract->tenant->phone }}
-                                </a>
-                                @if ($request->unit->latestContract->tenant->is_whatsapp)
-                                    <a href="https://wa.me/{{ ltrim($request->unit->latestContract->tenant->phone, '+') }}" 
-                                       target="_blank" 
-                                       class="text-green-600 dark:text-green-400">
-                                        <i class="fab fa-whatsapp text-lg"></i>
+                    {{-- Two Column Layout --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        {{-- Left Column: Contact Info --}}
+                        <div class="space-y-2">
+                            {{-- Contact Info --}}
+                            @if (
+                                ($request->unit->status === 'occupied' &&
+                                    $request->unit->latestContract &&
+                                    $request->unit->latestContract->tenant) ||
+                                    $request->extra_phone)
+                                <div class="space-y-1">
+                                    <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                        <i class="fas fa-phone text-blue-500"></i> {{ __('messages.contact') }}:
+                                    </div>
+                                    @if ($request->unit->status === 'occupied' && $request->unit->latestContract && $request->unit->latestContract->tenant)
+                                        <div
+                                            class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg px-2 py-1">
+                                            <a href="tel:{{ $request->unit->latestContract->tenant->phone }}"
+                                                class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1">
+                                                {{ $request->unit->latestContract->tenant->phone }}
+                                            </a>
+                                            @if ($request->unit->latestContract->tenant->is_whatsapp)
+                                                <a href="https://wa.me/{{ ltrim($request->unit->latestContract->tenant->phone, '+') }}"
+                                                    target="_blank" class="text-green-600 dark:text-green-400">
+                                                    <i class="fab fa-whatsapp text-sm"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    @if ($request->extra_phone)
+                                        <div
+                                            class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg px-2 py-1">
+                                            <a href="tel:{{ $request->extra_phone }}"
+                                                class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1">
+                                                {{ $request->extra_phone }}
+                                            </a>
+                                            @if ($request->is_whatsapp)
+                                                <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}"
+                                                    target="_blank" class="text-green-600 dark:text-green-400">
+                                                    <i class="fab fa-whatsapp text-sm"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+
+                            {{-- Timeline --}}
+                            <div>
+                                <div class="flex items-center gap-2 text-xs   mb-2">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                                    <span class="text-gray-600 dark:text-gray-400">{{ __('messages.created_by') }}:</span>
+                                    <span
+                                        class="font-medium text-gray-800 dark:text-gray-200">{{ $request->creator->name ?? __('messages.not_specified') }}</span>
+                                </div>
+                                <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+                                    <i class="fas fa-clock text-purple-500"></i> {{ __('messages.timeline') }}:
+                                </div>
+                                <div class="space-y-1">
+
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('messages.created_at') }}:</span>
+                                        <span
+                                            class="font-medium text-gray-800 dark:text-gray-200">{{ $request->created_at->format('Y/m/d H:i') }}</span>
+                                    </div>
+
+                                    @if ($request->in_progress_at)
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400">{{ __('messages.started_at') }}:</span>
+                                            <span
+                                                class="font-medium text-yellow-600 dark:text-yellow-400">{{ $request->in_progress_at->format('Y/m/d H:i') }}</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($request->delayed_at)
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400">{{ __('messages.delayed_at') }}:</span>
+                                            <span
+                                                class="font-medium text-orange-600 dark:text-orange-400">{{ $request->delayed_at->format('Y/m/d H:i') }}</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($request->completed_at)
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400">{{ __('messages.completed_at') }}:</span>
+                                            <span
+                                                class="font-medium text-green-600 dark:text-green-400">{{ $request->completed_at->format('Y/m/d H:i') }}</span>
+                                        </div>
+                                    @endif
+
+                                    @if ($request->rejected_at)
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                            <span
+                                                class="text-gray-600 dark:text-gray-400">{{ __('messages.rejected_at') }}:</span>
+                                            <span
+                                                class="font-medium text-red-600 dark:text-red-400">{{ $request->rejected_at->format('Y/m/d H:i') }}</span>
+                                        </div>
+                                    @endif
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Right Column: Image & Description --}}
+                        <div class="space-y-2">
+                            {{-- Image Preview --}}
+                            @if ($request->image)
+                                <div>
+                                    <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                        <i class="fas fa-image text-green-500"></i> {{ __('messages.problem_image') }}:
+                                    </div>
+                                    <a href="{{ asset('storage/' . $request->image) }}"
+                                        data-fancybox="gallery-{{ $request->id }}">
+                                        <img src="{{ asset('storage/' . $request->image) }}" alt="Problem Image"
+                                            class="h-16 w-16 object-cover rounded-lg border border-gray-200 dark:border-gray-600 hover:scale-105 transition-transform">
                                     </a>
-                                @endif
+                                </div>
+                            @endif
+
+                            {{-- Description Button --}}
+                            <div>
+                                <button onclick="showDescription('{{ addslashes($request->description) }}')"
+                                    class="text-blue-600 dark:text-blue-400 hover:underline text-xs font-medium flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-lg w-full justify-center">
+                                    <i class="fas fa-file-text"></i> {{ __('messages.view_problem_description') }}
+                                </button>
+                            </div>
+
+                            {{-- Delay Note --}}
+                            @if ($request->status === 'delayed' && $request->note)
+                                <div
+                                    class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-2">
+                                    <div class="text-xs font-medium text-orange-600 dark:text-orange-400 mb-1">
+                                        <i class="fas fa-clock"></i> {{ __('messages.delay_note') }}:
+                                    </div>
+                                    <p class="text-orange-600 dark:text-orange-400 text-xs">
+                                        {{ $request->note }}
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Rejection Note Row --}}
+                    @if ($request->rejected_at && $request->rejection_note)
+                        <div class="mb-3 pt-2 border-t border-gray-100 dark:border-gray-700">
+                            <div
+                                class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+                                <div class="text-xs font-medium text-red-600 dark:text-red-400 mb-1">
+                                    <i class="fas fa-exclamation-triangle"></i> {{ __('messages.rejection_note') }}:
+                                </div>
+                                <p class="text-red-600 dark:text-red-400 text-xs">
+                                    {{ $request->rejection_note }}
+                                </p>
                             </div>
                         </div>
                     @endif
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="font-medium">{{ __('messages.created_by') }}:</span>
-                            <span>{{ $request->creator->name ?? '-' }}</span>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <span class="font-medium">{{ __('messages.created_at') }}:</span>
-                            <span>{{ $request->created_at->format('Y-m-d H:i') }}</span>
-                        </div>
-
-                        @if ($request->in_progress_at)
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                                <span class="font-medium">{{ __('messages.in_progress_at') }}:</span>
-                                <span>{{ $request->in_progress_at->format('Y-m-d H:i') }}</span>
-                            </div>
-                        @endif
-
-                        @if ($request->completed_at)
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                                <span class="font-medium">{{ __('messages.completed_at') }}:</span>
-                                <span>{{ $request->completed_at->format('Y-m-d H:i') }}</span>
-                            </div>
-                        @endif
-
-                        @if ($request->rejected_at)
-                            <div class="md:col-span-2">
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                                    <span class="font-medium">{{ __('messages.rejected_at') }}:</span>
-                                    <span>{{ $request->rejected_at->format('Y-m-d H:i') }}</span>
-                                </div>
-                                <div class="text-red-600 dark:text-red-400 mt-1">
-                                    <span class="font-medium">{{ __('messages.rejection_note') }}:</span>
-                                    {{ $request->rejection_note }}
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                {{-- Image Section --}}
-                @if ($request->image)
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {{ __('messages.problem_images') }}
-                        </label>
-                        <div class="flex flex-wrap gap-2">
-                            <a href="{{ asset('storage/' . $request->image) }}" data-fancybox="gallery-{{ $request->id }}" class="block">
-                                <img src="{{ asset('storage/' . $request->image) }}" alt="Problem Image" 
-                                     class="h-24 w-24 object-cover rounded-md border border-gray-200 dark:border-gray-600">
-                            </a>
-                        </div>
-                    </div>
-                @endif
-
-                {{-- Action Buttons --}}
-                <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-
+                    {{-- Compact Action Buttons --}}
+                    <div class="space-y-2">
                         {{-- Start Work Button --}}
                         @if (in_array($request->status, ['new', 'delayed']))
-                            <form action="{{ route('maintenance.start', $request->id) }}" method="POST"
-                                class="flex-shrink-0">
+                            <form action="{{ route('maintenance.start', $request->id) }}" method="POST">
                                 @csrf
                                 <button type="submit"
-                                    class="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm">
-                                    <i class="fas fa-play-circle mr-1"></i> {{ __('messages.start_work') }}
+                                    class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
+                                    <i class="fas fa-play mr-1"></i> {{ __('messages.start_work') }}
                                 </button>
                             </form>
                         @endif
 
                         {{-- Complete Work Form --}}
                         @if ($request->status === 'in_progress' && !$request->completed_image)
-                            <div class="flex-1 min-w-full sm:min-w-0">
-                                <form action="{{ route('maintenance.complete', $request->id) }}" method="POST"
-                                    enctype="multipart/form-data" class="space-y-3">
-                                    @csrf
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            <i class="fas fa-camera mr-1"></i> {{ __('messages.upload_completion_image') }}
-                                        </label>
-                                        <input type="file" name="completed_image" accept="image/*" capture="environment"
-                                            required
-                                            class="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-700">
-                                    </div>
-                                    <button type="submit"
-                                        class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm">
-                                        <i class="fas fa-check-circle mr-1"></i> {{ __('messages.mark_as_completed') }}
-                                    </button>
-                                </form>
-                            </div>
+                            <form action="{{ route('maintenance.complete', $request->id) }}" method="POST"
+                                enctype="multipart/form-data" class="space-y-2">
+                                @csrf
+                                <input type="file" name="completed_image" accept="image/*" capture="environment"
+                                    required
+                                    class="w-full text-xs border border-gray-200 dark:border-gray-600 rounded-lg px-2 py-1 bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                <button type="submit"
+                                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
+                                    <i class="fas fa-check mr-1"></i> {{ __('messages.complete_work') }}
+                                </button>
+                            </form>
                         @endif
 
                         {{-- Action Buttons Row --}}
                         @if (in_array($request->status, ['new', 'in_progress', 'delayed']))
-                            <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <div class="flex gap-2">
                                 {{-- Reject Button --}}
                                 <form id="reject-form-{{ $request->id }}"
-                                    action="{{ route('maintenance.reject', $request->id) }}" method="POST" class="flex-1">
+                                    action="{{ route('maintenance.reject', $request->id) }}" method="POST"
+                                    class="flex-1">
                                     @csrf
                                     <input type="hidden" name="note" id="note-input-{{ $request->id }}">
                                     <button type="button" onclick="promptReject({{ $request->id }})"
-                                        class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm">
-                                        <i class="fas fa-times-circle mr-1"></i> {{ __('messages.reject_request') }}
+                                        class="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
+                                        <i class="fas fa-times mr-1"></i> {{ __('messages.reject') }}
                                     </button>
                                 </form>
 
                                 {{-- Postpone Button --}}
                                 @if (in_array($request->status, ['new', 'in_progress']))
                                     <form id="delay-form-{{ $request->id }}"
-                                        action="{{ route('maintenance.delay', $request->id) }}" method="POST">
+                                        action="{{ route('maintenance.delay', $request->id) }}" method="POST"
+                                        class="flex-1">
                                         @csrf
                                         <input type="hidden" name="note" id="delay-note-input-{{ $request->id }}">
                                         <input type="hidden" name="status" value="delayed">
                                         <button type="button" onclick="promptDelay({{ $request->id }})"
-                                            class="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors font-medium text-sm">
-                                            <i class="fas fa-clock mr-1"></i> {{ __('messages.delay_request') }}
+                                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
+                                            <i class="fas fa-clock mr-1"></i> {{ __('messages.postpone') }}
                                         </button>
                                     </form>
                                 @endif
@@ -234,22 +326,38 @@
                         @endif
                     </div>
                 </div>
-            </div>
-        @empty
-            <div class="text-center py-12">
-                <div class="text-gray-400 dark:text-gray-500 text-6xl mb-4">📋</div>
-                <p class="text-gray-500 dark:text-gray-400 text-lg">{{ __('messages.no_requests') }}</p>
-            </div>
-        @endforelse
+            @empty
+                <div class="text-center py-12">
+                    <div class="text-gray-400 dark:text-gray-500 text-4xl mb-4">📋</div>
+                    <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_requests') }}</p>
+                </div>
+            @endforelse
 
-        {{-- Pagination --}}
-        @if ($requests->hasPages())
-            <div class="mt-8 flex justify-center">
-                <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+            {{-- Pagination --}}
+            @if ($requests->hasPages())
+                <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                     {{ $requests->appends(request()->query())->links() }}
                 </div>
+            @endif
+        </div>
+    </div>
+
+    {{-- Description Modal --}}
+    <div id="description-modal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full max-h-96 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h3 class="font-semibold text-gray-800 dark:text-white text-sm">وصف المشكلة</h3>
+                <button onclick="closeDescription()" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
             </div>
-        @endif
+            <div class="p-4 overflow-y-auto max-h-80">
+                <div id="description-text" class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                    <!-- يتم تعبئته تلقائياً -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -267,6 +375,15 @@
                 document.getElementById(`delay-note-input-${requestId}`).value = note;
                 document.getElementById(`delay-form-${requestId}`).submit();
             }
+        }
+
+        function showDescription(text) {
+            document.getElementById('description-text').innerText = text || 'لا يوجد وصف متاح';
+            document.getElementById('description-modal').classList.remove('hidden');
+        }
+
+        function closeDescription() {
+            document.getElementById('description-modal').classList.add('hidden');
         }
 
         // Initialize Fancybox
@@ -288,92 +405,165 @@
                 });
             }
         });
+
+        // Close modal when clicking outside
+        document.getElementById('description-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDescription();
+            }
+        });
     </script>
 
     <style>
+        /* Enhanced Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            html:not([data-theme]) {
+                color-scheme: dark;
+            }
+        }
+
+        /* Smooth transitions for all elements */
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Mobile-first responsive design */
+        .container {
+            max-width: 100%;
+        }
+
+        /* Enhanced button styles */
+        button,
+        .btn {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus,
+        input:focus,
+        select:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* File input styling */
+        input[type="file"] {
+            font-size: 12px;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            margin-right: 0.5rem;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .dark input[type="file"]::-webkit-file-upload-button {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+
+        /* Status badge animations */
+        .status-badge {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Image hover effects */
+        [data-fancybox] img {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        [data-fancybox]:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+
+        /* Modal backdrop blur */
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Card hover effects */
+        .bg-white:hover,
+        .dark .dark\\:bg-gray-800:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .bg-white:hover,
+        .dark .dark\\:bg-gray-800:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
         /* RTL Support */
-        [dir="rtl"] .container {
-            direction: rtl;
-        }
-
-        [dir="rtl"] .text-left {
-            text-align: right;
-        }
-
-        [dir="rtl"] .text-right {
-            text-align: left;
-        }
-
         [dir="rtl"] .mr-1 {
             margin-right: 0 !important;
             margin-left: 0.25rem !important;
         }
 
-        /* Responsive improvements */
-        @media (max-width: 640px) {
+        /* Safe area support for mobile devices */
+        @supports (padding: max(0px)) {
             .container {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
-            }
-            
-            .bg-white, .dark\\:bg-gray-800 {
-                border-radius: 0;
-                margin-left: -0.75rem;
-                margin-right: -0.75rem;
-                width: calc(100% + 1.5rem);
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
             }
         }
 
-        /* Dark mode transitions */
-        .dark * {
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
 
-        /* Button improvements */
-        button, .btn {
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 42px;
+        /* Button press feedback */
+        button:active {
+            transform: scale(0.98);
         }
 
-        /* Focus styles */
-        button:focus, input:focus, select:focus, textarea:focus {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-        }
-
-        /* Status badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-        }
-
-        /* Image gallery */
-        [data-fancybox] img {
-            transition: transform 0.2s ease;
-        }
-        
-        [data-fancybox]:hover img {
-            transform: scale(1.03);
-        }
-
-        /* Form inputs */
-        input[type="file"]::-webkit-file-upload-button {
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.25rem 0.75rem;
-            margin-right: 0.5rem;
-            cursor: pointer;
-        }
-
-        .dark input[type="file"]::-webkit-file-upload-button {
-            background-color: #374151;
-            border-color: #4b5563;
-            color: #f3f4f6;
+        /* Improved focus indicators */
+        .focus\\:ring-2:focus {
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
         }
     </style>
 @endsection

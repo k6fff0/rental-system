@@ -79,6 +79,25 @@
                                         <div class="font-semibold text-blue-900 direction-ltr"> {{ $tenant?->phone ?? '-' }}
                                         </div>
                                     </div>
+									@if ($request->extra_phone)
+    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+        <span class="font-medium">{{ __('messages.extra_phone') }}:</span>
+        <div class="flex items-center gap-2">
+            <a href="tel:{{ $request->extra_phone }}"
+               class="text-blue-600 dark:text-blue-400 hover:underline">
+                {{ $request->extra_phone }}
+            </a>
+            @if ($request->is_whatsapp)
+                <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}"
+                   target="_blank"
+                   class="text-green-600 dark:text-green-400">
+                    <i class="fab fa-whatsapp text-lg"></i>
+                </a>
+            @endif
+        </div>
+    </div>
+@endif
+
                                 </div>
                             </div>
                         </div>
@@ -120,6 +139,16 @@
     <p class="text-sm text-red-700 mt-2 font-medium">
         📝 {{ __('messages.rejection_note') }}: {{ $request->rejection_note }}
     </p>
+@endif
+@if ($request->status === 'delayed' && $request->note)
+    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-md">
+        <h3 class="font-semibold text-yellow-800 mb-2">
+            {{ __('messages.delay_note') }}
+        </h3>
+        <p class="text-yellow-900 whitespace-pre-line">
+            {{ $request->note }}
+        </p>
+    </div>
 @endif
 
                             <div class="bg-green-50 rounded-xl p-4">
@@ -297,6 +326,28 @@
                                         </div>
                                     </div>
                                 @endif
+<!-- Delayed -->
+@if ($request->delayed_at)
+    <div class="flex items-start gap-3">
+        <div
+            class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="font-semibold text-gray-900 text-sm">تم التأجيل</div>
+            <div class="text-xs text-gray-600 mt-1">
+                {{ \Carbon\Carbon::parse($request->delayed_at)->format('Y/m/d H:i') }}
+            </div>
+            <div class="text-xs text-gray-500">بواسطة:
+                                                {{ $request->delayedBy->name ?? 'غير محدد' }}</div>
+                                        </div>
+        </div>
+    </div>
+@endif
 
                                 <!-- Completed -->
                                 @if ($request->completed_at)

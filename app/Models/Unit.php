@@ -125,4 +125,9 @@ class Unit extends Model
     {
         return $this->morphMany(Expense::class, 'expensable');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

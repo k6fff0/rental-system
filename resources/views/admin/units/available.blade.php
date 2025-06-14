@@ -38,7 +38,7 @@
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <!-- Search and Filters -->
-            <section class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 transition-all duration-300">
+            <form method="GET" action="{{ route('admin.units.available') }}" class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 transition-all duration-300">
                 <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div class="w-full md:w-auto flex-1">
                         <div class="relative">
@@ -47,7 +47,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                             </div>
-                            <input type="text" id="smart-search"
+                            <input type="text" name="search" value="{{ request('search') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pr-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="{{ __('messages.search_placeholder_available_units') }}" onkeyup="filterUnits()">
                         </div>
@@ -62,8 +62,7 @@
                         </span>
                     </div>
                 </div>
-            </section>
-
+            </form>
             <!-- Units Grid -->
             <section id="units-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @forelse($units as $unit)

@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
+use Illuminate\Support\Facades\Storage;
 
 class BuildingController extends Controller
+
+
 {
     public function __construct()
     {
@@ -18,6 +21,10 @@ class BuildingController extends Controller
         $this->middleware('permission:edit buildings')->only(['edit', 'update']);
         $this->middleware('permission:delete buildings')->only(['destroy']);
     }
+
+
+//--------------------------------------------------------------------------------------------------------------
+
 
     public function index(Request $request)
     {
@@ -31,7 +38,7 @@ class BuildingController extends Controller
             $query->where('id', $request->building_id);
         }
 
-        $buildings = $query->withCount('units')->get();
+        $buildings = $query->withCount('units')->paginate(10);
 
         return view('admin.buildings.index', compact('buildings'));
     }
@@ -40,6 +47,12 @@ class BuildingController extends Controller
     {
         return view('admin.buildings.create');
     }
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+
 
     public function store(Request $request)
     {
@@ -55,32 +68,39 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
-            'electric_meters' => 'array',
-            'electric_meters.*' => 'array',
-            'internet_lines' => 'array',
+            'image' => 'nullable|image|max:22048',
         ]);
 
-        $data['electric_meters'] = json_encode($request->electric_meters);
-        $data['internet_lines'] = json_encode(array_values($request->internet_lines ?? []));
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('buildings', 'public');
+        }
 
         Building::create($data);
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم إضافة المبنى بنجاح.');
     }
 
+//--------------------------------------------------------------------------------------------------------------
+
+
     public function show(Building $building)
     {
         return view('admin.buildings.show', compact('building'));
     }
+
+
 
     public function edit(Building $building)
     {
         return view('admin.buildings.edit', compact('building'));
     }
 
+
+//--------------------------------------------------------------------------------------------------------------
+
     public function update(Request $request, Building $building)
     {
-
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'building_number' => 'nullable|string|max:255',
@@ -93,18 +113,26 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
-            'electric_meters' => 'nullable|array',
-            'electric_meters.*' => 'nullable|string',
-            'internet_lines' => 'nullable|array',
+            'image' => 'nullable|image|max:2048', 
         ]);
 
-        $data['electric_meters'] = json_encode($request->electric_meters);
-        $data['internet_lines'] = json_encode(array_values($request->internet_lines ?? []));
+        
+        if ($request->hasFile('image')) {
+           
+            if ($building->image) {
+                Storage::disk('public')->delete($building->image);
+            }
+
+            
+            $data['image'] = $request->file('image')->store('buildings', 'public');
+        }
 
         $building->update($data);
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم تعديل المبنى بنجاح.');
     }
+
+//--------------------------------------------------------------------------------------------------------------
 
     public function destroy(Building $building)
     {
@@ -112,13 +140,34 @@ class BuildingController extends Controller
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم حذف المبنى.');
     }
+
+
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+
+    public function deleteImage(Building $building)
+    {
+        if ($building->image && Storage::disk('public')->exists($building->image)) {
+            Storage::disk('public')->delete($building->image);
+            $building->update(['image' => null]);
+        }
+
+        return back()->with('success', 'تم حذف صورة المبنى بنجاح.');
+    }
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+
     public function toggleFamiliesOnly(Building $building)
     {
 
         $building->families_only = !$building->families_only;
         $building->save();
 
-        // علشان تفضل في صفحة التعديل بعد الضغط
+        
         return redirect()->route('admin.buildings.edit', $building->id)
             ->with('success', 'تم تحديث الحالة بنجاح');
     }
