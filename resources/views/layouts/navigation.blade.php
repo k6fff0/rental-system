@@ -90,33 +90,38 @@
         ],
             ],
         ],
+       [
+    'label' => __('messages.system_management'),
+    'icon' => 'heroicon-o-cog',
+    'dropdown' => [
         [
-            'label' => __('messages.system_management'),
-            'icon' => 'heroicon-o-cog',
-            'dropdown' => [
-                [
-                    'route' => 'admin.users.index',
-                    'label' => __('messages.users'),
-                    'icon' => 'heroicon-o-user-circle',
-                ],
-                [
-                    'route' => 'admin.building-supervisors.index',
-                    'label' => __('messages.building_supervisors'),
-                    'icon' => 'heroicon-o-user',
-                ],
-                [
-                    'route' => 'admin.role_manager.index',
-                    'label' => __('messages.permissions'),
-                    'icon' => 'heroicon-o-shield-check',
-                ],
-                [
-                    'route' => '#',
-                    'label' => __('messages.ratings'),
-                    'icon' => 'heroicon-o-star',
-                ],
-
-            ],
+            'route' => 'admin.users.index',
+            'label' => __('messages.users'),
+            'icon' => 'heroicon-o-user-circle',
         ],
+        [
+            'route' => 'admin.building-supervisors.index',
+            'label' => __('messages.building_supervisors'),
+            'icon' => 'heroicon-o-user',
+        ],
+        [
+            'route' => 'admin.role_manager.index',
+            'label' => __('messages.permissions'),
+            'icon' => 'heroicon-o-shield-check',
+        ],
+        [
+            'route' => '#',
+            'label' => __('messages.ratings'),
+            'icon' => 'heroicon-o-star',
+        ],
+        [
+            'route' => 'admin.complaints', 
+            'label' => __('messages.complaints'),
+            'icon' => 'heroicon-o-exclamation-circle',
+        ],
+    ],
+],
+
     ];
 @endphp
 @can('view navbar')
@@ -234,7 +239,8 @@
             {{-- الإشعارات والمستخدم - Desktop --}}
             <div class="hidden sm:flex items-center gap-3 rtl:flex-row-reverse">
                 {{-- زر الإشعارات --}}
-                <div class="relative" x-data="{ open: false, hasNew: {{ $unreadNotificationsCount > 0 ? 'true' : 'false' } }">
+                <div class="relative" x-data='@json(["open" => false, "hasNew" => $unreadNotificationsCount > 0])'>
+
                     <button @click="open = !open"
                         class="relative p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 group"
                         :class="open ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600' : ''">

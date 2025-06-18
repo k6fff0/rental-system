@@ -165,38 +165,7 @@ public function create(Request $request)
         return back()->with('success', 'تم تأكيد الحجز وتم تمديده 48 ساعة إضافية.');
     }
 
-    // ✅ انتهاء الحجوزات القديمة
-    public function expireOldBookings()
-    {
-        RoomBooking::where('status', BookingStatus::Confirmed->value)
-    ->where('expires_at', '<', now())
-    ->whereDoesntHave('contract') // ⬅️ دي شغالة على حسب العلاقة اللي فوق
-    ->get()
-    ->each(function ($booking) {
-        $booking->update([
-            'status'         => BookingStatus::Expired->value,
-            'expired_reason' => 'no_contract_signed',
-            'cancelled_at'   => now(),
-        ]);
-
-        $booking->unit->update(['status' => 'available']);
-    });
-
-
-        RoomBooking::where('status', BookingStatus::Confirmed->value)
-            ->where('expires_at', '<', now())
-            ->whereDoesntHave('contract')
-            ->get()
-            ->each(function ($booking) {
-                $booking->update([
-                    'status'         => BookingStatus::Expired->value,
-                    'expired_reason' => 'no_contract_signed',
-                    'cancelled_at'   => now(),
-                ]);
-
-                $booking->unit->update(['status' => 'available']);
-            });
-    }
+ 
 
     // ✅ عرض التفاصيل
     public function show(RoomBooking $booking)

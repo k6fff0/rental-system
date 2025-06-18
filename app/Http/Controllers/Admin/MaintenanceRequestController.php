@@ -9,15 +9,15 @@ use App\Models\Building;
 use App\Models\Unit;
 use App\Models\Technician;
 use App\Models\User;
-use App\Models\MaintenanceWorker;
-use App\Models\MaintenanceCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Specialty;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Exports\MaintenanceArchiveExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class MaintenanceRequestController extends Controller
 {
@@ -28,6 +28,9 @@ class MaintenanceRequestController extends Controller
         $this->middleware('permission:edit maintenance requests')->only(['edit', 'update']);
         $this->middleware('permission:delete maintenance requests')->only(['destroy']);
     }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
 
     public function index(Request $request)
     {
@@ -67,27 +70,43 @@ class MaintenanceRequestController extends Controller
         ));
     }
 
-
-    public function create()
-    {
-        $buildings = Building::all();
-        $units = Unit::all();
-        $subSpecialties = Specialty::subtasks()->with('parent')->get();
-        $technicians = User::role('technician')->get();
-
-        return view('admin.maintenance_requests.create', compact('buildings', 'units', 'subSpecialties', 'technicians'));
-    }
+    //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-//-------------------------------------------------------------------------------------------------------------------------------------------
-
-
-   public function store(Request $request)
+  public function create()
 {
-    // ✅ 1. فحص البيانات المطلوبة
+    // ✅ لم نعد نحتاج المباني والوحدات في الصفحة
+
+    // جلب التخصصات الفرعية مع التخصص الرئيسي
+    $subSpecialties = Specialty::subtasks()
+        ->with('parent:id,name')
+        ->orderBy('name')
+        ->get();
+
+    // التقنيين (إذا احتجتهم)
+    $technicians = User::role('technician')
+        ->orderBy('name')
+        ->get();
+
+    return view('admin.maintenance_requests.create', compact(
+        'subSpecialties',
+        'technicians'
+    ));
+}
+
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+
+	
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ public function store(Request $request)
+{
     $request->validate([
-        'building_id'      => 'required|exists:buildings,id',
         'unit_id'          => 'required|exists:units,id',
         'sub_specialty_id' => 'required|exists:specialties,id',
         'description'      => 'nullable|string',
@@ -95,9 +114,10 @@ class MaintenanceRequestController extends Controller
         'technician_id'    => 'nullable|exists:users,id',
         'extra_phone'      => 'nullable|string|max:20',
         'is_whatsapp'      => 'nullable|boolean',
+        'is_emergency'     => 'nullable|boolean',
+        'audio_data'       => 'nullable|string',
     ]);
 
-    // ✅ 🔁 تحقق من وجود أوردر نشط لنفس الغرفة والعطل
     $exists = MaintenanceRequest::where('unit_id', $request->unit_id)
         ->where('sub_specialty_id', $request->sub_specialty_id)
         ->whereNotIn('status', ['completed', 'cancelled', 'rejected'])
@@ -107,43 +127,50 @@ class MaintenanceRequestController extends Controller
         return back()->with('error', 'يوجد بلاغ جاري لهذا العطل في هذه الوحدة بالفعل.');
     }
 
-    // ✅ 2. تجهيز البيانات الأساسية
+    $unit = Unit::with('latestContract.tenant')->find($request->unit_id);
+
     $data = $request->only([
-    'building_id',
-    'unit_id',
-    'sub_specialty_id',
-    'description',
+        'unit_id',
+        'sub_specialty_id',
+        'description',
     ]);
+    $data['building_id'] = $unit->building_id;
     $data['extra_phone'] = $request->input('extra_phone');
     $data['is_whatsapp'] = $request->boolean('is_whatsapp');
+    $data['is_emergency'] = $request->boolean('is_emergency');
     $data['created_by'] = auth()->id();
-
-    // ✅ ⏺️ نحفظ الساكن الحالي وقت البلاغ
-    $unit = \App\Models\Unit::with('latestContract.tenant')->find($request->unit_id);
     $data['tenant_id'] = $unit->latestContract?->tenant?->id;
 
-    // ✅ 3. رفع الصورة لو موجودة
     if ($request->hasFile('image')) {
         $data['image'] = $request->file('image')->store('maintenance_images', 'public');
     }
 
-    // ✅ 4. تعيين فني يدوي
+    // 🔊 تسجيل صوتي
+    if ($request->filled('audio_data')) {
+        try {
+            $base64Data = $request->input('audio_data');
+            $base64 = preg_replace('#^data:audio/\w+;base64,#i', '', $base64Data);
+            $fileData = base64_decode($base64);
+            $filename = 'maintenance_audio_notes/' . uniqid('note_') . '.webm';
+            Storage::disk('public')->put($filename, $fileData);
+            $data['audio_note'] = $filename;
+        } catch (\Exception $e) {
+            Log::error('خطأ في حفظ الملاحظة الصوتية: ' . $e->getMessage());
+        }
+    }
+
+    // 👨‍🔧 تعيين فني
     if ($request->filled('technician_id')) {
         $technician = User::find($request->technician_id);
-
         if ($technician->technician_status === 'unavailable') {
             return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
         }
-
         $data['assigned_worker_id'] = $technician->id;
         $data['assigned_manually'] = true;
     } else {
-        // ✅ 5. تعيين تلقائي
         $subSpecialty = Specialty::find($request->sub_specialty_id);
-
         if ($subSpecialty && $subSpecialty->parent_id) {
             $mainSpecialtyId = $subSpecialty->parent_id;
-
             $technician = User::role('technician')
                 ->where('main_specialty_id', $mainSpecialtyId)
                 ->whereIn('technician_status', ['available', 'busy'])
@@ -161,10 +188,10 @@ class MaintenanceRequestController extends Controller
         }
     }
 
-    // ✅ 6. إنشاء البلاغ
+    // 💾 إنشاء البلاغ بعد جمع كل البيانات
     $maintenanceRequest = MaintenanceRequest::create($data);
 
-    // ✅ 7. تحديث حالة الفني
+    // ✅ تحديث حالة الفني
     if ($maintenanceRequest->technician) {
         $maintenanceRequest->technician->updateTechnicianBusyStatus();
     }
@@ -173,7 +200,8 @@ class MaintenanceRequestController extends Controller
         ->with('success', 'تم تسجيل البلاغ بنجاح');
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------
+
+    //-------------------------------------------------------------------------------------------------------------------------------------
 
 
     public function edit($id)
@@ -193,266 +221,291 @@ class MaintenanceRequestController extends Controller
         ));
     }
 
-//-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------
 
 
- public function update(Request $request, $id)
-{
-    $request->validate([
-        'building_id'       => 'required|exists:buildings,id',
-        'unit_id'           => 'required|exists:units,id',
-        'sub_specialty_id'  => 'required|exists:specialties,id',
-        'description'       => 'nullable|string',
-        'status'            => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
-        'image'             => 'nullable|image|max:20480',
-        'cost'              => 'nullable|numeric',
-        'technician_id'     => 'nullable|exists:users,id',
-        'extra_phone'       => 'nullable|string|max:20',
-        'is_whatsapp'       => 'nullable|boolean',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'building_id'       => 'required|exists:buildings,id',
+            'unit_id'           => 'required|exists:units,id',
+            'sub_specialty_id'  => 'required|exists:specialties,id',
+            'description'       => 'nullable|string',
+            'status'            => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
+            'image'             => 'nullable|image|max:20480',
+            'cost'              => 'nullable|numeric',
+            'technician_id'     => 'nullable|exists:users,id',
+            'extra_phone'       => 'nullable|string|max:20',
+            'is_whatsapp'       => 'nullable|boolean',
+			'is_emergency'      => 'nullable|boolean',
+        ]);
 
-    $maintenance = MaintenanceRequest::findOrFail($id);
-    $oldTechnician = $maintenance->technician;
-    $oldStatus = $maintenance->status;
+        $maintenance = MaintenanceRequest::findOrFail($id);
+        $oldTechnician = $maintenance->technician;
+        $oldStatus = $maintenance->status;
 
-    $data = $request->only([
-        'building_id',
-        'unit_id',
-        'sub_specialty_id',
-        'description',
-        'note',
-        'cost',
-        'status',
+        $data = $request->only([
+            'building_id',
+            'unit_id',
+            'sub_specialty_id',
+            'description',
+            'note',
+            'cost',
+            'status',
 
-    ]);
-	$data['extra_phone'] = $request->input('extra_phone');
-    $data['is_whatsapp'] = $request->boolean('is_whatsapp');
+        ]);
+        $data['extra_phone'] = $request->input('extra_phone');
+        $data['is_whatsapp'] = $request->boolean('is_whatsapp');
 
-    // ✅ التحقق من الفني الجديد
-    if ($request->filled('technician_id')) {
-        $technician = User::find($request->technician_id);
+        // ✅ التحقق من الفني الجديد
+        if ($request->filled('technician_id')) {
+            $technician = User::find($request->technician_id);
 
-        if ($technician->technician_status === 'unavailable') {
-            return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
-        }
-
-        // ✅ لو تم تغيير الفني
-        if ($technician->id !== $maintenance->assigned_worker_id) {
-            $data['assigned_worker_id'] = $technician->id;
-            $data['assigned_manually'] = true;
-
-            \Log::info('Requested technician_id: ' . $request->technician_id);
-            \Log::info('Old technician: ' . $maintenance->assigned_worker_id);
-        }
-    }
-
-    // ✅ تحديث صورة الإنجاز لو اترفعت
-    if ($request->hasFile('image')) {
-        $newImagePath = $request->file('image')->store('maintenance_images', 'public');
-
-        if (!empty($maintenance->completed_image) && Storage::disk('public')->exists($maintenance->completed_image)) {
-            Storage::disk('public')->delete($maintenance->completed_image);
-        }
-
-        $data['completed_image'] = $newImagePath;
-    }
-
-    // ✅ تحديث وقت التغيير حسب الحالة
-    if ($request->status !== $oldStatus) {
-        $now = now();
-        $userId = auth()->id();
-
-        switch ($request->status) {
-            case 'in_progress':
-                $data['in_progress_at'] = $now;
-                $data['in_progress_by'] = $userId;
-                break;
-            case 'completed':
-                $data['completed_at'] = $now;
-                $data['completed_by'] = $userId;
-                break;
-            case 'rejected':
-                $data['rejected_at'] = $now;
-                $data['rejected_by'] = $userId;
-                break;
-            case 'delayed':
-                $data['delayed_at'] = $now;
-                break;
-        }
-    }
-
-    $maintenance->fill($data);
-    $maintenance->save();
-
-    // ✅ تحديث حالة الفني الجديد
-    if ($maintenance->technician) {
-        $maintenance->technician->updateTechnicianBusyStatus();
-        $maintenance->technician->recalculateTechnicianStatus();
-    }
-
-    // ✅ تحديث حالة الفني القديم لو اتغير
-    if ($oldTechnician && $oldTechnician->id !== $maintenance->assigned_worker_id) {
-        $oldTechnician->recalculateTechnicianStatus();
-    }
-
-    return redirect()->route('admin.maintenance_requests.index')
-        ->with('success', 'تم تحديث البلاغ بنجاح');
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
-public function updateStatus(Request $request, $id)
-{
-    if (!auth()->user()->can('change maintenance status') && auth()->user()->user_type !== 'technician') {
-        abort(403);
-    }
-
-    $request->validate([
-        'status' => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
-        'note' => 'nullable|string|max:1000',
-        'completed_image' => 'nullable|image|max:20480',
-    ]);
-
-    $maintenance = MaintenanceRequest::findOrFail($id);
-    $newStatus = $request->status;
-    $userId = auth()->id();
-    $now = now();
-
-    switch ($newStatus) {
-        case 'in_progress':
-            $maintenance->in_progress_at = $now;
-            $maintenance->in_progress_by = $userId;
-            break;
-
-        case 'completed':
-            $maintenance->completed_at = $now;
-            $maintenance->completed_by = $userId;
-
-            if ($request->hasFile('completed_image')) {
-                $path = $request->file('completed_image')->store('maintenance_images', 'public');
-                $maintenance->completed_image = $path;
+            if ($technician->technician_status === 'unavailable') {
+                return back()->with('error', 'هذا الفني غير متاح حالياً ولا يمكن توكيله.');
             }
-            break;
 
-        case 'rejected':
-            $maintenance->rejected_at = $now;
-            $maintenance->rejected_by = $userId;
-            $maintenance->rejection_note = $request->note;
-            break;
+            // ✅ لو تم تغيير الفني
+            if ($technician->id !== $maintenance->assigned_worker_id) {
+                $data['assigned_worker_id'] = $technician->id;
+                $data['assigned_manually'] = true;
+            }
+        }
 
-        case 'delayed':
-            $maintenance->note = $request->note;
-            $maintenance->delayed_at = $now; // ✅ تم تسجيل وقت التأجيل
-			$maintenance->delayed_by = $userId;
-            break;
+        // ✅ تحديث صورة الإنجاز لو اترفعت
+        if ($request->hasFile('image')) {
+            $newImagePath = $request->file('image')->store('maintenance_images', 'public');
+
+            if (!empty($maintenance->completed_image) && Storage::disk('public')->exists($maintenance->completed_image)) {
+                Storage::disk('public')->delete($maintenance->completed_image);
+            }
+
+            $data['completed_image'] = $newImagePath;
+        }
+
+        // ✅ تحديث وقت التغيير حسب الحالة
+        if ($request->status !== $oldStatus) {
+            $now = now();
+            $userId = auth()->id();
+
+            switch ($request->status) {
+                case 'in_progress':
+                    $data['in_progress_at'] = $now;
+                    $data['in_progress_by'] = $userId;
+                    break;
+                case 'completed':
+                    $data['completed_at'] = $now;
+                    $data['completed_by'] = $userId;
+                    break;
+                case 'rejected':
+                    $data['rejected_at'] = $now;
+                    $data['rejected_by'] = $userId;
+                    break;
+                case 'delayed':
+                    $data['delayed_at'] = $now;
+                    break;
+            }
+        }
+
+        $maintenance->fill($data);
+        $maintenance->save();
+
+        // ✅ تحديث حالة الفني الجديد
+        if ($maintenance->technician) {
+            $maintenance->technician->updateTechnicianBusyStatus();
+            $maintenance->technician->recalculateTechnicianStatus();
+        }
+
+        // ✅ تحديث حالة الفني القديم لو اتغير
+        if ($oldTechnician && $oldTechnician->id !== $maintenance->assigned_worker_id) {
+            $oldTechnician->recalculateTechnicianStatus();
+        }
+
+        return redirect()->route('admin.maintenance_requests.index')
+            ->with('success', 'تم تحديث البلاغ بنجاح');
     }
 
-    $maintenance->status = $newStatus;
-    $maintenance->save();
 
-    if ($maintenance->technician) {
-        $maintenance->technician->recalculateTechnicianStatus();
+    //----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public function updateStatus(Request $request, $id)
+    {
+        if (!auth()->user()->can('change maintenance status') && auth()->user()->user_type !== 'technician') {
+            abort(403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:new,in_progress,completed,rejected,delayed,waiting_materials,customer_unavailable,other',
+            'note' => 'nullable|string|max:1000',
+            'completed_image' => 'nullable|image|max:20480',
+        ]);
+
+        $maintenance = MaintenanceRequest::findOrFail($id);
+        $newStatus = $request->status;
+        $userId = auth()->id();
+        $now = now();
+
+        switch ($newStatus) {
+            case 'in_progress':
+                $maintenance->in_progress_at = $now;
+                $maintenance->in_progress_by = $userId;
+                break;
+
+            case 'completed':
+                $maintenance->completed_at = $now;
+                $maintenance->completed_by = $userId;
+
+                if ($request->hasFile('completed_image')) {
+                    $path = $request->file('completed_image')->store('maintenance_images', 'public');
+                    $maintenance->completed_image = $path;
+                }
+                break;
+
+            case 'rejected':
+                $maintenance->rejected_at = $now;
+                $maintenance->rejected_by = $userId;
+                $maintenance->rejection_note = $request->note;
+                break;
+
+            case 'delayed':
+                $maintenance->note = $request->note;
+                $maintenance->delayed_at = $now; // ✅ تم تسجيل وقت التأجيل
+                $maintenance->delayed_by = $userId;
+                break;
+        }
+
+        $maintenance->status = $newStatus;
+        $maintenance->save();
+
+        if ($maintenance->technician) {
+            $maintenance->technician->recalculateTechnicianStatus();
+        }
+
+
+
+        return redirect()->back()->with('success', 'تم تحديث حالة البلاغ بنجاح');
     }
 
-    \Log::info("تم نقل الأوردر إلى فني ID: " . $maintenance->assigned_worker_id);
-
-    return redirect()->back()->with('success', 'تم تحديث حالة البلاغ بنجاح');
-}
-
-//------------------------------------------------------------------------------------------------------------------------------------------------	
+    //------------------------------------------------------------------------------------------------------------------------------------------------	
 
 
- public function show($id)
+    public function show($id)
     {
         $request = MaintenanceRequest::with([
             'building',
-            'unit.latestContract.tenant', 
+            'unit.latestContract.tenant',
             'subSpecialty.parent',
             'technician',
             'creator',
             'inProgressBy',
-			'delayedBy',
+            'delayedBy',
             'completedBy',
             'rejectedBy'
         ])->findOrFail($id);
 
         return view('admin.maintenance_requests.show', compact('request'));
     }
-	
 
 
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------	
-	
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------	
+
     public function archive(Request $request)
     {
-
-
         $query = MaintenanceRequest::with(['unit', 'building', 'technician', 'subSpecialty'])
             ->whereIn('status', ['completed', 'rejected']);
 
+        // فلتر الوحدة عن طريق id مباشر (اختياري)
         if ($request->filled('unit_id')) {
             $query->where('unit_id', $request->unit_id);
         }
 
+        // فلتر البحث الذكي عن الوحدة
+        if ($request->filled('unit_search')) {
+            $query->whereHas('unit', function ($q) use ($request) {
+                $q->where('unit_number', 'like', '%' . $request->unit_search . '%');
+            });
+        }
+
+        // فلتر الفني
         if ($request->filled('assigned_worker_id')) {
             $query->where('assigned_worker_id', $request->assigned_worker_id);
         }
 
+        // فلتر نوع المشكلة
         if ($request->filled('sub_specialty_id')) {
             $query->where('sub_specialty_id', $request->sub_specialty_id);
         }
 
-        if ($request->filled('from') && $request->filled('to')) {
-            $query->whereBetween('created_at', [$request->from, $request->to]);
+        // فلتر التاريخ
+        if ($request->filled('from')) {
+            $query->whereDate('created_at', '>=', $request->from);
         }
 
-        $requests = $query->latest()->paginate(30);
+        if ($request->filled('to')) {
+            $query->whereDate('created_at', '<=', $request->to);
+        }
 
+        // فلتر الحالة (لو عايز تختار بين completed أو rejected فقط)
+        if ($request->filled('status') && in_array($request->status, ['completed', 'rejected'])) {
+            $query->where('status', $request->status);
+        }
+
+        // ترتيب حسب السورت
+        if ($request->sort == 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        } elseif ($request->sort == 'status') {
+            $query->orderBy('status', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc'); // الافتراضي
+        }
+
+        $requests = $query->paginate(30)->withQueryString();
 
         return view('admin.maintenance_requests.archive', compact('requests'));
     }
 
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
+    public function myRequests(Request $request)
+    {
+        $technicianId = auth()->id();
+
+        $requests = \App\Models\MaintenanceRequest::with(['unit.building', 'subSpecialty'])
+            ->where('assigned_worker_id', $technicianId)
+            ->whereNotIn('status', ['completed', 'rejected'])
+            ->when($request->building_id, fn($q) => $q->where('building_id', $request->building_id))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+			->orderByDesc('is_emergency')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(20);
+
+        $buildings = \App\Models\Building::all(); // علشان نعبي السلكت في الفيو
+
+        return view('admin.technicians.maintenance.index', compact('requests', 'buildings'));
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------
+
+    public function start($id)
+    {
+        return $this->updateStatus(request()->merge(['status' => 'in_progress']), $id);
+    }
+
+    public function complete($id)
+    {
+        return $this->updateStatus(request()->merge(['status' => 'completed']), $id);
+    }
+
+    public function reject(Request $request, $id)
+    {
+        return $this->updateStatus($request->merge(['status' => 'rejected']), $id);
+    }
 
 
-
-public function myRequests(Request $request)
-{
-    $technicianId = auth()->id();
-
-    $requests = \App\Models\MaintenanceRequest::with(['unit.building', 'subSpecialty'])
-        ->where('assigned_worker_id', $technicianId)
-        ->whereNotIn('status', ['completed', 'rejected'])
-        ->when($request->building_id, fn($q) => $q->where('building_id', $request->building_id))
-		->when($request->status, fn($q) => $q->where('status', $request->status))
-        ->orderBy('updated_at', 'desc')
-        ->paginate(20);
-
-    $buildings = \App\Models\Building::all(); // علشان نعبي السلكت في الفيو
-
-    return view('admin.technicians.maintenance.index', compact('requests', 'buildings'));
-}
-
-
-public function start($id)
-{
-    return $this->updateStatus(request()->merge(['status' => 'in_progress']), $id);
-}
-
-public function complete($id)
-{
-    return $this->updateStatus(request()->merge(['status' => 'completed']), $id);
-}
-
-public function reject(Request $request, $id)
-{
-    return $this->updateStatus($request->merge(['status' => 'rejected']), $id);
-}
-
-
-
+    //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
     public function exportExcel(Request $request)
@@ -470,6 +523,7 @@ public function reject(Request $request, $id)
         $pdf = Pdf::loadView('admin.maintenance_requests.exports.pdf', compact('requests'));
         return $pdf->download('maintenance-archive.pdf');
     }
-	
-	
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------	
+
 }

@@ -14,6 +14,7 @@ use Illuminate\Contracts\Http\Kernel;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Http\UploadedFile;
 use App\Services\ImageService;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
      */
    public function boot(): void
 {
+	
+	
     if (File::exists(config_path('settings.php'))) {
         $settings = include config_path('settings.php');
         config(['settings' => $settings]);
@@ -40,12 +43,12 @@ class AppServiceProvider extends ServiceProvider
 
     Paginator::useTailwind();
 
-    app()->resolving(function () {
-        $locale = Session::get('locale', config('app.locale'));
-        if (in_array($locale, ['ar', 'en'])) {
-            App::setLocale($locale);
-        }
-    });
+app()->resolving(function () {
+    $locale = Session::get('locale', config('app.locale'));
+    if (in_array($locale, ['ar', 'en', 'ur'])) {
+        App::setLocale($locale);
+    }
+});
 
     View::composer('*', function ($view) {
         $user = auth()->user();

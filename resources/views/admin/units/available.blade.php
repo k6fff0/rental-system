@@ -38,7 +38,7 @@
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <!-- Search and Filters -->
-            <form method="GET" action="{{ route('admin.units.available') }}" class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 transition-all duration-300">
+            <form method="GET" action="{{ route('units.available') }}" class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 transition-all duration-300">
                 <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div class="w-full md:w-auto flex-1">
                         <div class="relative">

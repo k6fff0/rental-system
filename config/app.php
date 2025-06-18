@@ -2,7 +2,7 @@
 
 return [
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Corvita'),
 
     'env' => env('APP_ENV', 'production'),
 
@@ -10,7 +10,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dubai',
 
     'locale' => 'en',
     'fallback_locale' => 'ar',
@@ -18,6 +18,7 @@ return [
     'super_admin_email' => env('SUPER_ADMIN_EMAIL', 'admin@corvita.net'),
     'cipher' => 'AES-256-CBC',
     'key' => env('APP_KEY'),
+	'available_locales' => ['en', 'ar', 'ur'],
 
     'previous_keys' => [
         ...array_filter(

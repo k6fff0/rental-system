@@ -265,7 +265,7 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إضافة مستأجر</span>
                     </a>
                     <!-- units.available -->
-                    <a href="{{ route('admin.units.available') }}"
+                    <a href="{{ route('units.available') }}"
                         class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
                         <div
                             class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">

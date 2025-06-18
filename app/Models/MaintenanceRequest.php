@@ -26,8 +26,10 @@ class MaintenanceRequest extends Model
     'created_by',
     'assigned_manually',
     'extra_phone',       
-    'is_whatsapp',      
+    'is_whatsapp',  
+    'is_emergency',    
 	'delayed_at', 
+	
 ];
 
 
@@ -38,6 +40,7 @@ class MaintenanceRequest extends Model
     'completed_at' => 'datetime',
     'rejected_at' => 'datetime',
 	'delayed_at' => 'datetime',
+	'is_emergency' => 'boolean',
     'is_whatsapp' => 'boolean', 
 ];
 

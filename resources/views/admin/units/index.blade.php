@@ -235,7 +235,9 @@
                     {{-- أزرار الإجراءات --}}
                     <div class="flex justify-end items-center pt-3 border-t border-gray-100 dark:border-gray-700 gap-2">
                         {{-- زر التأجير --}}
+						
                         @if ($unit->status === 'available' || $unit->status === 'booked')
+							@can('create contracts')
                             <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}"
                                 class="p-2 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-full transition-colors"
                                 title="{{ __('messages.rent_unit') }}">
@@ -245,7 +247,9 @@
                                         d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
                             </a>
+							@endcan
                         @endif
+						
 
                         {{-- زر التعديل --}}
                         @can('edit units')
@@ -381,6 +385,7 @@
                             </td>
 
                             {{-- المستأجر --}}
+							@can('view full tenant details')
                             <td class="px-4 py-4 text-sm text-right">
                                 @if ($unit->status === 'occupied' && $tenant)
                                     <span class="text-sm font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -406,6 +411,7 @@
                                     <span class="text-sm text-gray-400 dark:text-gray-500">-</span>
                                 @endif
                             </td>
+							@endcan
 
                             {{-- الأكشنات --}}
                             <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-center">

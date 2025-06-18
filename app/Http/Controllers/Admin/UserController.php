@@ -11,6 +11,9 @@ use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
+
+
+
     public function __construct()
     {
         $this->middleware('permission:view users')->only(['index', 'show']);
@@ -19,23 +22,24 @@ class UserController extends Controller
         $this->middleware('permission:delete users')->only(['destroy']);
     }
 
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
     public function index(Request $request)
     {
         $query = User::with(['roles', 'mainSpecialty'])
             ->where('is_hidden', false)
             ->where('email', '!=', config('app.super_admin_email'));
 
-        if ($request->filled('role_id')) {
-            $query->whereHas('roles', function ($q) use ($request) {
-                $q->where('id', $request->role_id);
-            });
-        }
-
         if ($request->filled('search')) {
             $search = $request->search;
+
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                $q->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($search) . '%'])
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -45,11 +49,20 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'roles'));
     }
 
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
     public function show($id)
     {
         $user = User::findOrFail($id);
         return view('admin.users.show', compact('user'));
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
     public function create()
     {
@@ -59,6 +72,9 @@ class UserController extends Controller
 
         return view('admin.users.create', compact('roles', 'permissions', 'mainSpecialties'));
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
 
     public function store(Request $request)
     {
@@ -104,6 +120,11 @@ class UserController extends Controller
             ->with('success', __('messages.user_created_successfully'));
     }
 
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
@@ -113,6 +134,11 @@ class UserController extends Controller
 
         return view('admin.users.edit', compact('user', 'roles', 'permissions', 'mainSpecialties'));
     }
+
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
     public function update(Request $request, string $id)
     {
@@ -170,44 +196,52 @@ class UserController extends Controller
             ->with('success', __('messages.user_updated_successfully'));
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 
-public function toggleActive(User $user)
-{
-	
-    if (!auth()->user()->hasRole("Admin's")) {
-        abort(403, __('messages.unauthorized'));
-    }
 
-    // لو المستخدم متعطل بالفعل، هنفعّله
-    if (!$user->is_active) {
-        $user->is_active = true;
+    public function toggleActive(User $user)
+    {
+
+        if (!auth()->user()->hasRole("Admin's")) {
+            abort(403, __('messages.unauthorized'));
+        }
+
+        // لو المستخدم متعطل بالفعل، هنفعّله
+        if (!$user->is_active) {
+            $user->is_active = true;
+            $user->save();
+
+            return back()->with('success', __('messages.user_enabled_successfully'));
+        }
+
+        // لو المستخدم شغّال، هنعطله
+        $user->is_active = false;
         $user->save();
 
-        return back()->with('success', __('messages.user_enabled_successfully'));
+        return back()->with('error', __('messages.user_disabled_successfully'));
     }
 
-    // لو المستخدم شغّال، هنعطله
-    $user->is_active = false;
-    $user->save();
 
-    return back()->with('error', __('messages.user_disabled_successfully'));
-}
 
-public function destroy(string $id)
-{
-    $user = User::findOrFail($id);
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 
-    if ($user->isSuperAdmin()) {
+
+
+    public function destroy(string $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->isSuperAdmin()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', __('messages.cannot_delete_super_admin'));
+        }
+
+        $user->delete(); // soft delete
+
         return redirect()->route('admin.users.index')
-            ->with('error', __('messages.cannot_delete_super_admin'));
+            ->with('success', __('messages.user_deleted_successfully'));
     }
 
-    $user->delete(); // soft delete
-
-    return redirect()->route('admin.users.index')
-        ->with('success', __('messages.user_deleted_successfully'));
-}
-
-
+    //-----------------------------------------------------------------------------------------------------------------------------------------
 
 }

@@ -6,36 +6,38 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
-    // 🧾 الحقول القابلة للتعبئة
-   protected $fillable = [
-    'name',
-    'email',
-    'phone',
-    'preferred_language',
-    'technician_status',
-    'department',
-    'notes',
-    'photo_url',
-    'password',
-];
+    use HasRoles {
+        HasRoles::hasRole as protected traitHasRole;
+        HasRoles::hasAnyRole as protected traitHasAnyRole;
+    }
 
-    // 🔒 الحقول المخفية من JSON
+    protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'preferred_language',
+        'technician_status',
+        'department',
+        'notes',
+        'photo_url',
+        'password',
+    ];
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    // 🔁 تحويل أنواع الحقول
     protected function casts(): array
     {
         return [
@@ -50,47 +52,42 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    // 🔗 علاقة المستأجر (لو يوزر ساكن)
     public function tenant(): HasOne
     {
         return $this->hasOne(Tenant::class);
     }
 
-    // 🔗 التخصص الرئيسي للفني
     public function mainSpecialty(): BelongsTo
     {
         return $this->belongsTo(Specialty::class, 'main_specialty_id');
     }
 
-    // 🔗 المباني اللي مرتبط بيها
     public function buildings(): BelongsToMany
     {
         return $this->belongsToMany(Building::class)->withTimestamps();
     }
 
-    // 🔗 الطلبات المسندة لهذا الفني
     public function assignedMaintenanceRequests(): HasMany
     {
         return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
     }
-     //العلاقه مع السياره 
-    public function vehicles()
+
+    public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class);
     }
-     //   العلاقه مع المخالفات 
-    public function violations()
+
+    public function violations(): HasMany
     {
-       return $this->hasMany(Violation::class);
+        return $this->hasMany(Violation::class);
     }
 
     /*
     |--------------------------------------------------------------------------
-    | 🔍 سكوبات واستعلامات مخصصة
+    | 🔍 سكوبات
     |--------------------------------------------------------------------------
     */
 
-    // 🔍 سكوب لفلترة الفنيين
     public function scopeTechnicians($query)
     {
         return $query->role('technician');
@@ -98,17 +95,33 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
-    | 🔧 دوال منطق السيستم للفنيين
+    | 🔧 دوال منطق النظام
     |--------------------------------------------------------------------------
     */
 
-    // ✅ هل هو سوبر أدمن؟
     public function isSuperAdmin(): bool
     {
         return $this->email === config('app.super_admin_email');
     }
 
-    // ✅ تحديث حالة الفني إلى busy لو عدد الطلبات النشطة 10 أو أكثر
+    public function hasRole($roles, $guard = null): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return $this->traitHasRole($roles, $guard);
+    }
+
+    public function hasAnyRole($roles, $guard = null): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        return $this->traitHasAnyRole($roles, $guard);
+    }
+
     public function updateTechnicianBusyStatus(): void
     {
         if ($this->user_type !== 'technician') return;
@@ -123,7 +136,6 @@ class User extends Authenticatable
         }
     }
 
-    // ✅ إعادة حالة الفني إلى available لو الطلبات قلت عن 10
     public function recalculateTechnicianStatus(): void
     {
         if ($this->user_type !== 'technician') return;
@@ -137,15 +149,13 @@ class User extends Authenticatable
             $this->save();
         }
     }
-	
-	public function getPhotoUrlAttribute($value)
-{
-    if ($value && file_exists(public_path('storage/' . $value))) {
-        return asset('storage/' . $value);
+
+    public function getPhotoUrlAttribute($value)
+    {
+        if ($value && file_exists(public_path('storage/' . $value))) {
+            return asset('storage/' . $value);
+        }
+
+        return asset('images/default-user.png');
     }
-
-    return asset('images/default-user.png');
-}
-
-
 }

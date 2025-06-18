@@ -13,7 +13,7 @@ class TechnicianController extends Controller
     {
         $this->middleware('permission:view technicians')->only(['index', 'show']);
         $this->middleware('permission:create technicians')->only(['create', 'store']);
-        $this->middleware('permission:edit technicians')->only(['edit', 'update']);
+        //$this->middleware('permission:edit technicians')->only(['edit', 'update']);
         $this->middleware('permission:delete technicians')->only(['destroy']);
     }
 

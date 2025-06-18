@@ -80,7 +80,7 @@
                                 </svg>
                                 {{ __('messages.confirm_booking') }}
                             </button>
-                            <a href="{{ route('admin.units.available') }}"
+                            <a href="{{ route('units.available') }}"
                                 class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
                                 {{ __('messages.cancel') }}
                             </a>

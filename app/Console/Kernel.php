@@ -9,11 +9,12 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         \App\Console\Commands\LangTranslateCommand::class,
+		\App\Console\Commands\ExpireRoomBookings::class,
     ];
 
     protected function schedule(Schedule $schedule): void
     {
-        // Define schedule jobs here
+        $schedule->command('bookings:expire')->everyMinute();
     }
 
     protected function commands(): void

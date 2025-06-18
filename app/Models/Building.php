@@ -67,5 +67,9 @@ class Building extends Model
         return $this->morphMany(Expense::class, 'expensable');
     }
 	
-	
+public function supervisors()
+{
+    return $this->belongsToMany(User::class, 'building_user');
+}
+
 }

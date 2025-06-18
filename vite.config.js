@@ -3,10 +3,12 @@ import laravel from 'laravel-vite-plugin';
 
 export default defineConfig({
     server: {
-        host: '0.0.0.0',       // يفتح الاتصال من أي IP
-        port: 5173,            // أو أي بورت متاح
+        host: '0.0.0.0',
+        port: 5173,
+        cors: true, // 🟢 مهم جدًا لعلاج مشكلة CORS
         hmr: {
-            host: '10.0.0.2',  // ← هنا تكتب IP الجهاز اللي عليه Laravel
+            host: '10.0.0.2', // 🟢 لازم يكون مطابق لـ APP_URL بدون بورت
+            protocol: 'ws',   // 🟢 بروتوكول WebSocket
         },
     },
     plugins: [

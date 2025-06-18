@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\UnitController;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\InstallController;
+use App\Http\Controllers\ComplaintController;
 //use App\Http\Controllers\UnitImageController;
 use App\Settings\SystemSettings;
 use App\Http\Controllers\Admin\VehicleController;
@@ -38,18 +40,22 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('lang/{lang}', function ($lang) {
-    Session::put('locale', $lang);
-    App::setLocale($lang);
+    $availableLocales = ['en', 'ar', 'ur'];
+
+    if (in_array($lang, $availableLocales)) {
+        Session::put('locale', $lang);
+        App::setLocale($lang);
+    }
+
     $redirectTo = request('redirect') ?? url()->previous() ?? '/';
     return Redirect::to($redirectTo);
 })->name('lang.switch');
 
 
+Route::get('/', function () {return view('welcome');});
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
 
 
 
@@ -72,6 +78,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
 
+    Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
 
 
     // ✅ API للمستأجر
@@ -85,10 +92,15 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('units', UnitController::class);
     Route::patch('units/{unit}/status', [UnitController::class, 'updateStatus'])->name('units.updateStatus');
     Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
-    Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
-    Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
+    Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');    
     Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])->name('buildings.toggleFamiliesOnly')->middleware('can:edit buildings');
 	Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
+	Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
+
+
+
+
+
 
 
 
@@ -135,7 +147,7 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
 
     Route::get('maintenance-requests/archive/export/excel', [MaintenanceRequestController::class, 'exportExcel'])
         ->name('maintenance_requests.exportExcel');
-    Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
+   // Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
     Route::get('technicians/search', [TechnicianController::class, 'search'])->name('technicians.search');
 
 
@@ -189,6 +201,7 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
 
     //settings.update
     Route::post('/update', [SettingController::class, 'update'])->name('settings.update');
+
 
 
 
@@ -281,7 +294,7 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
 
 // ✅ بروفايل المستخدم
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -439,5 +452,13 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::get('/install', [InstallController::class, 'showForm'])->name('install.form');
 Route::post('/install', [InstallController::class, 'submit'])->name('install.submit');
 Route::get('/phpinfo', fn() => phpinfo());
+
+
+Route::post('complaints', [ComplaintController::class, 'store'])->name('complaints.store');
+
+// صفحة عرض الشكاوى للإدارة فقط
+Route::get('/complaints', [ComplaintController::class, 'index'])->middleware('auth')->name('admin.complaints');
+
+
 
 require __DIR__ . '/auth.php';

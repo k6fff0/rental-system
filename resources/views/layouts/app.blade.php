@@ -2,6 +2,8 @@
 <html lang="{{ app()->getLocale() }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-bind:class="{ 'dark': darkMode }">
 
 <head>
+@livewireStyles
+
     <style>
         [x-cloak] {
             display: none !important;
@@ -25,8 +27,6 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Alpine.js -->
-    <script src="//unpkg.com/alpinejs" defer></script>
 
     <!-- Fancybox -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
@@ -82,7 +82,7 @@
                         }
                     @endphp
 
-                    <div x-data="{ open: false }" class="relative z-[110]" @click.away="open = false">
+                    <div x-data='@json(["open" => false, "hasNew" => $unreadNotificationsCount > 0])'>
                         <button @click="open = !open"
                             class="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
@@ -145,6 +145,10 @@
                                 class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 {{ app()->getLocale() === 'ar' ? 'font-bold' : '' }}">
                                 🇸🇦 عربي
                             </a>
+							<a href="{{ route('lang.switch', ['lang' => 'ur', 'redirect' => url()->full()]) }}"
+                                class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 {{ app()->getLocale() === 'ar' ? 'font-bold' : '' }}">
+                                🇵🇰 اردو
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -181,6 +185,19 @@
             @yield('content')
         </main>
     </div>
+<footer class="bg-gray-100 dark:bg-gray-900 mt-10 border-t border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center text-sm text-gray-600 dark:text-gray-300">
+        <p>© {{ date('Y') }} {{ config('app.name') }} — {{ __('messages.all_rights_reserved') }}</p>
+        <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-600 leading-relaxed">
+            {{ __('messages.privacy_terms_note') }}
+            <a href="https://wa.me/971503660507" target="_blank" class="text-indigo-600 hover:underline font-medium ms-1">
+                Amr Mohammed
+            </a>
+        </p>
+    </div>
+</footer>
+
+
 
     {{-- ✅ مودال عام --}}
     <div id="globalModal" x-data="{ show: false, html: '' }" x-cloak class="relative z-[9999]">
@@ -203,6 +220,10 @@
 
     {{-- ✅ السكريبتات --}}
     @stack('scripts')
+	
+@livewireScripts
+@yield('scripts')
+
 
 </body>
 

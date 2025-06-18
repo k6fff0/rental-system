@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 use App\Models\UnitImage;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use App\Services\ImageService;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
@@ -213,6 +214,21 @@ class UnitController extends Controller
         return view('admin.units.available', compact('units'));
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------
+
+
+
+public function availableText(Request $request)
+{
+    $units = Unit::with(['building.supervisors'])
+        ->where('status', 'available')
+        ->orderBy('building_id')
+        ->get()
+        ->groupBy('building.name');
+
+    return view('admin.units.available_text', compact('units'));
+}
+
 
     //-----------------------------------------------------------------------------------------------------------------------
 
@@ -289,19 +305,33 @@ class UnitController extends Controller
     //-----------------------------------------------------------------------------------------------------------------------
 
 
-    public function search(Request $request)
-    {
-        $q = $request->get('q');
+public function search(Request $request)
+{
+    $term = $request->get('q');
 
-        $units = \App\Models\Unit::with('building')
-            ->where('unit_number', 'LIKE', '%' . $q . '%')
-            ->limit(10)
-            ->get(['id', 'unit_number', 'building_id']);
+    $results = Unit::with('building')
+        ->where(function ($q) use ($term) {
+            $q->where('unit_number', 'like', "%$term%")
+              ->orWhereHas('building', function ($q2) use ($term) {
+                  $q2->where('name', 'like', "%$term%");
+              });
+        })
+        ->take(15)
+        ->get()
+        ->map(function ($unit) {
+            return [
+                'id' => $unit->id,
+                'text' => $unit->unit_number . ' - ' . optional($unit->building)->name,
+            ];
+        });
 
-        return response()->json($units);
-    }
+    return response()->json($results);
+}
+
 
     //-----------------------------------------------------------------------------------------------------------------------
 
 
+
+//-----------------------------------------------------------------------------------------------------------------------
 }

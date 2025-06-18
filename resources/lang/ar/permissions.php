@@ -79,9 +79,14 @@ return [
     'assign technician' => 'تعيين فني',
     'upload maintenance image' => 'رفع صورة للصيانة',
     'comment on maintenance' => 'كتابة تعليق على الصيانة',
+    'view available units' => 'عرض الغرف المتاحة',
+    'view cleaning dashboard' => 'لوحة تحكم النظافة',
+    'view available units' => 'عرض الغرف المتاحة',
+    'view cleaning dashboard' => 'لوحة تحكم النظافة',
 
 
     'update unit status' => 'تغيير حالة الوحدة',
+    'create emergency request' => 'أنشاء طلب صيانة طارئ',
 
     'end contract' => 'إنهاء العقد',
     'renew contract' => 'تجديد العقد',
@@ -92,6 +97,7 @@ return [
     'view tenant balance' => 'عرض المديونية',
 
     'upload invoice image' => 'رفع صورة الفاتورة',
+    'view utilities' => 'عرض المرافق',
 
     'evaluate technician' => 'تقييم الفني',
     'view technician log' => 'عرض سجل الفني',

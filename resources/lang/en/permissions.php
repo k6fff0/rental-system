@@ -15,6 +15,9 @@ return [
     'edit units' => 'Edit Unit',
     'delete units' => 'Delete Unit',
     'view unit details' => 'View unit details',
+    'create emergency request' => 'Emergency Request',
+
+
 
 
     // Tenants
@@ -117,4 +120,7 @@ return [
     'view booking details' => 'View Booking Details',
     'view all bookings' => 'View All Bookings',
     'view navbar' => 'View Navbar',
+    'view available units' => 'View Available Units',
+    'view cleaning dashboard' => 'Cleaning Dashboard',
+    'view utilities' => 'View Utilities',
 ];
