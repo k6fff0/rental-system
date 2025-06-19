@@ -29,6 +29,7 @@ class MaintenanceRequest extends Model
     'is_whatsapp',  
     'is_emergency',    
 	'delayed_at', 
+	'audio_note',
 	
 ];
 

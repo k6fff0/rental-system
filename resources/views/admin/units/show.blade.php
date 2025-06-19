@@ -324,6 +324,32 @@
                                                 {{ $unit->latestContract->end_date }}</p>
                                         </div>
                                     </div>
+									<div
+                                        class="flex items-start p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                                        <div
+                                            class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 flex-shrink-0">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">
+                                                {{ __('messages.contract_number') }}</h3>
+                                             @php
+    $contract = $unit->contracts->last();
+@endphp
+
+<td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+    @if ($unit->status === 'occupied' && $contract)
+        {{ $contract->contract_number }}
+    @else
+        <span class="text-gray-400 dark:text-gray-500">-</span>
+    @endif
+</td>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

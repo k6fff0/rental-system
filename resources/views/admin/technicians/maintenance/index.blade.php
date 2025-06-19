@@ -238,7 +238,15 @@
                                 </div>
                             </div>
                         @endif
-
+@if ($request->audio_note)
+    <div class="mt-4">
+        <p class="text-sm text-gray-600 mb-2">🎧 التسجيل الصوتي:</p>
+        <audio controls class="w-full max-w-sm rounded shadow">
+            <source src="{{ asset('storage/' . $request->audio_note) }}" type="audio/webm">
+            المتصفح لا يدعم تشغيل ملفات webm.
+        </audio>
+    </div>
+@endif
                         {{-- Action Buttons --}}
                         <div class="space-y-2">
                             {{-- Start Work Button --}}

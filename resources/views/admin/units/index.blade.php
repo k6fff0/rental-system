@@ -317,6 +317,8 @@
                             {{ __('messages.status') }}</th>
                         <th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
                             {{ __('messages.tenant') }}</th>
+						<th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
+                            {{ __('messages.contract_number') }}</th>
                         <th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-center">
                             {{ __('messages.actions') }}</th>
                     </tr>
@@ -412,7 +414,18 @@
                                 @endif
                             </td>
 							@endcan
+                            {{-- رقم العقد --}}
+                           @php
+    $contract = $unit->contracts->last();
+@endphp
 
+<td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+    @if ($unit->status === 'occupied' && $contract)
+        {{ $contract->contract_number }}
+    @else
+        <span class="text-gray-400 dark:text-gray-500">-</span>
+    @endif
+</td>
                             {{-- الأكشنات --}}
                             <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-center">
                                 <div class="flex justify-center gap-2">
