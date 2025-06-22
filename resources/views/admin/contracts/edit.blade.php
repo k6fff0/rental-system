@@ -2,14 +2,18 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-2 px-2 sm:px-4 lg:px-8 transition-colors duration-300"
-         dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
         <div class="max-w-2xl mx-auto">
             {{-- Header Section - Mobile Optimized --}}
             <div class="text-center mb-4 px-2">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-900/50 dark:to-yellow-900/50 rounded-xl mb-3">
-                    <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                <div
+                    class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-900/50 dark:to-yellow-900/50 rounded-xl mb-3">
+                    <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
                     </svg>
                 </div>
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-1">
@@ -22,10 +26,13 @@
 
             {{-- Alert Messages --}}
             @if ($errors->any())
-                <div class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
                         <svg class="w-4 h-4 text-red-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <div class="flex-1">
                             @foreach ($errors->all() as $error)
@@ -37,10 +44,14 @@
             @endif
 
             @if (session('success'))
-                <div class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <p class="text-green-700 dark:text-green-200 text-sm leading-relaxed">{{ session('success') }}</p>
                     </div>
@@ -49,15 +60,18 @@
 
             {{-- Main Form --}}
             <form action="{{ route('admin.contracts.update', $contract->id) }}" method="POST" enctype="multipart/form-data"
-                  class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 @csrf
                 @method('PUT')
 
                 {{-- Form Header --}}
-                <div class="bg-gradient-to-r from-orange-600 to-yellow-600 dark:from-orange-700 dark:to-yellow-700 px-4 py-3">
+                <div
+                    class="bg-gradient-to-r from-orange-600 to-yellow-600 dark:from-orange-700 dark:to-yellow-700 px-4 py-3">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
                         </svg>
                         {{ __('messages.contract_information') }}
                     </h2>
@@ -67,52 +81,63 @@
                     {{-- Contract Parties Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-blue-600 dark:text-blue-400 text-sm font-bold">1</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.contract_parties') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.contract_parties') }}</h3>
                         </div>
 
                         {{-- Tenant Display (Read-Only) --}}
-<div class="space-y-2">
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-            {{ __('messages.tenant') }}
-        </span>
-    </label>
-    <input type="text" value="{{ $contract->tenant->name ?? '' }}" readonly
-           class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white cursor-not-allowed">
-    <input type="hidden" name="tenant_id" value="{{ $contract->tenant_id }}">
-</div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <span class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    {{ __('messages.tenant') }}
+                                </span>
+                            </label>
+                            <input type="text" value="{{ $contract->tenant->name ?? '' }}" readonly
+                                class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white cursor-not-allowed">
+                            <input type="hidden" name="tenant_id" value="{{ $contract->tenant_id }}">
+                        </div>
 
-{{-- Unit Display (Read-Only) --}}
-<div class="space-y-2">
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21v-4a2 2 0 012-2h4a2 2 0 012 2v4"></path>
-            </svg>
-            {{ __('messages.unit') }}
-        </span>
-    </label>
-    <input type="text" value="{{ $contract->unit->unit_number }} - {{ $contract->unit->building->name ?? '' }}" readonly
-           class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white cursor-not-allowed">
-    <input type="hidden" name="unit_id" value="{{ $contract->unit_id }}">
-</div>
+                        {{-- Unit Display (Read-Only) --}}
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <span class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 21v-4a2 2 0 012-2h4a2 2 0 012 2v4"></path>
+                                    </svg>
+                                    {{ __('messages.unit') }}
+                                </span>
+                            </label>
+                            <input type="text"
+                                value="{{ $contract->unit->unit_number }} - {{ $contract->unit->building->name ?? '' }}"
+                                readonly
+                                class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white cursor-not-allowed">
+                            <input type="hidden" name="unit_id" value="{{ $contract->unit_id }}">
+                        </div>
 
                     </div>
 
                     {{-- Contract Terms Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-green-600 dark:text-green-400 text-sm font-bold">2</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.contract_terms') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.contract_terms') }}</h3>
                         </div>
 
                         {{-- Date Fields --}}
@@ -121,30 +146,39 @@
                             <div class="space-y-2">
                                 <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <span class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            </path>
                                         </svg>
                                         {{ __('messages.start_date') }}
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">({{ __('messages.fixed') }})</span>
+                                        <span
+                                            class="text-xs text-gray-500 dark:text-gray-400">({{ __('messages.fixed') }})</span>
                                     </span>
                                 </label>
-                                <input type="date" id="start_date" value="{{ $contract->start_date->format('Y-m-d') }}" disabled
+                                <input type="date" id="start_date"
+                                    value="{{ $contract->start_date->format('Y-m-d') }}" disabled
                                     class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed">
-                                <input type="hidden" name="start_date" value="{{ $contract->start_date->format('Y-m-d') }}">
+                                <input type="hidden" name="start_date"
+                                    value="{{ $contract->start_date->format('Y-m-d') }}">
                             </div>
 
                             {{-- End Date --}}
                             <div class="space-y-2">
                                 <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <span class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                            </path>
                                         </svg>
                                         {{ __('messages.end_date') }}
                                         <span class="text-red-500 text-xs">*</span>
                                     </span>
                                 </label>
-                                <input type="date" name="end_date" id="end_date" 
+                                <input type="date" name="end_date" id="end_date"
                                     value="{{ old('end_date', $contract->end_date->format('Y-m-d')) }}" required
                                     min="{{ $contract->start_date->format('Y-m-d') }}"
                                     class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200">
@@ -158,20 +192,25 @@
                         <div class="space-y-2">
                             <label for="rent_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                                        </path>
                                     </svg>
                                     {{ __('messages.rent_amount') }}
                                     <span class="text-red-500 text-xs">*</span>
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="number" name="rent_amount" id="rent_amount" 
-                                    value="{{ old('rent_amount', $contract->rent_amount) }}" required
-                                    step="0.01" min="0"
+                                <input type="number" name="rent_amount" id="rent_amount"
+                                    value="{{ old('rent_amount', $contract->rent_amount) }}" required step="0.01"
+                                    min="0"
                                     class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 {{ app()->getLocale() === 'ar' ? 'pl-16' : 'pr-16' }}">
-                                <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
-                                    <span class="text-gray-500 dark:text-gray-400 text-sm font-medium">{{ __('messages.currency') }}</span>
+                                <div
+                                    class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
+                                    <span
+                                        class="text-gray-500 dark:text-gray-400 text-sm font-medium">{{ __('messages.currency') }}</span>
                                 </div>
                             </div>
                             @error('rent_amount')
@@ -183,10 +222,12 @@
                     {{-- Files and Notes Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-purple-600 dark:text-purple-400 text-sm font-bold">3</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.files_and_notes') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.files_and_notes') }}</h3>
                         </div>
 
                         {{-- Current Contract File --}}
@@ -194,18 +235,25 @@
                             <div class="space-y-2">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     <span class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                            </path>
                                         </svg>
                                         {{ __('messages.existing_contract_file') }}
                                     </span>
                                 </label>
-                                <div class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                                <div
+                                    class="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                                     <a href="{{ asset('storage/' . $contract->contract_file) }}" target="_blank"
                                         class="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium transition-colors duration-200">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                            </path>
                                         </svg>
                                         {{ __('messages.view_contract') }}
                                     </a>
@@ -217,26 +265,36 @@
                         <div class="space-y-2">
                             <label for="contract_file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                        </path>
                                     </svg>
                                     {{ __('messages.upload_new_contract') }}
                                 </span>
                             </label>
                             <div class="relative">
-                                <input type="file" name="contract_file" id="contract_file" class="hidden" accept=".pdf,.doc,.docx"
-                                    onchange="showFileName(this)">
+                                <input type="file" name="contract_file" id="contract_file" class="hidden"
+                                    accept=".pdf,.doc,.docx" onchange="showFileName(this)">
                                 <label for="contract_file" class="block w-full cursor-pointer">
-                                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700/50">
-                                        <svg class="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <div
+                                        class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center hover:border-orange-400 dark:hover:border-orange-500 transition-all duration-200 bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700/50">
+                                        <svg class="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500 mb-2" fill="none"
+                                            stroke="currentColor" viewBox="0 0 48 48">
+                                            <path
+                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                                            <span class="font-medium text-orange-600 dark:text-orange-400">{{ __('messages.choose_file') }}</span>
+                                            <span
+                                                class="font-medium text-orange-600 dark:text-orange-400">{{ __('messages.choose_file') }}</span>
                                             {{ __('messages.or_drag_and_drop') }}
                                         </p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">PDF, DOC, DOCX</p>
-                                        <p id="file-name" class="text-xs text-orange-600 dark:text-orange-400 mt-2 hidden font-medium"></p>
+                                        <p id="file-name"
+                                            class="text-xs text-orange-600 dark:text-orange-400 mt-2 hidden font-medium">
+                                        </p>
                                     </div>
                                 </label>
                             </div>
@@ -249,8 +307,11 @@
                         <div class="space-y-2">
                             <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.notes') }}
                                 </span>
@@ -272,16 +333,18 @@
                         <a href="{{ route('admin.contracts.index') }}"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-sm">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
                             {{ __('messages.back') }}
                         </a>
-                        
+
                         {{-- Update Button --}}
                         <button type="submit"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                             </svg>
                             {{ __('messages.update') }}
                         </button>
@@ -332,12 +395,15 @@
                 if (hasErrors) {
                     e.preventDefault();
                     showNotification('{{ __('messages.please_fill_required_fields') }}', 'error');
-                    
+
                     // Focus on first error field
                     const firstError = form.querySelector('.border-red-500');
                     if (firstError) {
                         firstError.focus();
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
                     }
                     return;
                 }
@@ -381,7 +447,8 @@
                 const isRequired = field.hasAttribute('required');
 
                 // Remove existing validation classes
-                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500', 'dark:border-green-500');
+                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500',
+                    'dark:border-green-500');
 
                 if (isRequired && !value) {
                     field.classList.add('border-red-500', 'dark:border-red-500');
@@ -392,7 +459,7 @@
                 if (field.name === 'end_date' && value) {
                     const startDate = new Date(document.querySelector('input[name="start_date"]').value);
                     const endDate = new Date(value);
-                    
+
                     if (endDate <= startDate) {
                         field.classList.add('border-red-500', 'dark:border-red-500');
                         return false;
@@ -443,12 +510,12 @@
             // Date validation
             const endDateInput = document.querySelector('#end_date');
             const startDateValue = document.querySelector('input[name="start_date"]').value;
-            
+
             if (endDateInput && startDateValue) {
                 endDateInput.addEventListener('change', function() {
                     const endDate = new Date(this.value);
                     const startDate = new Date(startDateValue);
-                    
+
                     if (endDate <= startDate) {
                         this.classList.add('border-red-500', 'dark:border-red-500');
                         showNotification('{{ __('messages.end_date_must_be_after_start') }}', 'error');
@@ -467,7 +534,7 @@
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
                 });
-                
+
                 // Initial resize
                 textarea.style.height = textarea.scrollHeight + 'px';
             });
@@ -524,7 +591,8 @@
 
                 // Create notification
                 const notification = document.createElement('div');
-                notification.className = `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+                notification.className =
+                    `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
 
                 // Set colors based on type
                 if (type === 'error') {
@@ -640,7 +708,7 @@
             window.showNotification = showNotification;
 
             // Show success message if updated
-            @if(session('success'))
+            @if (session('success'))
                 showNotification('{{ session('success') }}', 'success');
             @endif
         });

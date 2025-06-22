@@ -30,7 +30,7 @@
         {{-- 🏷️ اختيار نوع الوحدة --}}
         <div class="relative">
             <label class="block text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('messages.unit_type') }}</label>
-            <select id="unitTypeSelect"
+            <select id="unitTypeSelectس"
                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 {{ app()->getLocale() == 'ar' ? 'pr-10' : 'pl-10' }} bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 style="appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: none;">
                 <option value="">{{ __('messages.all_unit_types') }}</option>

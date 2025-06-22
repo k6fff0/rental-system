@@ -74,7 +74,6 @@ class InstallController extends Controller
             }
 
             return redirect()->route('login')->with('success', 'تم تثبيت النظام بنجاح ✅');
-
         } catch (\Throwable $e) {
             return back()->withErrors(['error' => 'حدث خطأ أثناء التثبيت: ' . $e->getMessage()]);
         }

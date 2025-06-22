@@ -24,10 +24,10 @@ class PaymentLog extends Model
         'changes' => 'array',
     ];
 
- public function payment()
-{
-    return $this->belongsTo(Payment::class)->withTrashed();
-}
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class)->withTrashed();
+    }
 
 
 
@@ -35,6 +35,4 @@ class PaymentLog extends Model
     {
         return $this->belongsTo(User::class);
     }
-	
-	
 }

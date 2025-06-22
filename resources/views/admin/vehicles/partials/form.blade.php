@@ -433,41 +433,41 @@
                 </div>
             </div>
 
-         <!-- Form Actions -->
-<div class="mt-6 mb-4 pt-4 border-t border-gray-200">
-    <div class="flex justify-end pr-6"> {{-- زودنا هنا padding right --}}
-        <div class="flex gap-4">
-            {{-- زر الإلغاء --}}
-            <a href="{{ route('vehicles.index') }}" class="btn btn-secondary flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-                </svg>
-                {{ __('vehicles.cancel') }}
-            </a>
+            <!-- Form Actions -->
+            <div class="mt-6 mb-4 pt-4 border-t border-gray-200">
+                <div class="flex justify-end pr-6"> {{-- زودنا هنا padding right --}}
+                    <div class="flex gap-4">
+                        {{-- زر الإلغاء --}}
+                        <a href="{{ route('vehicles.index') }}" class="btn btn-secondary flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
+                            </svg>
+                            {{ __('vehicles.cancel') }}
+                        </a>
 
-            {{-- زر الحفظ أو التحديث --}}
-            <button type="submit" class="btn btn-primary flex items-center">
-                @if (isset($vehicle))
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5 13l4 4L19 7" />
-                    </svg>
-                    {{ __('vehicles.update_vehicle') }}
-                @else
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    {{ __('vehicles.add_vehicle') }}
-                @endif
-            </button>
-        </div>
-    </div>
-</div>
+                        {{-- زر الحفظ أو التحديث --}}
+                        <button type="submit" class="btn btn-primary flex items-center">
+                            @if (isset($vehicle))
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                {{ __('vehicles.update_vehicle') }}
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                {{ __('vehicles.add_vehicle') }}
+                            @endif
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         </form>
     </div>

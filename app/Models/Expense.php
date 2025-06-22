@@ -16,8 +16,8 @@ class Expense extends Model
         'amount',
         'expense_date',
         'description',
-		'invoice_image',
-		'expensable_id',
+        'invoice_image',
+        'expensable_id',
         'expensable_type',
     ];
 
@@ -30,14 +30,13 @@ class Expense extends Model
     {
         return $this->belongsTo(Unit::class);
     }
-	public function images()
+    public function images()
     {
-    return $this->hasMany(ExpenseImage::class);
+        return $this->hasMany(ExpenseImage::class);
     }
-	
-public function expensable()
-{
-    return $this->morphTo();
-}
 
+    public function expensable()
+    {
+        return $this->morphTo();
+    }
 }

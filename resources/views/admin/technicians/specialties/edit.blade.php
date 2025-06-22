@@ -198,7 +198,7 @@
             if (isMainSelect.value === '0') {
                 parentDropdownDiv.style.display = 'block';
                 parentDropdownDiv.querySelector('select').setAttribute('required',
-                'required'); // Make required when visible
+                    'required'); // Make required when visible
             } else {
                 parentDropdownDiv.style.display = 'none';
                 parentDropdownDiv.querySelector('select').removeAttribute('required'); // Remove required when hidden

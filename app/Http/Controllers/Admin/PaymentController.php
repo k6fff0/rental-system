@@ -133,73 +133,73 @@ class PaymentController extends Controller
 
 
 
-  public function monthlyDueReport(Request $request)
-{
-    $month = $request->input('month', now()->format('Y-m'));
-    $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
-    $endOfMonth = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
+    public function monthlyDueReport(Request $request)
+    {
+        $month = $request->input('month', now()->format('Y-m'));
+        $startOfMonth = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+        $endOfMonth = Carbon::createFromFormat('Y-m', $month)->endOfMonth();
 
-    $contracts = Contract::with([
-        'tenant',
-        'unit.building',
-        'payments' => function ($q) {
-            $q->orderBy('updated_at', 'desc');
-        },
-        'payments.collector',
-    ])->get();
+        $contracts = Contract::with([
+            'tenant',
+            'unit.building',
+            'payments' => function ($q) {
+                $q->orderBy('updated_at', 'desc');
+            },
+            'payments.collector',
+        ])->get();
 
-    $data = $contracts->map(function ($contract) use ($startOfMonth) {
-        $rent = $contract->rent_amount;
-        $allPayments = $contract->payments;
+        $data = $contracts->map(function ($contract) use ($startOfMonth) {
+            $rent = $contract->rent_amount;
+            $allPayments = $contract->payments;
 
-        $totalPaid = $allPayments->sum('amount');
+            $totalPaid = $allPayments->sum('amount');
 
-        $contractStart = Carbon::parse($contract->start_date)->startOfMonth();
-        $monthsSinceStart = $contractStart->diffInMonths($startOfMonth);
+            $contractStart = Carbon::parse($contract->start_date)->startOfMonth();
+            $monthsSinceStart = $contractStart->diffInMonths($startOfMonth);
 
-        $fullCoveredMonths = floor($totalPaid / $rent);
-        $remainingBalance = $totalPaid - ($fullCoveredMonths * $rent);
+            $fullCoveredMonths = floor($totalPaid / $rent);
+            $remainingBalance = $totalPaid - ($fullCoveredMonths * $rent);
 
-        if ($fullCoveredMonths > $monthsSinceStart) {
-            $paidThisMonth = $rent;
-            $remaining = 0;
-            $status = __('messages.paid');
-        } elseif ($fullCoveredMonths == $monthsSinceStart) {
-            $paidThisMonth = $remainingBalance;
-            $remaining = $rent - $paidThisMonth;
-            $status = $paidThisMonth == $rent
-                ? __('messages.paid')
-                : ($paidThisMonth > 0 ? __('messages.partial') : __('messages.unpaid'));
-        } else {
-            $paidThisMonth = 0;
-            $remaining = $rent;
-            $status = __('messages.unpaid');
-        }
+            if ($fullCoveredMonths > $monthsSinceStart) {
+                $paidThisMonth = $rent;
+                $remaining = 0;
+                $status = __('messages.paid');
+            } elseif ($fullCoveredMonths == $monthsSinceStart) {
+                $paidThisMonth = $remainingBalance;
+                $remaining = $rent - $paidThisMonth;
+                $status = $paidThisMonth == $rent
+                    ? __('messages.paid')
+                    : ($paidThisMonth > 0 ? __('messages.partial') : __('messages.unpaid'));
+            } else {
+                $paidThisMonth = 0;
+                $remaining = $rent;
+                $status = __('messages.unpaid');
+            }
 
-        $firstPayment = $allPayments->first(function ($payment) use ($startOfMonth) {
-            return Carbon::parse($payment->month_for)->isSameMonth($startOfMonth);
-        });
+            $firstPayment = $allPayments->first(function ($payment) use ($startOfMonth) {
+                return Carbon::parse($payment->month_for)->isSameMonth($startOfMonth);
+            });
 
-        $collectorName = $firstPayment && $firstPayment->collector
-            ? $firstPayment->collector->name
-            : '—';
+            $collectorName = $firstPayment && $firstPayment->collector
+                ? $firstPayment->collector->name
+                : '—';
 
-        return [
-            'tenant' => $contract->tenant->name,
-            'contract_code' => $contract->contract_number,
-            'building' => optional($contract->unit->building)->name,
-            'unit' => $contract->unit->unit_number,
-            'collector' => $collectorName,
-            'due' => $rent,
-            'paid' => $paidThisMonth,
-            'remaining' => $remaining,
-            'status' => $status,
-            'latest_payment_time' => optional($allPayments->first())->updated_at,
-        ];
-    })->sortByDesc('latest_payment_time');
+            return [
+                'tenant' => $contract->tenant->name,
+                'contract_code' => $contract->contract_number,
+                'building' => optional($contract->unit->building)->name,
+                'unit' => $contract->unit->unit_number,
+                'collector' => $collectorName,
+                'due' => $rent,
+                'paid' => $paidThisMonth,
+                'remaining' => $remaining,
+                'status' => $status,
+                'latest_payment_time' => optional($allPayments->first())->updated_at,
+            ];
+        })->sortByDesc('latest_payment_time');
 
-    return view('admin.payments.due_report', compact('data', 'month'));
-}
+        return view('admin.payments.due_report', compact('data', 'month'));
+    }
 
     public function exportExcel(Request $request)
     {

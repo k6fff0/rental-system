@@ -158,13 +158,10 @@ class User extends Authenticatable
 
         return asset('images/default-user.png');
     }
-	
-	
-public function technicianRequests()
-{
-    return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id'); 
-}
 
 
-
+    public function technicianRequests()
+    {
+        return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
+    }
 }

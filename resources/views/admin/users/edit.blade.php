@@ -1,17 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300" 
-         dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+        dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
             <!-- Header Section -->
             <div class="mb-6 sm:mb-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden w-full lg:w-auto transition-colors duration-300">
-                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 px-4 sm:px-6 py-4 sm:py-5">
-                        <div class="flex items-center space-x-3 sm:space-x-4 {{ app()->getLocale() === 'ar' ? 'space-x-reverse' : '' }}">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden w-full lg:w-auto transition-colors duration-300">
+                    <div
+                        class="bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-700 dark:to-indigo-800 px-4 sm:px-6 py-4 sm:py-5">
+                        <div
+                            class="flex items-center space-x-3 sm:space-x-4 {{ app()->getLocale() === 'ar' ? 'space-x-reverse' : '' }}">
                             <div class="p-2 sm:p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
@@ -48,8 +52,10 @@
                             <button type="submit"
                                 class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
                                 onclick="return confirm('{{ __('messages.disable_user_confirmation') }}')">
-                                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
                                 </svg>
                                 {{ __('messages.disable_account') }}
                             </button>
@@ -60,8 +66,10 @@
                             <button type="submit"
                                 class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-900 transition-all duration-200"
                                 onclick="return confirm('{{ __('messages.enable_user_confirmation') }}')">
-                                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 {{ __('messages.enable_account') }}
                             </button>
@@ -71,11 +79,14 @@
             </div>
 
             <!-- User Info Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6 transition-colors duration-300">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6 transition-colors duration-300">
                 <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         {{ __('messages.user_information') }}
                     </h3>
@@ -92,7 +103,8 @@
                                             onerror="this.src='{{ asset('images/default-avatar.png') }}'; this.onerror=null;">
                                     </a>
                                 @else
-                                    <div class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center ring-4 ring-gray-100 dark:ring-gray-600">
+                                    <div
+                                        class="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center ring-4 ring-gray-100 dark:ring-gray-600">
                                         <span class="text-white font-semibold text-2xl sm:text-3xl">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </span>
@@ -100,9 +112,12 @@
                                 @endif
 
                                 <!-- Status Badge -->
-                                <span class="absolute -bottom-1 {{ app()->getLocale() === 'ar' ? '-left-1' : '-right-1' }} inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                <span
+                                    class="absolute -bottom-1 {{ app()->getLocale() === 'ar' ? '-left-1' : '-right-1' }} inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
                                     {{ $user->is_active ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700' : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700' }}">
-                                    <div class="w-2 h-2 rounded-full {{ $user->is_active ? 'bg-green-500' : 'bg-red-500' }} {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"></div>
+                                    <div
+                                        class="w-2 h-2 rounded-full {{ $user->is_active ? 'bg-green-500' : 'bg-red-500' }} {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}">
+                                    </div>
                                     {{ $user->is_active ? __('messages.active') : __('messages.disabled') }}
                                 </span>
                             </div>
@@ -113,31 +128,42 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 <!-- Name -->
                                 <div class="space-y-1">
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    <label
+                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                         {{ __('messages.name') }}
                                     </label>
-                                    <p class="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">{{ $user->name }}</p>
+                                    <p class="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium">
+                                        {{ $user->name }}</p>
                                 </div>
 
                                 <!-- Email -->
                                 <div class="space-y-1">
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                    <label
+                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                                         </svg>
                                         {{ __('messages.email') }}
                                     </label>
-                                    <p class="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium break-all">{{ $user->email }}</p>
+                                    <p class="text-sm sm:text-base text-gray-900 dark:text-gray-100 font-medium break-all">
+                                        {{ $user->email }}</p>
                                 </div>
 
                                 <!-- Phone -->
                                 <div class="space-y-1">
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    <label
+                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
                                         {{ __('messages.phone') }}
                                     </label>
@@ -148,9 +174,12 @@
 
                                 <!-- Registration Date -->
                                 <div class="space-y-1">
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    <label
+                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                         {{ __('messages.registration_date') }}
                                     </label>
@@ -161,31 +190,43 @@
 
                                 <!-- Current Role -->
                                 <div class="space-y-1 sm:col-span-2">
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
-                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    <label
+                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center">
+                                        <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }} text-gray-400"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
                                         {{ __('messages.role') }}
                                     </label>
                                     <div class="flex flex-wrap gap-2">
-                                        @if($user->roles->count() > 0)
-                                            @foreach($user->roles as $role)
+                                        @if ($user->roles->count() > 0)
+                                            @foreach ($user->roles as $role)
                                                 @php
                                                     $roleColors = [
-                                                        'admin' => 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-200 dark:border-red-700',
-                                                        'supervisor' => 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-700',
-                                                        'technician' => 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700',
-                                                        'user' => 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700',
-                                                        'broker' => 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-700',
+                                                        'admin' =>
+                                                            'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border-red-200 dark:border-red-700',
+                                                        'supervisor' =>
+                                                            'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 border-purple-200 dark:border-purple-700',
+                                                        'technician' =>
+                                                            'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700',
+                                                        'user' =>
+                                                            'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700',
+                                                        'broker' =>
+                                                            'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-700',
                                                     ];
-                                                    $roleColor = $roleColors[$role->name] ?? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
+                                                    $roleColor =
+                                                        $roleColors[$role->name] ??
+                                                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600';
                                                 @endphp
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $roleColor }}">
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $roleColor }}">
                                                     {{ __('roles.' . $role->name) ?? $role->name }}
                                                 </span>
                                             @endforeach
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
                                                 {{ __('messages.no_role') }}
                                             </span>
                                         @endif
@@ -206,8 +247,10 @@
                 <!-- Role Selection -->
                 <div class="px-4 sm:px-6 py-6 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                         {{ __('messages.role_assignment') }}
                     </h3>
@@ -234,8 +277,10 @@
                 <div class="px-4 sm:px-6 py-6 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-                            <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }} text-gray-500 dark:text-gray-400"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
                             {{ __('messages.permissions') }}
                         </h3>
@@ -262,13 +307,13 @@
                                     $isDirect = $user->permissions->contains($permission->id);
                                 @endphp
 
-                                <label class="relative flex items-start p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800 cursor-pointer transition-all duration-200 {{ $isFromRole ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700' : '' }}">
+                                <label
+                                    class="relative flex items-start p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800 cursor-pointer transition-all duration-200 {{ $isFromRole ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700' : '' }}">
                                     <div class="flex items-center h-5">
-                                        <input id="permission-{{ $permission->id }}" name="permissions[]" type="checkbox"
-                                            value="{{ $permission->id }}"
+                                        <input id="permission-{{ $permission->id }}" name="permissions[]"
+                                            type="checkbox" value="{{ $permission->id }}"
                                             class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 transition-colors duration-200"
-                                            {{ $isDirect ? 'checked' : '' }} 
-                                            {{ $isFromRole ? 'checked disabled' : '' }}>
+                                            {{ $isDirect ? 'checked' : '' }} {{ $isFromRole ? 'checked disabled' : '' }}>
                                     </div>
                                     <div class="ml-3 text-sm">
                                         <div class="font-medium text-gray-700 dark:text-gray-300">
@@ -276,8 +321,11 @@
                                         </div>
                                         @if ($isFromRole)
                                             <p class="text-xs text-blue-600 dark:text-blue-400 mt-1 flex items-center">
-                                                <svg class="w-3 h-3 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                <svg class="w-3 h-3 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 {{ __('messages.from_role') }}
                                             </p>
@@ -290,22 +338,28 @@
                 </div>
 
                 <!-- Form Actions -->
-                <div class="px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 flex flex-col sm:flex-row justify-end gap-3 {{ app()->getLocale() === 'ar' ? 'sm:space-x-reverse' : '' }}">
+                <div
+                    class="px-4 sm:px-6 py-4 bg-gray-50 dark:bg-gray-900 flex flex-col sm:flex-row justify-end gap-3 {{ app()->getLocale() === 'ar' ? 'sm:space-x-reverse' : '' }}">
                     <a href="{{ route('admin.users.index') }}"
                         class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200">
-                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         {{ __('messages.cancel') }}
                     </a>
                     <button type="submit" id="submitBtn"
                         class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
-                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                         <span id="submitText">{{ __('messages.save_changes') }}</span>
-                        <svg class="w-5 h-5 ml-2 animate-spin hidden" id="loadingIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        <svg class="w-5 h-5 ml-2 animate-spin hidden" id="loadingIcon" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                     </button>
                 </div>
@@ -317,15 +371,19 @@
     <div id="disableModal" class="fixed z-50 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title"
         role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <div class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 transition-opacity"
+                aria-hidden="true"></div>
 
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200 dark:border-gray-700">
+            <div
+                class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-200 dark:border-gray-700">
                 <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 dark:bg-yellow-900 sm:mx-0 sm:h-10 sm:w-10">
-                            <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div
+                            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 dark:bg-yellow-900 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
@@ -336,7 +394,8 @@
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ __('messages.disable_user_confirmation') }} "<span class="font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</span>"?
+                                    {{ __('messages.disable_user_confirmation') }} "<span
+                                        class="font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</span>"?
                                 </p>
                             </div>
                         </div>
@@ -406,7 +465,7 @@
         }
 
         /* Checkbox animations */
-        input[type="checkbox"]:checked + div {
+        input[type="checkbox"]:checked+div {
             transform: scale(1.05);
         }
 
@@ -437,9 +496,12 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.8;
             }
@@ -451,6 +513,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -515,7 +578,7 @@
                 // Show loading state
                 submitBtn.disabled = true;
                 submitBtn.classList.add('button-loading');
-                submitText.textContent = '{{ __("messages.saving") }}...';
+                submitText.textContent = '{{ __('messages.saving') }}...';
                 loadingIcon.classList.remove('hidden');
             });
 
@@ -526,10 +589,12 @@
             permissionCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const totalCheckboxes = permissionCheckboxes.length;
-                    const checkedCheckboxes = document.querySelectorAll('input[name="permissions[]"]:not(:disabled):checked').length;
-                    
+                    const checkedCheckboxes = document.querySelectorAll(
+                        'input[name="permissions[]"]:not(:disabled):checked').length;
+
                     selectAllCheckbox.checked = totalCheckboxes === checkedCheckboxes;
-                    selectAllCheckbox.indeterminate = checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes;
+                    selectAllCheckbox.indeterminate = checkedCheckboxes > 0 && checkedCheckboxes <
+                        totalCheckboxes;
                 });
             });
 
@@ -537,7 +602,7 @@
             window.confirmDisable = function() {
                 const modal = document.getElementById('disableModal');
                 modal.classList.remove('hidden');
-                
+
                 // Add animation
                 modal.style.opacity = '0';
                 modal.style.transform = 'scale(0.95)';
@@ -574,7 +639,7 @@
                         closeModal();
                     }
                 }
-                
+
                 // Quick save with Ctrl+S
                 if (e.ctrlKey && e.key === 's') {
                     e.preventDefault();
@@ -590,7 +655,7 @@
                 setTimeout(() => {
                     this.style.transform = 'scale(1)';
                 }, 150);
-                
+
                 // You can add logic here to auto-select permissions based on role
                 // Example: if certain roles should have default permissions
             });
@@ -598,8 +663,8 @@
             // Add status indicator animation
             const statusBadges = document.querySelectorAll('[class*="bg-green-100"], [class*="bg-red-100"]');
             statusBadges.forEach(badge => {
-                if (badge.textContent.trim().includes('{{ __("messages.active") }}') || 
-                    badge.textContent.trim().includes('{{ __("messages.disabled") }}')) {
+                if (badge.textContent.trim().includes('{{ __('messages.active') }}') ||
+                    badge.textContent.trim().includes('{{ __('messages.disabled') }}')) {
                     badge.classList.add('status-indicator');
                 }
             });
@@ -624,7 +689,8 @@
             formSections.forEach((section, index) => {
                 section.style.opacity = '0';
                 section.style.transform = 'translateY(20px)';
-                section.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                section.style.transition =
+                    `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
                 observer.observe(section);
             });
 
@@ -639,6 +705,7 @@
 
             // Auto-save draft functionality (optional)
             let draftTimer;
+
             function saveDraft() {
                 const formData = new FormData(form);
                 const draftData = {};
@@ -679,7 +746,7 @@
                     this.closest('label').style.outline = '2px solid #3b82f6';
                     this.closest('label').style.outlineOffset = '2px';
                 });
-                
+
                 checkbox.addEventListener('blur', function() {
                     this.closest('label').style.outline = 'none';
                 });

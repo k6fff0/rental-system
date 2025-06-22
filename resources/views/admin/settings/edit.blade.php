@@ -41,17 +41,14 @@
 
             {{-- 🎨 اللون الأساسي --}}
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اللون الأساسي</label>
-                <input type="color" name="primary_color" value="{{ old('primary_color', settings()->primary_color) }}"
-                    class="w-20 h-10 rounded-md border dark:bg-gray-700">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"></label>
+                <input type="hidden" name="primary_color" value="{{ settings()->primary_color }}">
             </div>
 
             {{-- 🌈 اللون الثانوي --}}
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">اللون الثانوي</label>
-                <input type="color" name="secondary_color"
-                    value="{{ old('secondary_color', settings()->secondary_color) }}"
-                    class="w-20 h-10 rounded-md border dark:bg-gray-700">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"></label>
+                <input type="hidden" name="secondary_color" value="{{ settings()->secondary_color }}">
             </div>
 
             {{-- 🖼️ شعار النظام --}}
@@ -98,10 +95,8 @@
             {{-- 🚧 وضع الصيانة --}}
             <div>
                 <label class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                    <input type="hidden" name="maintenance_mode" value="0">
-                    <input type="checkbox" name="maintenance_mode" value="1"
-                        {{ settings()->maintenance_mode ? 'checked' : '' }}>
-                    تفعيل وضع الصيانة
+                    <input type="hidden" name="maintenance_mode" value="{{ settings()->maintenance_mode }}">
+
                 </label>
             </div>
 

@@ -9,13 +9,13 @@ use Spatie\Permission\Models\Permission;
 
 class RoleManagerController extends Controller
 {
-	public function __construct()
-{
-    $this->middleware('permission:view roles')->only(['index', 'show']);
-    $this->middleware('permission:create roles')->only(['create', 'store']);
-    $this->middleware('permission:edit roles')->only(['edit', 'update']);
-    $this->middleware('permission:delete roles')->only(['destroy']);
-}
+    public function __construct()
+    {
+        $this->middleware('permission:view roles')->only(['index', 'show']);
+        $this->middleware('permission:create roles')->only(['create', 'store']);
+        $this->middleware('permission:edit roles')->only(['edit', 'update']);
+        $this->middleware('permission:delete roles')->only(['destroy']);
+    }
 
     /**
      * عرض كل المجموعات.
@@ -38,7 +38,7 @@ class RoleManagerController extends Controller
         Role::create(['name' => $request->name]);
 
         return redirect()->route('admin.role_manager.index')
-                         ->with('success', __('messages.role_created_successfully'));
+            ->with('success', __('messages.role_created_successfully'));
     }
 
     /**
@@ -70,7 +70,7 @@ class RoleManagerController extends Controller
         $role->syncPermissions($permissions);
 
         return redirect()->route('admin.role_manager.index')
-                         ->with('success', __('messages.role_updated_successfully'));
+            ->with('success', __('messages.role_updated_successfully'));
     }
 
     /**
@@ -81,6 +81,6 @@ class RoleManagerController extends Controller
         $role->delete();
 
         return redirect()->route('admin.role_manager.index')
-                         ->with('success', __('messages.role_deleted_successfully'));
+            ->with('success', __('messages.role_deleted_successfully'));
     }
 }

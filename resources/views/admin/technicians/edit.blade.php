@@ -4,31 +4,40 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-2 px-2 sm:px-4 lg:px-8 transition-colors duration-300"
-         dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
         <div class="max-w-2xl mx-auto">
             {{-- Header Section - Mobile Optimized --}}
             <div class="text-center mb-4 px-2">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/50 dark:to-indigo-900/50 rounded-xl mb-3">
-                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <div
+                    class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/50 dark:to-indigo-900/50 rounded-xl mb-3">
+                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
                 </div>
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-1">
                     {{ __('messages.edit_technician') }}
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                    {{ __('messages.editing_technician_data_for') }} <span class="font-medium text-purple-600 dark:text-purple-400">{{ $technician->name }}</span>
+                    {{ __('messages.editing_technician_data_for') }} <span
+                        class="font-medium text-purple-600 dark:text-purple-400">{{ $technician->name }}</span>
                 </p>
             </div>
 
             {{-- Alert Messages --}}
             @if ($errors->any())
-                <div class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
                         <svg class="w-4 h-4 text-red-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <div class="flex-1">
                             @foreach ($errors->all() as $error)
@@ -40,10 +49,14 @@
             @endif
 
             @if (session('success'))
-                <div class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <p class="text-green-700 dark:text-green-200 text-sm leading-relaxed">{{ session('success') }}</p>
                     </div>
@@ -52,15 +65,17 @@
 
             {{-- Main Form --}}
             <form action="{{ route('admin.technicians.update', $technician->id) }}" method="POST"
-                  class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 @csrf
                 @method('PUT')
 
                 {{-- Form Header --}}
-                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-700 dark:to-indigo-700 px-4 py-3">
+                <div
+                    class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-700 dark:to-indigo-700 px-4 py-3">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         {{ __('messages.technician_information') }}
                     </h2>
@@ -70,18 +85,24 @@
                     {{-- Technical Information Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-blue-600 dark:text-blue-400 text-sm font-bold">1</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.technical_specialization') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.technical_specialization') }}</h3>
                         </div>
 
                         {{-- Main Specialty --}}
                         <div class="space-y-2">
-                            <label for="main_specialty_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <label for="main_specialty_id"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.main_specialty') }}
                                     <span class="text-red-500 text-xs">*</span>
@@ -91,7 +112,8 @@
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200">
                                 <option value="">{{ __('messages.choose_specialty') }}</option>
                                 @foreach ($mainSpecialties as $main)
-                                    <option value="{{ $main->id }}" {{ old('main_specialty_id', $technician->main_specialty_id) == $main->id ? 'selected' : '' }}>
+                                    <option value="{{ $main->id }}"
+                                        {{ old('main_specialty_id', $technician->main_specialty_id) == $main->id ? 'selected' : '' }}>
                                         {{ $main->name }}
                                     </option>
                                 @endforeach
@@ -105,18 +127,23 @@
                     {{-- Status Information Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-yellow-600 dark:text-yellow-400 text-sm font-bold">2</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.status_and_availability') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.status_and_availability') }}</h3>
                         </div>
 
                         {{-- Technician Status --}}
                         <div class="space-y-2">
-                            <label for="technician_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <label for="technician_status"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     {{ __('messages.technician_status') }}
                                     <span class="text-red-500 text-xs">*</span>
@@ -124,13 +151,16 @@
                             </label>
                             <select name="technician_status" id="technician_status" required
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200">
-                                <option value="available" {{ old('technician_status', $technician->technician_status) == 'available' ? 'selected' : '' }}>
+                                <option value="available"
+                                    {{ old('technician_status', $technician->technician_status) == 'available' ? 'selected' : '' }}>
                                     {{ __('messages.technician_status_available') }}
                                 </option>
-                                <option value="busy" {{ old('technician_status', $technician->technician_status) == 'busy' ? 'selected' : '' }}>
+                                <option value="busy"
+                                    {{ old('technician_status', $technician->technician_status) == 'busy' ? 'selected' : '' }}>
                                     {{ __('messages.technician_status_busy') }}
                                 </option>
-                                <option value="unavailable" {{ old('technician_status', $technician->technician_status) == 'unavailable' ? 'selected' : '' }}>
+                                <option value="unavailable"
+                                    {{ old('technician_status', $technician->technician_status) == 'unavailable' ? 'selected' : '' }}>
                                     {{ __('messages.technician_status_unavailable') }}
                                 </option>
                             </select>
@@ -143,18 +173,23 @@
                     {{-- Additional Information Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-green-600 dark:text-green-400 text-sm font-bold">3</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.additional_information') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.additional_information') }}</h3>
                         </div>
 
                         {{-- Notes --}}
                         <div class="space-y-2">
                             <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.notes') }}
                                 </span>
@@ -176,16 +211,18 @@
                         <a href="{{ route('admin.technicians.index') }}"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 shadow-sm">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
                             {{ __('messages.back') }}
                         </a>
-                        
+
                         {{-- Update Button --}}
                         <button type="submit"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                             </svg>
                             {{ __('messages.save_changes') }}
                         </button>
@@ -225,12 +262,15 @@
                 if (hasErrors) {
                     e.preventDefault();
                     showNotification('{{ __('messages.please_fill_required_fields') }}', 'error');
-                    
+
                     // Focus on first error field
                     const firstError = form.querySelector('.border-red-500');
                     if (firstError) {
                         firstError.focus();
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
                     }
                     return;
                 }
@@ -274,7 +314,8 @@
                 const isRequired = field.hasAttribute('required');
 
                 // Remove existing validation classes
-                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500', 'dark:border-green-500');
+                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500',
+                    'dark:border-green-500');
 
                 if (isRequired && !value) {
                     field.classList.add('border-red-500', 'dark:border-red-500');
@@ -322,7 +363,7 @@
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
                 });
-                
+
                 // Initial resize
                 textarea.style.height = textarea.scrollHeight + 'px';
             });
@@ -337,7 +378,8 @@
 
                 // Create notification
                 const notification = document.createElement('div');
-                notification.className = `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+                notification.className =
+                    `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
 
                 // Set colors based on type
                 if (type === 'error') {
@@ -453,7 +495,7 @@
             window.showNotification = showNotification;
 
             // Show success message if updated
-            @if(session('success'))
+            @if (session('success'))
                 showNotification('{{ session('success') }}', 'success');
             @endif
         });

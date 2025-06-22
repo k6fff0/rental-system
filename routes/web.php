@@ -102,8 +102,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
 
 
-
-
     Route::prefix('technicians')->name('technicians.')->group(function () {
 
         // ✅ التخصصات أولاً
@@ -164,6 +162,7 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
 	//Route::put('maintenance-requests/{id}', [MaintenanceRequestController::class, 'update'])->name('maintenance_requests.update');
     Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
+	
 
 
 

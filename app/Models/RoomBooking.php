@@ -29,12 +29,12 @@ class RoomBooking extends Model
 
     protected $casts = [
         'start_date' => 'datetime',
-    'end_date' => 'datetime',
-    'tentative_at' => 'datetime',
-    'confirmed_at' => 'datetime',
-    'auto_expire_at' => 'datetime',
-    'expires_at' => 'datetime',
-    'cancelled_at' => 'datetime',
+        'end_date' => 'datetime',
+        'tentative_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'auto_expire_at' => 'datetime',
+        'expires_at' => 'datetime',
+        'cancelled_at' => 'datetime',
         'status'     => BookingStatus::class,
     ];
 
@@ -62,9 +62,8 @@ class RoomBooking extends Model
         return $this->user_id === $user->id || $user->hasRole('admin');
     }
 
-   public function contract()
-{
-    return $this->hasOne(Contract::class, 'unit_id', 'unit_id');
-}
-
+    public function contract()
+    {
+        return $this->hasOne(Contract::class, 'unit_id', 'unit_id');
+    }
 }

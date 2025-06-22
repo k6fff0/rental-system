@@ -28,36 +28,36 @@
 
                         {{-- Unit Selection --}}
                         <div class="mb-6">
-    <label for="unit_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        {{ __('messages.unit_number') }} <span class="text-red-500">*</span>
-    </label>
-    <div class="relative">
-        <select name="unit_id" id="unit_id" required
-            class="appearance-none block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150"
-            @if(!empty($selectedUnitId)) disabled @endif>
-            <option value="">{{ __('messages.choose_unit') }}</option>
-            @foreach ($units as $unit)
-                <option value="{{ $unit->id }}" @selected(old('unit_id', $selectedUnitId) == $unit->id)>
-                    {{ $unit->unit_number }} - {{ $unit->building->name }}
-                </option>
-            @endforeach
-        </select>
-        <div
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd"></path>
-            </svg>
-        </div>
-    </div>
-    @error('unit_id')
-        <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-    @enderror
-</div>
-@if(!empty($selectedUnitId))
-    <input type="hidden" name="unit_id" value="{{ $selectedUnitId }}">
-@endif
+                            <label for="unit_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ __('messages.unit_number') }} <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select name="unit_id" id="unit_id" required
+                                    class="appearance-none block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150"
+                                    @if (!empty($selectedUnitId)) disabled @endif>
+                                    <option value="">{{ __('messages.choose_unit') }}</option>
+                                    @foreach ($units as $unit)
+                                        <option value="{{ $unit->id }}" @selected(old('unit_id', $selectedUnitId) == $unit->id)>
+                                            {{ $unit->unit_number }} - {{ $unit->building->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            @error('unit_id')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        @if (!empty($selectedUnitId))
+                            <input type="hidden" name="unit_id" value="{{ $selectedUnitId }}">
+                        @endif
 
 
                         {{-- Notes --}}

@@ -14,11 +14,11 @@ class SpecialtyController extends Controller
         return view('admin.specialties.index', compact('mainSpecialties'));
     }
 
-public function create()
-{
-    $mainSpecialties = Specialty::where('is_main', true)->get();
-    return view('admin.specialties.create', compact('mainSpecialties'));
-}
+    public function create()
+    {
+        $mainSpecialties = Specialty::where('is_main', true)->get();
+        return view('admin.specialties.create', compact('mainSpecialties'));
+    }
 
 
     public function store(Request $request)

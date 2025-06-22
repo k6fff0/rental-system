@@ -95,182 +95,187 @@
             </div>
 
             {{-- Stats Cards --}}
-			@can('view booking details')
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-blue-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {{ __('messages.total_bookings') }}</p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total'] }}</p>
+            @can('view booking details')
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-blue-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    {{ __('messages.total_bookings') }}</p>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['total'] }}</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-green-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.confirmed') }}
+                                </p>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['confirmed'] }}</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-yellow-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.tentative') }}
+                                </p>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['tentative'] }}</p>
+                            </div>
+                            <div
+                                class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-red-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.cancelled') }}
+                                </p>
+                                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['cancelled'] }}</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-green-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.confirmed') }}
-                            </p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['confirmed'] }}</p>
-                        </div>
-                        <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
+            @endcan
+            {{-- Mobile Cards View --}}
+            <div class="block md:hidden space-y-4 mb-6">
+                @forelse($bookings as $booking)
+                    @php
+                        $status =
+                            $booking->status instanceof \App\Enums\BookingStatus
+                                ? $booking->status->value
+                                : $booking->status;
+
+                        $statusClasses = match ($status) {
+                            'tentative' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                            'confirmed' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                            'completed' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                            'cancelled' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                            'cancelled_due_to_rent'
+                                => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                            'auto_cancelled' => 'bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
+                            'expired' => 'bg-gray-300 text-gray-900 dark:bg-gray-900 dark:text-gray-300',
+                            'active' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                            default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+                        };
+
+                        $canViewOwner = auth()->user()->can('view booking owner') || auth()->id() === $booking->user_id;
+                    @endphp
+
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-lg text-gray-900 dark:text-white">
+                                        {{ $booking->unit->unit_number }}
+                                    </h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $booking->unit->building->name ?? '-' }}
+                                    </p>
+                                </div>
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusClasses }}">
+                                    {{ __('messages.' . $status) }}
+                                </span>
+                            </div>
+
+                            <div class="mt-3 grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.start_date') }}
+                                    </p>
+                                    <p class="text-sm font-medium">{{ $booking->start_date->format('Y-m-d') }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.end_date') }}</p>
+                                    <p class="text-sm font-medium">{{ $booking->end_date->format('Y-m-d') }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.booked_by') }}</p>
+                                    <p class="text-sm font-medium">
+                                        @if ($canViewOwner)
+                                            {{ $booking->user->name ?? '-' }}
+                                        @else
+                                            —
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex {{ app()->getLocale() === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2' }}">
+                                @can('view booking details')
+                                    <a href="{{ route('admin.bookings.show', $booking) }}"
+                                        class="flex-1 text-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg">
+                                        {{ __('messages.details') }}
+                                    </a>
+                                @endcan
+
+                                @if (
+                                    $booking->status === \App\Enums\BookingStatus::Tentative &&
+                                        !$booking->deposit_paid &&
+                                        auth()->user()->can('confirm booking'))
+                                    <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST"
+                                        onsubmit="return confirm('{{ __('messages.confirm_booking_prompt') }}')"
+                                        class="flex-1">
+                                        @csrf
+                                        <button type="submit"
+                                            class="w-full px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg">
+                                            {{ __('messages.confirm') }}
+                                        </button>
+                                    </form>
+                                @endif
+
+
+                                @if (in_array($booking->status, [\App\Enums\BookingStatus::Tentative, \App\Enums\BookingStatus::Confirmed]) &&
+                                        (!$booking->auto_expire_at || now()->lt($booking->auto_expire_at)) &&
+                                        ($booking->user_id === auth()->id() || auth()->user()->can('cancel bookings')))
+                                    <form method="POST" action="{{ route('admin.bookings.cancel', $booking) }}"
+                                        onsubmit="return confirm('{{ __('messages.confirm_cancel_booking') }}')"
+                                        class="flex-1">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="w-full px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg">
+                                            {{ __('messages.cancel') }}
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-yellow-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.tentative') }}
-                            </p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['tentative'] }}</p>
-                        </div>
-                        <div
-                            class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
+                @empty
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
+                        <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_bookings_found') }}</p>
                     </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md border-l-4 border-red-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.cancelled') }}
-                            </p>
-                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['cancelled'] }}</p>
-                        </div>
-                        <div class="p-3 rounded-full bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
-@endcan
-          {{-- Mobile Cards View --}}
-<div class="block md:hidden space-y-4 mb-6">
-    @forelse($bookings as $booking)
-        @php
-            $status = $booking->status instanceof \App\Enums\BookingStatus
-                ? $booking->status->value
-                : $booking->status;
-
-            $statusClasses = match($status) {
-                'tentative' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-                'confirmed' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                'completed' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                'cancelled' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                'cancelled_due_to_rent' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
-                'auto_cancelled' => 'bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
-                'expired' => 'bg-gray-300 text-gray-900 dark:bg-gray-900 dark:text-gray-300',
-                'active' => 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
-                default => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-            };
-
-            $canViewOwner = auth()->user()->can('view booking owner') || auth()->id() === $booking->user_id;
-        @endphp
-
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
-            <div class="p-4">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 class="font-bold text-lg text-gray-900 dark:text-white">
-                            {{ $booking->unit->unit_number }}
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ $booking->unit->building->name ?? '-' }}
-                        </p>
-                    </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusClasses }}">
-                        {{ __('messages.' . $status) }}
-                    </span>
-                </div>
-
-                <div class="mt-3 grid grid-cols-2 gap-2">
-                    <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.start_date') }}</p>
-                        <p class="text-sm font-medium">{{ $booking->start_date->format('Y-m-d') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.end_date') }}</p>
-                        <p class="text-sm font-medium">{{ $booking->end_date->format('Y-m-d') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.booked_by') }}</p>
-                        <p class="text-sm font-medium">
-                            @if($canViewOwner)
-                                {{ $booking->user->name ?? '-' }}
-                            @else
-                                —
-                            @endif
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex {{ app()->getLocale() === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2' }}">
-				@can('view booking details')
-                    <a href="{{ route('admin.bookings.show', $booking) }}"
-                       class="flex-1 text-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg">
-                        {{ __('messages.details') }}
-                    </a>
-					@endcan
-
-                    @if (
-    $booking->status === \App\Enums\BookingStatus::Tentative &&
-    !$booking->deposit_paid &&
-    auth()->user()->can('confirm booking')
-)
-    <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST"
-          onsubmit="return confirm('{{ __('messages.confirm_booking_prompt') }}')" class="flex-1">
-        @csrf
-        <button type="submit"
-                class="w-full px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg">
-            {{ __('messages.confirm') }}
-        </button>
-    </form>
-@endif
-
-
-                    @if (
-                        in_array($booking->status, [\App\Enums\BookingStatus::Tentative, \App\Enums\BookingStatus::Confirmed]) &&
-                        (!$booking->auto_expire_at || now()->lt($booking->auto_expire_at)) &&
-                        ($booking->user_id === auth()->id() || auth()->user()->can('cancel bookings'))
-                    )
-                        <form method="POST" action="{{ route('admin.bookings.cancel', $booking) }}"
-                              onsubmit="return confirm('{{ __('messages.confirm_cancel_booking') }}')" class="flex-1">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit"
-                                    class="w-full px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg">
-                                {{ __('messages.cancel') }}
-                            </button>
-                        </form>
-                    @endif
-                </div>
-            </div>
-        </div>
-    @empty
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md text-center">
-            <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_bookings_found') }}</p>
-        </div>
-    @endforelse
-</div>
 
 
             {{-- Desktop Table View --}}
@@ -360,53 +365,56 @@
                                     </td>
 
                                     @php
-    $canViewOwner = auth()->user()->can('view booking owner') || auth()->id() === $booking->user_id;
-@endphp
+                                        $canViewOwner =
+                                            auth()->user()->can('view booking owner') ||
+                                            auth()->id() === $booking->user_id;
+                                    @endphp
 
-<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
-    @if ($canViewOwner)
-        <div>{{ $booking->user->name ?? '-' }}</div>
-        <div class="text-xs text-gray-400">{{ $booking->user->email ?? '' }}</div>
-    @else
-        —
-    @endif
-</td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
+                                        @if ($canViewOwner)
+                                            <div>{{ $booking->user->name ?? '-' }}</div>
+                                            <div class="text-xs text-gray-400">{{ $booking->user->email ?? '' }}</div>
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
 
-									
+
                                     <td
                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium {{ app()->getLocale() === 'ar' ? 'text-right' : 'text-left' }}">
                                         <div
                                             class="flex {{ app()->getLocale() === 'ar' ? 'space-x-reverse space-x-2' : 'space-x-2' }}">
-											@can('view booking details')
-                                            <a href="{{ route('admin.bookings.show', $booking) }}"
-                                                class="p-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors"
-                                                title="{{ __('messages.show_details') }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                            </a>
-											@endcan
+                                            @can('view booking details')
+                                                <a href="{{ route('admin.bookings.show', $booking) }}"
+                                                    class="p-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors"
+                                                    title="{{ __('messages.show_details') }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                    </svg>
+                                                </a>
+                                            @endcan
                                             @can('confirm booking')
-                                            @if ($booking->status === \App\Enums\BookingStatus::Tentative && !$booking->deposit_paid)
-                                                <form action="{{ route('admin.bookings.confirm', $booking) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('{{ __('messages.confirm_booking_prompt') }}')">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="p-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
-                                                        title="{{ __('messages.confirm_booking') }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                @if ($booking->status === \App\Enums\BookingStatus::Tentative && !$booking->deposit_paid)
+                                                    <form action="{{ route('admin.bookings.confirm', $booking) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('{{ __('messages.confirm_booking_prompt') }}')">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="p-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                                                            title="{{ __('messages.confirm_booking') }}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2" d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             @endcan
                                             @if (in_array($booking->status, [\App\Enums\BookingStatus::Tentative, \App\Enums\BookingStatus::Confirmed]) &&
                                                     (!$booking->auto_expire_at || now()->lt($booking->auto_expire_at)) &&

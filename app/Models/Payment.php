@@ -49,16 +49,14 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class, 'payer_id');
     }
-	
-	public function collector()
-{
-    return $this->belongsTo(User::class, 'collector_id');
-}
 
-public function logs()
-{
-    return $this->hasMany(\App\Models\PaymentLog::class);
-}
+    public function collector()
+    {
+        return $this->belongsTo(User::class, 'collector_id');
+    }
 
-
+    public function logs()
+    {
+        return $this->hasMany(\App\Models\PaymentLog::class);
+    }
 }

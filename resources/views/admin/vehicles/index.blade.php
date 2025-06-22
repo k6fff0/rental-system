@@ -16,9 +16,10 @@
                         <div class="flex items-center space-x-4 rtl:space-x-reverse">
                             <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl shadow-lg">
                                 <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"
-     xmlns="http://www.w3.org/2000/svg">
-  <path d="M3 13.5V10l1.5-4.5A2 2 0 016.4 4h7.2a2 2 0 011.9 1.5L17 10v3.5a1.5 1.5 0 01-1.5 1.5H15a1.5 1.5 0 01-1.5-1.5V13h-7v.5A1.5 1.5 0 015 15H4.5A1.5 1.5 0 013 13.5zM6 12a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
-</svg>
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 13.5V10l1.5-4.5A2 2 0 016.4 4h7.2a2 2 0 011.9 1.5L17 10v3.5a1.5 1.5 0 01-1.5 1.5H15a1.5 1.5 0 01-1.5-1.5V13h-7v.5A1.5 1.5 0 015 15H4.5A1.5 1.5 0 013 13.5zM6 12a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+                                </svg>
 
 
                             </div>
@@ -206,14 +207,14 @@
 
                                             </div>
                                         </td>
-                                       <td class="px-6 py-5 whitespace-nowrap">
-    <div class="text-sm font-medium text-slate-900 dark:text-white">
-        {{ $vehicle->brand }}
-    </div>
-    <div class="text-sm text-slate-500 dark:text-slate-300">
-        {{ $vehicle->model }}
-    </div>
-</td>
+                                        <td class="px-6 py-5 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-slate-900 dark:text-white">
+                                                {{ $vehicle->brand }}
+                                            </div>
+                                            <div class="text-sm text-slate-500 dark:text-slate-300">
+                                                {{ $vehicle->model }}
+                                            </div>
+                                        </td>
 
                                         <td class="px-6 py-5 whitespace-nowrap">
                                             <div class="flex items-center space-x-2 rtl:space-x-reverse">

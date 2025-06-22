@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Artisan;
-use Rap2hpoutre\LaravelLogViewer\LogViewerController;
+// Removed unused import for LogViewerController
 
 
 class LogController extends Controller
@@ -23,10 +23,7 @@ class LogController extends Controller
             File::put($logPath, ''); // يفرغ محتوى السجل
         }
 
-        // لو فيه باكدج log viewer
-        if (class_exists(\Rap2hpoutre\LaravelLogViewer\LogViewerController::class)) {
-            Artisan::call('log:clear');
-        }
+
 
         return redirect()->back()->with('success', __('messages.log_cleared_successfully'));
     }

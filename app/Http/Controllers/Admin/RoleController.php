@@ -9,13 +9,13 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-	public function __construct()
-{
-    $this->middleware('permission:view roles')->only(['index', 'show']);
-    $this->middleware('permission:create roles')->only(['create', 'store']);
-    $this->middleware('permission:edit roles')->only(['edit', 'update']);
-    $this->middleware('permission:delete roles')->only(['destroy']);
-}
+    public function __construct()
+    {
+        $this->middleware('permission:view roles')->only(['index', 'show']);
+        $this->middleware('permission:create roles')->only(['create', 'store']);
+        $this->middleware('permission:edit roles')->only(['edit', 'update']);
+        $this->middleware('permission:delete roles')->only(['destroy']);
+    }
 
     /**
      * Display a listing of the resource.
@@ -51,7 +51,7 @@ class RoleController extends Controller
         }
 
         return redirect()->route('admin.roles.index')
-                         ->with('success', __('messages.role_created_successfully'));
+            ->with('success', __('messages.role_created_successfully'));
     }
 
     /**
@@ -84,7 +84,7 @@ class RoleController extends Controller
         }
 
         return redirect()->route('admin.roles.index')
-                         ->with('success', __('messages.role_updated_successfully'));
+            ->with('success', __('messages.role_updated_successfully'));
     }
 
     /**
@@ -96,6 +96,6 @@ class RoleController extends Controller
         $role->delete();
 
         return redirect()->route('admin.roles.index')
-                         ->with('success', __('messages.role_deleted_successfully'));
+            ->with('success', __('messages.role_deleted_successfully'));
     }
 }

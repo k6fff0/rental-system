@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-bind:class="{ 'dark': darkMode }">
 
 <head>
-@livewireStyles
+    @livewireStyles
 
     <style>
         [x-cloak] {
@@ -42,12 +42,13 @@
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
         {{-- 🔘 الوضع الليلي - اللغة - الحساب --}}
-        <div class="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-800 shadow text-sm relative z-[100]">
+        <div
+            class="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-800 shadow text-sm relative z-[100]">
 
             {{-- زر لوحة التحكم --}}
             <div>
                 <a href="{{ route('dashboard') }}"
-                   class="inline-flex items-center px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition">
+                    class="inline-flex items-center px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition">
                     <x-heroicon-o-home class="w-5 h-5 mr-2" />
                     {{ __('messages.home_page') }}
                 </a>
@@ -82,7 +83,7 @@
                         }
                     @endphp
 
-                    <div x-data='@json(["open" => false, "hasNew" => $unreadNotificationsCount > 0])'>
+                    <div x-data='@json(['open' => false, 'hasNew' => $unreadNotificationsCount > 0])'>
                         <button @click="open = !open"
                             class="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                             <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
@@ -145,7 +146,7 @@
                                 class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 {{ app()->getLocale() === 'ar' ? 'font-bold' : '' }}">
                                 🇸🇦 عربي
                             </a>
-							<a href="{{ route('lang.switch', ['lang' => 'ur', 'redirect' => url()->full()]) }}"
+                            <a href="{{ route('lang.switch', ['lang' => 'ur', 'redirect' => url()->full()]) }}"
                                 class="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 {{ app()->getLocale() === 'ar' ? 'font-bold' : '' }}">
                                 🇵🇰 اردو
                             </a>
@@ -185,17 +186,15 @@
             @yield('content')
         </main>
     </div>
-<footer class="bg-gray-100 dark:bg-gray-900 mt-10 border-t border-gray-200 dark:border-gray-700">
-    <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center text-sm text-gray-600 dark:text-gray-300">
-        <p>© {{ date('Y') }} {{ config('app.name') }} — {{ __('messages.all_rights_reserved') }}</p>
-        <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-600 leading-relaxed">
-            {{ __('messages.privacy_terms_note') }}
-            <a href="https://wa.me/971503660507" target="_blank" class="text-indigo-600 hover:underline font-medium ms-1">
-                Amr Mohammed
+    <footer class="bg-gray-100 dark:bg-gray-900 mt-10 border-t border-gray-200 dark:border-gray-700">
+        <div class="border-t border-white/20 pt-8 text-center">
+            <p class="text-gray-300 text-lg">&copy; {{ __('messages.rights_reserved') }}</p>
+            <a href="https://wa.me/971503660507" target="_blank"
+                class="text-sm text-green-300 hover:text-green-400 underline">
+                Developed by : Amr Mohammed
             </a>
-        </p>
-    </div>
-</footer>
+        </div>
+    </footer>
 
 
 
@@ -220,9 +219,9 @@
 
     {{-- ✅ السكريبتات --}}
     @stack('scripts')
-	
-@livewireScripts
-@yield('scripts')
+
+    @livewireScripts
+    @yield('scripts')
 
 
 </body>

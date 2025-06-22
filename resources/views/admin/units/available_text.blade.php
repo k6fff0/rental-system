@@ -8,22 +8,22 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        
+
         /* تحسينات للهاتف */
         @media (max-width: 640px) {
             .responsive-padding {
                 padding: 15px;
             }
-            
+
             .responsive-text {
                 font-size: 0.9rem;
             }
-            
+
             .responsive-heading {
                 font-size: 1.4rem;
             }
         }
-        
+
         /* تحسينات منطقة النص */
         .content-box {
             border-radius: 12px;
@@ -32,18 +32,18 @@
             direction: rtl;
             line-height: 1.7;
         }
-        
+
         /* تحسينات الزر */
         .copy-btn {
             transition: all 0.2s ease;
             box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3);
         }
-        
+
         .copy-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
         }
-        
+
         /* تحسينات التكست اريا */
         .custom-textarea {
             resize: none;
@@ -53,7 +53,7 @@
             line-height: 1.8;
             padding: 15px;
         }
-        
+
         /* تحسينات للتاريخ */
         .date-text {
             color: #6b7280;
@@ -68,7 +68,7 @@
                 <h2 class="text-2xl font-bold text-gray-800 responsive-heading">
                     <span class="mr-2">📋</span> النسخة الكتابية للغرف المتاحة
                 </h2>
-                
+
                 <button onclick="copyToClipboard()"
                     class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2">
                     <span>📋</span>
@@ -83,9 +83,7 @@
 
             <!-- محتوى الغرف -->
             <div class="content-box h-[calc(100vh-180px)] overflow-auto responsive-text">
-                <textarea id="textContent" 
-                    class="custom-textarea w-full h-full focus:outline-none"
-                    readonly>
+                <textarea id="textContent" class="custom-textarea w-full h-full focus:outline-none" readonly>
 @foreach ($units as $buildingName => $buildingUnits)
 🏠 {{ $buildingName }}
 @php
@@ -102,7 +100,6 @@
 💵 الإيجار: {{ $unit->rent_price }} درهم
 -----------------------------
 @endforeach
-
 @endforeach
                 </textarea>
             </div>
@@ -114,23 +111,23 @@
             const textarea = document.getElementById("textContent");
             textarea.select();
             textarea.setSelectionRange(0, 99999);
-            
+
             try {
                 document.execCommand("copy");
-                
+
                 // تغيير نص الزر مؤقتًا للإشارة إلى النجاح
                 const btn = document.querySelector('.copy-btn');
                 btn.innerHTML = '<span>✅</span><span>تم النسخ!</span>';
-                
+
                 setTimeout(() => {
                     btn.innerHTML = '<span>📋</span><span>نسخ كل النص</span>';
                 }, 2000);
-                
+
             } catch (err) {
                 alert("حدث خطأ أثناء النسخ، يرجى المحاولة مرة أخرى");
             }
         }
-        
+
         // جعل التكست اريا تأخذ المساحة المتبقية تلقائيًا
         function adjustTextareaHeight() {
             const headerHeight = document.querySelector('h2').offsetHeight;
@@ -138,10 +135,10 @@
             const remainingHeight = window.innerHeight - headerHeight - dateHeight - 100;
             document.querySelector('.content-box').style.height = `${remainingHeight}px`;
         }
-        
+
         // تعديل الارتفاع عند تغيير حجم النافذة
         window.addEventListener('resize', adjustTextareaHeight);
-        
+
         // تعديل الارتفاع عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', adjustTextareaHeight);
     </script>

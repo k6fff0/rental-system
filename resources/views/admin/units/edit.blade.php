@@ -51,9 +51,11 @@
 
             {{-- ⚠️ تحذير بوجود عقد مرتبط بالغرفة --}}
             @if ($unit->status === 'occupied' && isset($activeContract))
-                <div class="mb-8 p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+                <div
+                    class="mb-8 p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
                     <div class="flex items-start">
-                        <svg class="w-6 h-6 text-amber-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-6 h-6 text-amber-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor"
+                            viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
                                 clip-rule="evenodd" />
@@ -79,19 +81,22 @@
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                         <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         {{ __('messages.basic_information') }}
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {{-- المبنى --}}
                         <div>
-                            <label for="building_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="building_id"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('messages.building') }} <span class="text-red-500">*</span>
                             </label>
                             <select name="building_id" id="building_id"
-                                class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" required>
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                required>
                                 @foreach ($buildings as $building)
                                     <option value="{{ $building->id }}"
                                         {{ $building->id == old('building_id', $unit->building_id) ? 'selected' : '' }}>
@@ -103,7 +108,8 @@
 
                         {{-- رقم الوحدة --}}
                         <div>
-                            <label for="unit_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="unit_number"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('messages.unit_number') }} <span class="text-red-500">*</span>
                             </label>
                             <input type="text" name="unit_number" id="unit_number"
@@ -130,7 +136,8 @@
                                 <input type="number" name="rent_price" id="rent_price" step="0.01" required
                                     class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                                     value="{{ old('rent_price', $unit->rent_price) }}">
-                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 dark:text-gray-400 text-sm">
+                                <span
+                                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500 dark:text-gray-400 text-sm">
                                     {{ __('messages.currency') }}
                                 </span>
                             </div>
@@ -142,7 +149,8 @@
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                         <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
                         {{ __('messages.unit_details') }}
                     </h3>
@@ -186,60 +194,62 @@
                         </select>
                     </div>
 
-                     {{-- ✅ الحالة بالألوان --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ __('messages.status') }}
-                        <span class="text-gray-400 text-xs block mt-1">{{ __('messages.status_hint') }}</span>
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        @php
-                            $statuses = [
-                                'available' => [
-                                    'label' => 'status_available',
-                                    'bg' => 'bg-green-200',
-                                    'text' => 'text-green-800',
-                                ],
-                                'booked' => [
-                                    'label' => 'status_booked',
-                                    'bg' => 'bg-purple-200',
-                                    'text' => 'text-purple-800',
-                                ],
-                                'cleaning' => [
-                                    'label' => 'status_cleaning',
-                                    'bg' => 'bg-indigo-200',
-                                    'text' => 'text-indigo-800',
-                                ],
-                                'maintenance' => [
-                                    'label' => 'status_maintenance',
-                                    'bg' => 'bg-yellow-200',
-                                    'text' => 'text-yellow-800',
-                                ],
-                            ];
-                        @endphp
+                    {{-- ✅ الحالة بالألوان --}}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('messages.status') }}
+                            <span class="text-gray-400 text-xs block mt-1">{{ __('messages.status_hint') }}</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            @php
+                                $statuses = [
+                                    'available' => [
+                                        'label' => 'status_available',
+                                        'bg' => 'bg-green-200',
+                                        'text' => 'text-green-800',
+                                    ],
+                                    'booked' => [
+                                        'label' => 'status_booked',
+                                        'bg' => 'bg-purple-200',
+                                        'text' => 'text-purple-800',
+                                    ],
+                                    'cleaning' => [
+                                        'label' => 'status_cleaning',
+                                        'bg' => 'bg-indigo-200',
+                                        'text' => 'text-indigo-800',
+                                    ],
+                                    'maintenance' => [
+                                        'label' => 'status_maintenance',
+                                        'bg' => 'bg-yellow-200',
+                                        'text' => 'text-yellow-800',
+                                    ],
+                                ];
+                            @endphp
 
-                        @foreach ($statuses as $value => $style)
-                            <label
-                                class="flex items-center px-4 py-2 rounded-md cursor-pointer {{ $style['bg'] }} {{ $style['text'] }} font-medium shadow-sm">
-                                <input type="radio" name="status" value="{{ $value }}"
-                                    class="form-radio focus:ring-0 text-current mr-2"
-                                    {{ old('status', $unit->status) === $value ? 'checked' : '' }}>
-                                {{ __('messages.' . $style['label']) }}
-                            </label>
-                        @endforeach
+                            @foreach ($statuses as $value => $style)
+                                <label
+                                    class="flex items-center px-4 py-2 rounded-md cursor-pointer {{ $style['bg'] }} {{ $style['text'] }} font-medium shadow-sm">
+                                    <input type="radio" name="status" value="{{ $value }}"
+                                        class="form-radio focus:ring-0 text-current mr-2"
+                                        {{ old('status', $unit->status) === $value ? 'checked' : '' }}>
+                                    {{ __('messages.' . $style['label']) }}
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 {{-- ملاحظات --}}
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                        <svg class="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z" />
                         </svg>
                         {{ __('messages.additional_notes') }}
                     </h3>
-                    
+
                     <div>
                         <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {{ __('messages.notes') }}
@@ -255,7 +265,8 @@
                     <a href="{{ route('admin.units.index') }}"
                         class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         {{ __('messages.cancel') }}
                     </a>

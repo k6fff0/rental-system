@@ -14,8 +14,10 @@
 
         .container-modern {
             max-width: 1000px;
-            margin: 20px auto; /* تصغير المسافة */
-            padding: 20px; /* تصغير الpadding */
+            margin: 20px auto;
+            /* تصغير المسافة */
+            padding: 20px;
+            /* تصغير الpadding */
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
@@ -39,13 +41,16 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 20px; /* تصغير المسافة */
+            margin-bottom: 20px;
+            /* تصغير المسافة */
             flex-wrap: wrap;
-            gap: 15px; /* تصغير المسافة */
+            gap: 15px;
+            /* تصغير المسافة */
         }
 
         .header-modern h1 {
-            font-size: 2rem; /* تصغير الخط */
+            font-size: 2rem;
+            /* تصغير الخط */
             font-weight: 700;
             color: #212529;
             margin: 0;
@@ -65,8 +70,10 @@
 
         .header-modern p {
             color: #6c757d;
-            margin-top: 5px; /* تصغير المسافة */
-            font-size: 0.95rem; /* تصغير الخط */
+            margin-top: 5px;
+            /* تصغير المسافة */
+            font-size: 0.95rem;
+            /* تصغير الخط */
             transition: color 0.3s ease;
         }
 
@@ -83,11 +90,14 @@
 
         .search-input-modern {
             border: 1px solid #d1d5db;
-            padding: 8px 12px; /* تصغير الpadding */
+            padding: 8px 12px;
+            /* تصغير الpadding */
             border-radius: 8px;
             width: 100%;
-            max-width: 300px; /* تصغير العرض */
-            font-size: 0.9rem; /* تصغير الخط */
+            max-width: 300px;
+            /* تصغير العرض */
+            font-size: 0.9rem;
+            /* تصغير الخط */
             box-sizing: border-box;
             transition: all 0.3s ease;
             background-color: #ffffff;
@@ -107,7 +117,7 @@
                 border-color: #4b5563;
                 color: #f9fafb;
             }
-            
+
             .search-input-modern::placeholder {
                 color: #9ca3af;
             }
@@ -126,21 +136,25 @@
         .button-modern {
             background-color: #3b82f6;
             color: white;
-            padding: 8px 16px; /* تصغير الpadding */
+            padding: 8px 16px;
+            /* تصغير الpadding */
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem; /* تصغير الخط */
+            font-size: 0.9rem;
+            /* تصغير الخط */
             font-weight: 600;
             transition: all 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px; /* تصغير المسافة */
+            gap: 6px;
+            /* تصغير المسافة */
             box-shadow: 0 3px 8px rgba(59, 130, 246, 0.2);
             width: 100%;
-            max-width: 300px; /* تصغير العرض */
+            max-width: 300px;
+            /* تصغير العرض */
         }
 
         .button-modern:hover {
@@ -163,8 +177,10 @@
         .specialty-card-modern {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
-            margin-bottom: 15px; /* تصغير المسافة */
-            padding: 18px; /* تصغير الpadding */
+            margin-bottom: 15px;
+            /* تصغير المسافة */
+            padding: 18px;
+            /* تصغير الpadding */
             border-radius: 10px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.2s ease;
@@ -182,7 +198,7 @@
                 border-color: #4b5563;
                 box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
             }
-            
+
             .specialty-card-modern:hover {
                 box-shadow: 0 5px 16px rgba(0, 0, 0, 0.3);
             }
@@ -202,13 +218,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px; /* تصغير المسافة */
+            margin-bottom: 12px;
+            /* تصغير المسافة */
             flex-wrap: wrap;
-            gap: 10px; /* تصغير المسافة */
+            gap: 10px;
+            /* تصغير المسافة */
         }
 
         .main-specialty-header h2 {
-            font-size: 1.4rem; /* تصغير الخط */
+            font-size: 1.4rem;
+            /* تصغير الخط */
             font-weight: 700;
             color: #374151;
             transition: color 0.3s ease;
@@ -230,7 +249,8 @@
             border: none;
             cursor: pointer;
             color: #6b7280;
-            padding: 6px; /* تصغير الpadding */
+            padding: 6px;
+            /* تصغير الpadding */
             border-radius: 6px;
             transition: all 0.2s ease;
             display: inline-flex;
@@ -253,12 +273,12 @@
             .action-icon-button {
                 color: #9ca3af;
             }
-            
+
             .action-icon-button:hover {
                 background-color: #4b5563;
                 color: #60a5fa;
             }
-            
+
             .action-icon-button.delete:hover {
                 background-color: #7f1d1d;
                 color: #f87171;
@@ -280,14 +300,17 @@
         }
 
         .sub-specialty-toggle {
-            font-size: 0.85rem; /* تصغير الخط */
+            font-size: 0.85rem;
+            /* تصغير الخط */
             font-weight: 600;
             color: #3b82f6;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 4px; /* تصغير المسافة */
-            margin-top: 10px; /* تصغير المسافة */
+            gap: 4px;
+            /* تصغير المسافة */
+            margin-top: 10px;
+            /* تصغير المسافة */
             transition: color 0.2s ease;
         }
 
@@ -306,21 +329,28 @@
 
         .sub-specialties-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* تصغير العرض */
-            gap: 8px; /* تصغير المسافة */
-            padding-top: 10px; /* تصغير المسافة */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            /* تصغير العرض */
+            gap: 8px;
+            /* تصغير المسافة */
+            padding-top: 10px;
+            /* تصغير المسافة */
         }
 
         .sub-specialty-chip {
             background-color: #eff6ff;
             color: #1e40af;
-            padding: 6px 10px; /* تصغير الpadding */
-            border-radius: 16px; /* تصغير الحواف */
-            font-size: 0.8rem; /* تصغير الخط */
+            padding: 6px 10px;
+            /* تصغير الpadding */
+            border-radius: 16px;
+            /* تصغير الحواف */
+            font-size: 0.8rem;
+            /* تصغير الخط */
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 6px; /* تصغير المسافة */
+            gap: 6px;
+            /* تصغير المسافة */
             transition: all 0.2s ease;
         }
 
@@ -335,7 +365,7 @@
                 background-color: #1e3a8a;
                 color: #bfdbfe;
             }
-            
+
             .sub-specialty-chip:hover {
                 background-color: #1e40af;
             }
@@ -352,14 +382,16 @@
 
         .chip-actions {
             display: flex;
-            gap: 3px; /* تصغير المسافة */
+            gap: 3px;
+            /* تصغير المسافة */
         }
 
         .chip-action-icon {
             color: #6b7280;
             cursor: pointer;
             transition: color 0.2s ease;
-            font-size: 0.75rem; /* تصغير الأيقونات */
+            font-size: 0.75rem;
+            /* تصغير الأيقونات */
         }
 
         .chip-action-icon:hover {
@@ -385,32 +417,40 @@
 
         .empty-state-modern {
             text-align: center;
-            padding: 40px 20px; /* تصغير الpadding */
+            padding: 40px 20px;
+            /* تصغير الpadding */
             color: #6b7280;
             border: 2px dashed #d1d5db;
             border-radius: 10px;
             background-color: #fefefe;
-            margin-top: 20px; /* تصغير المسافة */
+            margin-top: 20px;
+            /* تصغير المسافة */
             transition: all 0.3s ease;
         }
 
         .empty-state-modern svg {
-            width: 50px; /* تصغير الأيقونة */
+            width: 50px;
+            /* تصغير الأيقونة */
             height: 50px;
-            margin: 0 auto 15px; /* تصغير المسافة */
+            margin: 0 auto 15px;
+            /* تصغير المسافة */
             color: #9ca3af;
         }
 
         .empty-state-modern h3 {
-            font-size: 1.4rem; /* تصغير الخط */
+            font-size: 1.4rem;
+            /* تصغير الخط */
             color: #374151;
-            margin-bottom: 8px; /* تصغير المسافة */
+            margin-bottom: 8px;
+            /* تصغير المسافة */
             transition: color 0.3s ease;
         }
 
         .empty-state-modern p {
-            font-size: 0.95rem; /* تصغير الخط */
-            margin-bottom: 20px; /* تصغير المسافة */
+            font-size: 0.95rem;
+            /* تصغير الخط */
+            margin-bottom: 20px;
+            /* تصغير المسافة */
         }
 
         /* Dark mode empty state */
@@ -420,11 +460,11 @@
                 border-color: #4b5563;
                 color: #9ca3af;
             }
-            
+
             .empty-state-modern h3 {
                 color: #f9fafb;
             }
-            
+
             .empty-state-modern svg {
                 color: #6b7280;
             }
@@ -452,13 +492,15 @@
         }
 
         .collapse-content.show {
-            max-height: 400px; /* تصغير الارتفاع */
+            max-height: 400px;
+            /* تصغير الارتفاع */
         }
 
         /* Small description text styles */
         .specialty-description {
             color: #6b7280;
-            font-size: 0.8rem; /* تصغير الخط */
+            font-size: 0.8rem;
+            /* تصغير الخط */
             margin-top: 2px;
             transition: color 0.3s ease;
         }
@@ -471,8 +513,10 @@
         .count-badge {
             background-color: #f3f4f6;
             color: #6b7280;
-            font-size: 0.7rem; /* تصغير الخط */
-            padding: 2px 6px; /* تصغير الpadding */
+            font-size: 0.7rem;
+            /* تصغير الخط */
+            padding: 2px 6px;
+            /* تصغير الpadding */
             border-radius: 10px;
             margin-right: 4px;
             transition: all 0.3s ease;
@@ -506,7 +550,7 @@
                 gap: 10px;
             }
 
-            .header-modern > div {
+            .header-modern>div {
                 width: 100%;
             }
 
@@ -542,8 +586,13 @@
 
         /* Loading animation */
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .animate-spin {
@@ -706,7 +755,8 @@
                             </div>
                         </div>
                     @else
-                        <div class="mt-3 p-3 bg-gray-50 dark:bg-gray-600 rounded text-center text-gray-500 dark:text-gray-400 text-xs border border-dashed border-gray-200 dark:border-gray-500">
+                        <div
+                            class="mt-3 p-3 bg-gray-50 dark:bg-gray-600 rounded text-center text-gray-500 dark:text-gray-400 text-xs border border-dashed border-gray-200 dark:border-gray-500">
                             {{ app()->getLocale() === 'ar' ? 'لا توجد مهام إضافية لهذا التخصص.' : 'No sub-specialties for this main specialty.' }}
                         </div>
                     @endif
@@ -753,8 +803,10 @@
                         let hasVisibleResults = false;
 
                         specialtyCards.forEach(card => {
-                            const mainSpecialtyName = card.querySelector('h2').textContent.toLowerCase();
-                            const subSpecialtyChips = card.querySelectorAll('.sub-specialty-chip span.font-medium');
+                            const mainSpecialtyName = card.querySelector('h2').textContent
+                        .toLowerCase();
+                            const subSpecialtyChips = card.querySelectorAll(
+                                '.sub-specialty-chip span.font-medium');
 
                             let isMainVisible = mainSpecialtyName.includes(searchTerm);
                             let isSubVisible = false;
@@ -762,7 +814,8 @@
                             // Check sub-specialties if main is not visible
                             if (!isMainVisible) {
                                 subSpecialtyChips.forEach(chipName => {
-                                    if (chipName.textContent.toLowerCase().includes(searchTerm)) {
+                                    if (chipName.textContent.toLowerCase().includes(
+                                        searchTerm)) {
                                         isSubVisible = true;
                                     }
                                 });
@@ -844,7 +897,7 @@
                             submitBtn.style.opacity = '0.7';
                             submitBtn.style.cursor = 'not-allowed';
 
-                            if (submitBtn.classList.contains('action-icon-button') || 
+                            if (submitBtn.classList.contains('action-icon-button') ||
                                 submitBtn.classList.contains('chip-action-icon')) {
                                 submitBtn.innerHTML = `
                                     <svg class="animate-spin w-3 h-3 text-blue-500" fill="none" viewBox="0 0 24 24">
@@ -868,8 +921,8 @@
                 // Theme detection and handling
                 function handleThemeChange() {
                     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches ||
-                                  document.documentElement.classList.contains('dark');
-                    
+                        document.documentElement.classList.contains('dark');
+
                     // Update any theme-specific elements if needed
                     const elements = document.querySelectorAll('.theme-sensitive');
                     elements.forEach(el => {
@@ -883,7 +936,7 @@
 
                 // Listen for theme changes
                 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleThemeChange);
-                
+
                 // Initial theme setup
                 handleThemeChange();
 
@@ -896,7 +949,7 @@
                             searchBox.focus();
                         }
                     }
-                    
+
                     // Press 'Escape' to clear search
                     if (e.key === 'Escape' && document.activeElement === searchBox) {
                         searchBox.value = '';
@@ -906,7 +959,7 @@
 
                 // Add smooth scroll behavior
                 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                    anchor.addEventListener('click', function (e) {
+                    anchor.addEventListener('click', function(e) {
                         e.preventDefault();
                         const target = document.querySelector(this.getAttribute('href'));
                         if (target) {
@@ -937,14 +990,14 @@
                     button.addEventListener('mouseenter', function() {
                         const isEdit = this.href && this.href.includes('edit');
                         const isDelete = this.classList.contains('delete');
-                        
+
                         let tooltipText = '';
                         if (isEdit) {
                             tooltipText = document.dir === 'rtl' ? 'تعديل' : 'Edit';
                         } else if (isDelete) {
                             tooltipText = document.dir === 'rtl' ? 'حذف' : 'Delete';
                         }
-                        
+
                         if (tooltipText) {
                             this.title = tooltipText;
                         }
@@ -956,7 +1009,7 @@
                 if (searchBox) {
                     const originalHandler = searchBox.oninput;
                     searchBox.oninput = null;
-                    
+
                     searchBox.addEventListener('input', function(e) {
                         clearTimeout(searchTimeout);
                         searchTimeout = setTimeout(() => {
@@ -1000,7 +1053,8 @@
                 cards.forEach((card, index) => {
                     card.style.opacity = '0';
                     card.style.transform = 'translateY(20px)';
-                    card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                    card.style.transition =
+                        `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
                     observer.observe(card);
                 });
             });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Exception;
 
@@ -14,22 +15,22 @@ class BackupController extends Controller
     /**
      * إنشاء نسخة احتياطية
      */
-  public function create()
-{
-    try {
-        \Log::info('🔁 Running backup via UI...');
+    public function create()
+    {
+        try {
+            \Log::info('🔁 Running backup via UI...');
 
-        Artisan::call('backup:run');
-        $output = Artisan::output();
+            Artisan::call('backup:run');
+            $output = Artisan::output();
 
-        \Log::info('📦 Backup Output:', [$output]);
+            \Log::info('📦 Backup Output:', [$output]);
 
-        return back()->with('success', '✅ تم تنفيذ النسخة الاحتياطية بنجاح');
-    } catch (\Exception $e) {
-        \Log::error('❌ فشل تنفيذ النسخة الاحتياطية: ' . $e->getMessage());
-        return back()->with('error', '❌ فشل النسخة الاحتياطية: ' . $e->getMessage());
+            return back()->with('success', '✅ تم تنفيذ النسخة الاحتياطية بنجاح');
+        } catch (\Exception $e) {
+            \Log::error('❌ فشل تنفيذ النسخة الاحتياطية: ' . $e->getMessage());
+            return back()->with('error', '❌ فشل النسخة الاحتياطية: ' . $e->getMessage());
+        }
     }
-}
 
 
     /**
@@ -50,7 +51,8 @@ class BackupController extends Controller
             return back()->with('error', '❌ لا توجد نسخ احتياطية متاحة.');
         }
 
-        return $disk->download($latestBackup);
+        $filePath = $disk->path($latestBackup);
+        return response()->download($filePath);
     }
 
     /**

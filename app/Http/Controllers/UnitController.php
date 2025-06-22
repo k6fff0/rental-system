@@ -42,45 +42,45 @@ class UnitController extends Controller
     //-----------------------------------------------------------------------------------------------------------------------
 
 
-   public function index(Request $request)
-{
-    $query = Unit::with(['building', 'contracts.tenant', 'latestContract'])
-        ->orderByDesc('updated_at'); // ✅ الترتيب حسب آخر تحديث
+    public function index(Request $request)
+    {
+        $query = Unit::with(['building', 'contracts.tenant', 'latestContract'])
+            ->orderByDesc('updated_at'); // ✅ الترتيب حسب آخر تحديث
 
-    // ✅ فلترة لو المستخدم اختارها
-    if ($request->filled('building_id')) {
-        $query->where('building_id', $request->building_id);
+        // ✅ فلترة لو المستخدم اختارها
+        if ($request->filled('building_id')) {
+            $query->where('building_id', $request->building_id);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('unit_number', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('unit_type')) {
+            $query->where('unit_type', $request->unit_type);
+        }
+
+        $units = $query->paginate(10);
+
+        $units->getCollection()->transform(function ($unit) {
+            $contract = $unit->latestContract;
+
+            $unit->actual_rent = ($contract && $contract->status !== 'terminated')
+                ? $contract->rent_amount
+                : $unit->rent_price;
+
+            $unit->has_discount = $unit->actual_rent != $unit->rent_price;
+            $unit->contract_status = $contract?->status;
+            $unit->building_name = optional($unit->building)->name;
+
+            return $unit;
+        });
+
+        $buildings = Building::all();
+        $unitTypes = UnitType::values();
+
+        return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
     }
-
-    if ($request->filled('search')) {
-        $query->where('unit_number', 'like', '%' . $request->search . '%');
-    }
-
-    if ($request->filled('unit_type')) {
-        $query->where('unit_type', $request->unit_type);
-    }
-
-    $units = $query->paginate(10);
-
-    $units->getCollection()->transform(function ($unit) {
-        $contract = $unit->latestContract;
-
-        $unit->actual_rent = ($contract && $contract->status !== 'terminated')
-            ? $contract->rent_amount
-            : $unit->rent_price;
-
-        $unit->has_discount = $unit->actual_rent != $unit->rent_price;
-        $unit->contract_status = $contract?->status;
-        $unit->building_name = optional($unit->building)->name;
-
-        return $unit;
-    });
-
-    $buildings = Building::all();
-    $unitTypes = UnitType::values();
-
-    return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
-}
 
     //-----------------------------------------------------------------------------------------------------------------------
 
@@ -177,7 +177,7 @@ class UnitController extends Controller
 
         // ✅ التحديث
         $unit->update($validated);
-		
+
         log_action('🏠 تم تعديل بيانات الغرفة: ' . $unit->unit_number . ' - ' . $unit->building->name);
 
         return redirect()
@@ -221,16 +221,16 @@ class UnitController extends Controller
 
 
 
-public function availableText(Request $request)
-{
-    $units = Unit::with(['building.supervisors'])
-        ->where('status', 'available')
-        ->orderBy('building_id')
-        ->get()
-        ->groupBy('building.name');
+    public function availableText(Request $request)
+    {
+        $units = Unit::with(['building.supervisors'])
+            ->where('status', 'available')
+            ->orderBy('building_id')
+            ->get()
+            ->groupBy('building.name');
 
-    return view('admin.units.available_text', compact('units'));
-}
+        return view('admin.units.available_text', compact('units'));
+    }
 
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -308,33 +308,33 @@ public function availableText(Request $request)
     //-----------------------------------------------------------------------------------------------------------------------
 
 
-public function search(Request $request)
-{
-    $term = $request->get('q');
+    public function search(Request $request)
+    {
+        $term = $request->get('q');
 
-    $results = Unit::with('building')
-        ->where(function ($q) use ($term) {
-            $q->where('unit_number', 'like', "%$term%")
-              ->orWhereHas('building', function ($q2) use ($term) {
-                  $q2->where('name', 'like', "%$term%");
-              });
-        })
-        ->take(15)
-        ->get()
-        ->map(function ($unit) {
-            return [
-                'id' => $unit->id,
-                'text' => $unit->unit_number . ' - ' . optional($unit->building)->name,
-            ];
-        });
+        $results = Unit::with('building')
+            ->where(function ($q) use ($term) {
+                $q->where('unit_number', 'like', "%$term%")
+                    ->orWhereHas('building', function ($q2) use ($term) {
+                        $q2->where('name', 'like', "%$term%");
+                    });
+            })
+            ->take(15)
+            ->get()
+            ->map(function ($unit) {
+                return [
+                    'id' => $unit->id,
+                    'text' => $unit->unit_number . ' - ' . optional($unit->building)->name,
+                ];
+            });
 
-    return response()->json($results);
-}
+        return response()->json($results);
+    }
 
 
     //-----------------------------------------------------------------------------------------------------------------------
 
 
 
-//-----------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------
 }

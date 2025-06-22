@@ -290,7 +290,7 @@
                 </form>
             </div>
 
-          
+
 
             {{-- No Results Message --}}
             <div id="noResults"
@@ -854,9 +854,9 @@
                     </div>
                 </div>
             @endif
-			
-			
-			  {{-- Statistics Cards --}}
+
+
+            {{-- Statistics Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-1">
                 @php
                     $totalRequests = collect($statusCounts)->sum();
@@ -951,7 +951,7 @@
                     </div>
                 </div>
             </div>
-        </div>		
+        </div>
     </div>
 
     {{-- Loading Indicator --}}

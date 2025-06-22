@@ -324,7 +324,7 @@
                                                 {{ $unit->latestContract->end_date }}</p>
                                         </div>
                                     </div>
-									<div
+                                    <div
                                         class="flex items-start p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
                                         <div
                                             class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 flex-shrink-0">
@@ -337,17 +337,18 @@
                                         <div>
                                             <h3 class="text-sm font-medium text-emerald-700 dark:text-emerald-300 mb-1">
                                                 {{ __('messages.contract_number') }}</h3>
-                                             @php
-    $contract = $unit->contracts->last();
-@endphp
+                                            @php
+                                                $contract = $unit->contracts->last();
+                                            @endphp
 
-<td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
-    @if ($unit->status === 'occupied' && $contract)
-        {{ $contract->contract_number }}
-    @else
-        <span class="text-gray-400 dark:text-gray-500">-</span>
-    @endif
-</td>
+                                            <td
+                                                class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium text-right">
+                                                @if ($unit->status === 'occupied' && $contract)
+                                                    {{ $contract->contract_number }}
+                                                @else
+                                                    <span class="text-gray-400 dark:text-gray-500">-</span>
+                                                @endif
+                                            </td>
                                         </div>
                                     </div>
                                 </div>
@@ -380,7 +381,7 @@
                                                     class="px-6 py-3 text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                     {{ __('messages.tenant_name') }}
                                                 </th>
-												<th
+                                                <th
                                                     class="px-6 py-3 text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                     {{ __('messages.contract_number') }}
                                                 </th>
@@ -422,7 +423,7 @@
                                                                 class="text-sm font-medium text-gray-900 dark:text-white">{{ $contract->tenant->name ?? '-' }}</span>
                                                         </div>
                                                     </td>
-													 <td
+                                                    <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                                         {{ $contract->contract_number }}
                                                     </td>
@@ -539,7 +540,7 @@
                                                         onclick="return confirm('{{ __('messages.confirm_delete_image') }}')">
                                                         ×
                                                     </button>
-                                                </form>                                              
+                                                </form>
                                                 <!-- تأثير Hover مع أيقونة التكبير -->
                                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl transition duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100"
                                                     style="pointer-events: none;">
@@ -575,17 +576,17 @@
                             </h2>
                         </div>
                         <div class="p-6 space-y-3">
-						    @can('edit units')
-                            <a href="{{ route('admin.units.edit', $unit->id) }}"
-                                class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
-                                <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                تعديل الوحدة
-                            </a>
-							@endcan
+                            @can('edit units')
+                                <a href="{{ route('admin.units.edit', $unit->id) }}"
+                                    class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
+                                    <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    تعديل الوحدة
+                                </a>
+                            @endcan
 
                             @if ($unit->status === 'available')
                                 <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}"
@@ -599,16 +600,16 @@
                                 </a>
                             @endif
                             @can('view building details')
-                            <a href="{{ route('admin.buildings.show', $unit->building->id) }}"
-                                class="w-full flex items-center justify-center px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors duration-200">
-                                <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                </svg>
-                                عرض المبنى
-                            </a>
-							@endcan
+                                <a href="{{ route('admin.buildings.show', $unit->building->id) }}"
+                                    class="w-full flex items-center justify-center px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors duration-200">
+                                    <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                    عرض المبنى
+                                </a>
+                            @endcan
 
                             <a href="{{ route('admin.units.index', ['building_id' => $unit->building->id]) }}"
                                 class="w-full flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200">

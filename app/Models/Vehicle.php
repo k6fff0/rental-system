@@ -9,19 +9,19 @@ class Vehicle extends Model
     protected $fillable = [
         'plate_number',
         'brand',
-		'model',
+        'model',
         'color',
         'user_id',
         'status',
         'photo',
         'notes',
-		'license_expiry_date',
+        'license_expiry_date',
         'insurance_expiry_date',
     ];
-	protected $casts = [
-    'license_expiry_date' => 'date',
-    'insurance_expiry_date' => 'date',
-];
+    protected $casts = [
+        'license_expiry_date' => 'date',
+        'insurance_expiry_date' => 'date',
+    ];
 
 
     public function user()
@@ -29,15 +29,13 @@ class Vehicle extends Model
         return $this->belongsTo(User::class);
     }
 
-public function expenses()
-{
-    return $this->morphMany(\App\Models\Expense::class, 'expensable');
-}
+    public function expenses()
+    {
+        return $this->morphMany(\App\Models\Expense::class, 'expensable');
+    }
 
     public function violations()
     {
         return $this->hasMany(Violation::class);
     }
-	
-	
 }

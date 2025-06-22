@@ -15,8 +15,8 @@ class Tenant extends Model
         'uuid',
         'name',
         'phone',
-		'phone_secondary',
-		'is_whatsapp',
+        'phone_secondary',
+        'is_whatsapp',
         'id_number',
         'type',
         'family_type',
@@ -41,7 +41,7 @@ class Tenant extends Model
         'absent',
         'abroad',
         'legal_issue',
-		'blocked',
+        'blocked',
     ];
 
     /**
@@ -50,8 +50,8 @@ class Tenant extends Model
     public function unit()
     {
         return $this->hasOneThrough(Unit::class, Contract::class, 'tenant_id', 'id', 'id', 'unit_id')
-                    ->where('contracts.status', 'active')
-                    ->latest('start_date');
+            ->where('contracts.status', 'active')
+            ->latest('start_date');
     }
 
     /**
@@ -60,8 +60,8 @@ class Tenant extends Model
     public function latestContract()
     {
         return $this->hasOne(Contract::class)
-                    ->where('contracts.status', 'active')
-                    ->latestOfMany('start_date');
+            ->where('contracts.status', 'active')
+            ->latestOfMany('start_date');
     }
 
     /**
@@ -94,10 +94,8 @@ class Tenant extends Model
     public function activeContracts()
     {
         return $this->hasMany(Contract::class)
-                    ->where('contracts.status', 'active')
-                    ->whereDate('start_date', '<=', now())
-                    ->whereDate('end_date', '>=', now());
+            ->where('contracts.status', 'active')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now());
     }
-	
-	
 }

@@ -6,10 +6,12 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {{-- Header Section --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
@@ -19,7 +21,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-300">
+                            <h1
+                                class="text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white transition-colors duration-300">
                                 {{ __('messages.technicians_list') }}
                             </h1>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 transition-colors duration-300">
@@ -41,49 +44,56 @@
                 </div>
             </div>
 
-           
+
 
             {{-- Technicians Table --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-colors duration-300">
                 {{-- Mobile View --}}
                 <div class="block md:hidden">
                     @forelse ($technicians as $tech)
-                        <div class="border-b border-gray-100 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <div
+                            class="border-b border-gray-100 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md">
                                         {{ substr($tech->name, 0, 1) }}
                                     </div>
                                     <div>
-                                        <h3 class="font-bold text-gray-800 dark:text-white transition-colors duration-300">{{ $tech->name }}</h3>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">{{ $tech->email }}</p>
+                                        <h3 class="font-bold text-gray-800 dark:text-white transition-colors duration-300">
+                                            {{ $tech->name }}</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                                            {{ $tech->email }}</p>
                                     </div>
                                 </div>
                                 @php
                                     $statusColors = [
                                         'available' => [
                                             'light' => 'bg-green-100 text-green-800',
-                                            'dark' => 'dark:bg-green-900/30 dark:text-green-300'
+                                            'dark' => 'dark:bg-green-900/30 dark:text-green-300',
                                         ],
                                         'busy' => [
                                             'light' => 'bg-yellow-100 text-yellow-800',
-                                            'dark' => 'dark:bg-yellow-900/30 dark:text-yellow-300'
+                                            'dark' => 'dark:bg-yellow-900/30 dark:text-yellow-300',
                                         ],
                                         'unavailable' => [
                                             'light' => 'bg-red-100 text-red-800',
-                                            'dark' => 'dark:bg-red-900/30 dark:text-red-300'
+                                            'dark' => 'dark:bg-red-900/30 dark:text-red-300',
                                         ],
                                     ];
                                     $status = $tech->technician_status ?? 'unavailable';
                                     $colorConfig = $statusColors[$status] ?? $statusColors['unavailable'];
                                 @endphp
-                                <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $colorConfig['light'] }} {{ $colorConfig['dark'] }} transition-colors duration-300">
+                                <span
+                                    class="px-3 py-1 rounded-full text-xs font-semibold {{ $colorConfig['light'] }} {{ $colorConfig['dark'] }} transition-colors duration-300">
                                     {{ __('messages.status_' . $status) }}
                                 </span>
                             </div>
 
                             <div class="mb-4">
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1 transition-colors duration-300">{{ __('messages.specialty') }}:</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1 transition-colors duration-300">
+                                    {{ __('messages.specialty') }}:</p>
                                 <p class="font-medium text-gray-800 dark:text-gray-200 transition-colors duration-300">
                                     {{ $tech->mainSpecialty->name ?? __('messages.no_specialty') }}</p>
                             </div>
@@ -101,14 +111,16 @@
                         </div>
                     @empty
                         <div class="p-12 text-center">
-                            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
+                            <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                     d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
                                 </path>
                             </svg>
-                            <p class="text-gray-500 dark:text-gray-400 text-lg font-medium transition-colors duration-300">{{ __('messages.no_technicians_found') }}</p>
-                            <p class="text-gray-400 dark:text-gray-500 text-sm mt-2 transition-colors duration-300">{{ __('messages.try_different_filters') }}</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-lg font-medium transition-colors duration-300">
+                                {{ __('messages.no_technicians_found') }}</p>
+                            <p class="text-gray-400 dark:text-gray-500 text-sm mt-2 transition-colors duration-300">
+                                {{ __('messages.try_different_filters') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -118,29 +130,36 @@
                     <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-700 transition-colors duration-300">
                             <tr>
-                                <th class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
+                                <th
+                                    class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
                                     {{ __('messages.technician') }}
                                 </th>
-                                <th class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
+                                <th
+                                    class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
                                     {{ __('messages.contact') }}
                                 </th>
-                                <th class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
+                                <th
+                                    class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
                                     {{ __('messages.specialty') }}
                                 </th>
-                                <th class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
+                                <th
+                                    class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
                                     {{ __('messages.status') }}
                                 </th>
-                                <th class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
+                                <th
+                                    class="px-8 py-4 text-start text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">
                                     {{ __('messages.actions') }}
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
+                        <tbody
+                            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                             @forelse ($technicians as $tech)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                                     <td class="px-8 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-4">
-                                            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow-sm transition-colors duration-300">
+                                            <div
+                                                class="w-10 h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow-sm transition-colors duration-300">
                                                 @if ($tech->photo_url)
                                                     <a href="{{ $tech->photo_url }}"
                                                         data-fancybox="tech-avatar-{{ $tech->id }}">
@@ -148,26 +167,36 @@
                                                             src="{{ $tech->photo_url }}" alt="{{ $tech->name }}">
                                                     </a>
                                                 @else
-                                                    <div class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center text-white font-bold">
+                                                    <div
+                                                        class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 flex items-center justify-center text-white font-bold">
                                                         {{ strtoupper(substr($tech->name, 0, 1)) }}
                                                     </div>
                                                 @endif
                                             </div>
 
                                             <div>
-                                                <div class="font-bold text-gray-800 dark:text-white transition-colors duration-300">{{ $tech->name }}</div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">ID: #{{ $tech->id }}</div>
+                                                <div
+                                                    class="font-bold text-gray-800 dark:text-white transition-colors duration-300">
+                                                    {{ $tech->name }}</div>
+                                                <div
+                                                    class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
+                                                    ID: #{{ $tech->id }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-8 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-800 dark:text-gray-200 transition-colors duration-300">{{ $tech->email }}</div>
+                                        <div
+                                            class="text-sm text-gray-800 dark:text-gray-200 transition-colors duration-300">
+                                            {{ $tech->email }}</div>
                                         @if ($tech->phone)
-                                            <div class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">{{ $tech->phone }}</div>
+                                            <div
+                                                class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300">
+                                                {{ $tech->phone }}</div>
                                         @endif
                                     </td>
                                     <td class="px-8 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors duration-300">
+                                        <div
+                                            class="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors duration-300">
                                             {{ $tech->mainSpecialty->name ?? __('messages.no_specialty') }}
                                         </div>
                                     </td>
@@ -193,8 +222,10 @@
                                             $status = $tech->technician_status ?? 'unavailable';
                                             $config = $statusConfig[$status] ?? $statusConfig['unavailable'];
                                         @endphp
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $config['bg'] }} {{ $config['text'] }} transition-colors duration-300">
-                                            <span class="w-2 h-2 {{ $config['dot'] }} rounded-full {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></span>
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $config['bg'] }} {{ $config['text'] }} transition-colors duration-300">
+                                            <span
+                                                class="w-2 h-2 {{ $config['dot'] }} rounded-full {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></span>
                                             {{ __('messages.status_' . $status) }}
                                         </span>
                                     </td>
@@ -228,15 +259,18 @@
                             @empty
                                 <tr>
                                     <td colspan="5" class="px-6 py-12 text-center">
-                                        <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4 transition-colors duration-300"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
                                             </path>
                                         </svg>
-                                        <p class="text-gray-500 dark:text-gray-400 text-lg font-medium transition-colors duration-300">
+                                        <p
+                                            class="text-gray-500 dark:text-gray-400 text-lg font-medium transition-colors duration-300">
                                             {{ __('messages.no_technicians_found') }}</p>
-                                        <p class="text-gray-400 dark:text-gray-500 text-sm mt-2 transition-colors duration-300">{{ __('messages.try_different_filters') }}
+                                        <p
+                                            class="text-gray-400 dark:text-gray-500 text-sm mt-2 transition-colors duration-300">
+                                            {{ __('messages.try_different_filters') }}
                                         </p>
                                     </td>
                                 </tr>
@@ -249,7 +283,8 @@
             {{-- Pagination --}}
             @if (method_exists($technicians, 'links'))
                 <div class="mt-8 flex justify-center">
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                         {{ $technicians->links() }}
                     </div>
                 </div>
@@ -257,11 +292,11 @@
         </div>
     </div>
 
-    
+
 
     <style>
         /* Enhanced Dark Mode Styles */
-        
+
         /* Smooth transitions for all elements */
         * {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
@@ -362,9 +397,12 @@
 
         /* Status badge pulse animation */
         @keyframes pulse-status {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 1;
             }
+
             50% {
                 opacity: 0.8;
             }
@@ -386,11 +424,11 @@
                 width: 2.5rem;
                 height: 2.5rem;
             }
-            
+
             .text-2xl.lg\\:text-3xl {
                 font-size: 1.25rem;
             }
-            
+
             .px-8 {
                 padding-left: 1rem;
                 padding-right: 1rem;
@@ -402,7 +440,7 @@
             .border {
                 border-width: 2px;
             }
-            
+
             .shadow-xl,
             .shadow-lg {
                 box-shadow: 0 0 0 1px currentColor;
@@ -411,6 +449,7 @@
 
         /* Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
+
             *,
             ::before,
             ::after {
@@ -426,18 +465,19 @@
 
         /* Print styles */
         @media print {
+
             .dark .bg-gray-800,
             .dark .bg-gray-700 {
                 background-color: white !important;
                 color: black !important;
             }
-            
+
             .shadow-xl,
             .shadow-lg {
                 box-shadow: none !important;
                 border: 1px solid #ccc !important;
             }
-            
+
             .bg-gradient-to-br,
             .bg-gradient-to-r {
                 background: white !important;
@@ -466,8 +506,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Enhanced RTL support */
@@ -621,6 +666,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);

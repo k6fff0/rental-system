@@ -2,14 +2,18 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-2 px-2 sm:px-4 lg:px-8 transition-colors duration-300"
-         dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
         <div class="max-w-2xl mx-auto">
             {{-- Header Section - Mobile Optimized --}}
             <div class="text-center mb-4 px-2">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/50 dark:to-red-900/50 rounded-xl mb-3">
-                    <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                <div
+                    class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/50 dark:to-red-900/50 rounded-xl mb-3">
+                    <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
                     </svg>
                 </div>
                 <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-tight mb-1">
@@ -22,10 +26,13 @@
 
             {{-- Alert Messages --}}
             @if ($errors->any())
-                <div class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
                         <svg class="w-4 h-4 text-red-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <div class="flex-1">
                             @foreach ($errors->all() as $error)
@@ -37,10 +44,14 @@
             @endif
 
             @if (session('success'))
-                <div class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
+                <div
+                    class="mb-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3 mx-2">
                     <div class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        <svg class="w-4 h-4 text-green-500 mt-0.5 ml-2 flex-shrink-0" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
                         </svg>
                         <p class="text-green-700 dark:text-green-200 text-sm leading-relaxed">{{ session('success') }}</p>
                     </div>
@@ -49,7 +60,7 @@
 
             {{-- Main Form --}}
             <form action="{{ route('admin.tenants.update', $tenant->id) }}" method="POST"
-                  class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                class="bg-white dark:bg-gray-800 shadow-lg rounded-lg mx-2 overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors duration-300">
                 @csrf
                 @method('PUT')
 
@@ -57,7 +68,8 @@
                 <div class="bg-gradient-to-r from-orange-600 to-red-600 dark:from-orange-700 dark:to-red-700 px-4 py-3">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                         </svg>
                         {{ __('messages.edit_tenant_data') }}
                     </h2>
@@ -67,24 +79,29 @@
                     {{-- Personal Information Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-blue-600 dark:text-blue-400 text-sm font-bold">1</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.personal_information') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.personal_information') }}</h3>
                         </div>
 
                         {{-- Full Name --}}
                         <div class="space-y-2">
                             <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                     </svg>
                                     {{ __('messages.full_name') }}
                                     <span class="text-red-500 text-xs">*</span>
                                 </span>
                             </label>
-                            <input type="text" name="name" id="name" value="{{ old('name', $tenant->name) }}" required
+                            <input type="text" name="name" id="name" value="{{ old('name', $tenant->name) }}"
+                                required
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                                 placeholder="{{ __('messages.full_name_placeholder') }}">
                             @error('name')
@@ -96,15 +113,18 @@
                         <div class="space-y-2">
                             <label for="id_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2">
+                                        </path>
                                     </svg>
                                     {{ __('messages.id_number') }}
                                 </span>
                             </label>
-                            <input type="text" name="id_number" id="id_number" value="{{ old('id_number', $tenant->id_number) }}"
-                                minlength="15" maxlength="15" pattern="\d{15}" inputmode="numeric"
-                                title="يجب أن يكون 15 رقمًا"
+                            <input type="text" name="id_number" id="id_number"
+                                value="{{ old('id_number', $tenant->id_number) }}" minlength="15" maxlength="15"
+                                pattern="\d{15}" inputmode="numeric" title="يجب أن يكون 15 رقمًا"
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                                 placeholder="{{ __('messages.id_number_placeholder') }}">
                             @error('id_number')
@@ -116,18 +136,23 @@
                         <div class="space-y-2">
                             <label for="family_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.family_type') }}
                                 </span>
                             </label>
                             <select name="family_type" id="family_type"
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200">
-                                <option value="individual" {{ old('family_type', $tenant->family_type) === 'individual' ? 'selected' : '' }}>
+                                <option value="individual"
+                                    {{ old('family_type', $tenant->family_type) === 'individual' ? 'selected' : '' }}>
                                     {{ __('messages.individual') }}
                                 </option>
-                                <option value="family" {{ old('family_type', $tenant->family_type) === 'family' ? 'selected' : '' }}>
+                                <option value="family"
+                                    {{ old('family_type', $tenant->family_type) === 'family' ? 'selected' : '' }}>
                                     {{ __('messages.family') }}
                                 </option>
                             </select>
@@ -140,18 +165,22 @@
                     {{-- Status and Financial Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-yellow-600 dark:text-yellow-400 text-sm font-bold">2</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.status_financial_info') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.status_financial_info') }}</h3>
                         </div>
 
                         {{-- Tenant Status --}}
                         <div class="space-y-2">
                             <label for="tenant_status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
                                     {{ __('messages.tenant_status') }}
                                     <span class="text-red-500 text-xs">*</span>
@@ -159,25 +188,32 @@
                             </label>
                             <select name="tenant_status" id="tenant_status" required
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200">
-                                <option value="active" {{ old('tenant_status', $tenant->tenant_status) == 'active' ? 'selected' : '' }}>
+                                <option value="active"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'active' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_active') }}
                                 </option>
-                                <option value="late_payer" {{ old('tenant_status', $tenant->tenant_status) == 'late_payer' ? 'selected' : '' }}>
+                                <option value="late_payer"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'late_payer' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_late_payer') }}
                                 </option>
-                                <option value="has_debt" {{ old('tenant_status', $tenant->tenant_status) == 'has_debt' ? 'selected' : '' }}>
+                                <option value="has_debt"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'has_debt' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_has_debt') }}
                                 </option>
-                                <option value="absent" {{ old('tenant_status', $tenant->tenant_status) == 'absent' ? 'selected' : '' }}>
+                                <option value="absent"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'absent' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_absent') }}
                                 </option>
-                                <option value="abroad" {{ old('tenant_status', $tenant->tenant_status) == 'abroad' ? 'selected' : '' }}>
+                                <option value="abroad"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'abroad' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_abroad') }}
                                 </option>
-                                <option value="legal_issue" {{ old('tenant_status', $tenant->tenant_status) == 'legal_issue' ? 'selected' : '' }}>
+                                <option value="legal_issue"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'legal_issue' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_legal_issue') }}
                                 </option>
-                                <option value="blocked" {{ old('tenant_status', $tenant->tenant_status) == 'blocked' ? 'selected' : '' }}>
+                                <option value="blocked"
+                                    {{ old('tenant_status', $tenant->tenant_status) == 'blocked' ? 'selected' : '' }}>
                                     {{ __('messages.tenant_status_blocked') }}
                                 </option>
                             </select>
@@ -190,8 +226,11 @@
                         <div class="space-y-2">
                             <label for="debt" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                                        </path>
                                     </svg>
                                     {{ __('messages.debt') }}
                                 </span>
@@ -201,7 +240,8 @@
                                     value="{{ old('debt', $tenant->debt) }}"
                                     class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 {{ app()->getLocale() === 'ar' ? 'pl-16' : 'pr-16' }}"
                                     placeholder="0.00">
-                                <div class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
+                                <div
+                                    class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center pointer-events-none">
                                     <span class="text-gray-500 dark:text-gray-400 text-sm font-medium">AED</span>
                                 </div>
                             </div>
@@ -214,25 +254,31 @@
                     {{-- Contact Information Section --}}
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
+                            <div
+                                class="w-8 h-8 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
                                 <span class="text-green-600 dark:text-green-400 text-sm font-bold">3</span>
                             </div>
-                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ __('messages.contact_information') }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+                                {{ __('messages.contact_information') }}</h3>
                         </div>
 
                         {{-- Primary Phone --}}
                         <div class="space-y-2">
                             <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.phone') }}
                                     <span class="text-red-500 text-xs">*</span>
                                 </span>
                             </label>
-                            <input type="tel" name="phone" id="phone" value="{{ old('phone', $tenant->phone ?? '') }}" required
-                                pattern="^\+\d{6,15}$" title="يرجى إدخال الرقم مع مفتاح الدولة مثل: +971501234567"
+                            <input type="tel" name="phone" id="phone"
+                                value="{{ old('phone', $tenant->phone ?? '') }}" required pattern="^\+\d{6,15}$"
+                                title="يرجى إدخال الرقم مع مفتاح الدولة مثل: +971501234567"
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                                 placeholder="+971501234567">
                             @error('phone')
@@ -244,10 +290,14 @@
                         <div x-data="{ showSecondary: {{ old('phone_secondary', $tenant->phone_secondary) ? 'true' : 'false' }} }" class="space-y-2">
                             <template x-if="showSecondary">
                                 <div class="space-y-2">
-                                    <label for="phone_secondary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label for="phone_secondary"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         <span class="flex items-center gap-2">
-                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                </path>
                                             </svg>
                                             {{ __('messages.secondary_phone') }}
                                         </span>
@@ -263,7 +313,8 @@
                             <button type="button" @click="showSecondary = true" x-show="!showSecondary"
                                 class="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 border border-blue-200 dark:border-blue-800">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4"></path>
                                 </svg>
                                 {{ __('messages.add_another_phone') }}
                             </button>
@@ -273,13 +324,17 @@
                         <div class="space-y-2">
                             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.email') }}
                                 </span>
                             </label>
-                            <input type="email" name="email" id="email" value="{{ old('email', $tenant->email) }}"
+                            <input type="email" name="email" id="email"
+                                value="{{ old('email', $tenant->email) }}"
                                 class="w-full px-4 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
                                 placeholder="البريد الإلكتروني (اختياري)">
                             @error('email')
@@ -291,8 +346,11 @@
                         <div class="space-y-2">
                             <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                        </path>
                                     </svg>
                                     {{ __('messages.notes') }}
                                 </span>
@@ -314,16 +372,18 @@
                         <a href="{{ route('admin.tenants.index') }}"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-sm">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                             </svg>
                             {{ __('messages.back') }}
                         </a>
-                        
+
                         {{-- Update Button --}}
                         <button type="submit"
                             class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                             </svg>
                             {{ __('messages.update') }}
                         </button>
@@ -334,7 +394,7 @@
     </div>
 
 
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
@@ -365,12 +425,15 @@
                 if (hasErrors) {
                     e.preventDefault();
                     showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
-                    
+
                     // Focus on first error field
                     const firstError = form.querySelector('.border-red-500');
                     if (firstError) {
                         firstError.focus();
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
                     }
                     return;
                 }
@@ -414,7 +477,8 @@
                 const isRequired = field.hasAttribute('required');
 
                 // Remove existing validation classes
-                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500', 'dark:border-green-500');
+                field.classList.remove('border-red-500', 'border-green-500', 'dark:border-red-500',
+                    'dark:border-green-500');
 
                 if (isRequired && !value) {
                     field.classList.add('border-red-500', 'dark:border-red-500');
@@ -547,7 +611,7 @@
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
                 });
-                
+
                 // Initial resize
                 textarea.style.height = textarea.scrollHeight + 'px';
             });
@@ -592,7 +656,8 @@
 
                 // Create notification
                 const notification = document.createElement('div');
-                notification.className = `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+                notification.className =
+                    `notification fixed top-4 right-4 z-50 max-w-sm p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
 
                 // Set colors based on type
                 if (type === 'error') {
@@ -708,7 +773,7 @@
             window.showNotification = showNotification;
 
             // Show success message if updated
-            @if(session('success'))
+            @if (session('success'))
                 showNotification('{{ session('success') }}', 'success');
             @endif
         });

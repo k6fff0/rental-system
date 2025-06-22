@@ -26,54 +26,54 @@ class TenantController extends Controller
 	}
 
 	public function index(Request $request)
-{
-    $query = Tenant::with(['contracts.unit']);
+	{
+		$query = Tenant::with(['contracts.unit']);
 
-    if ($request->filled('search')) {
-        $search = $request->search;
+		if ($request->filled('search')) {
+			$search = $request->search;
 
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%$search%")
-                ->orWhere('id_number', 'like', "%$search%")
-                ->orWhere('phone', 'like', "%$search%")
-                ->orWhereHas('contracts', function ($q3) use ($search) {
-                    $q3->whereHas('unit', function ($q4) use ($search) {
-                        $q4->where('unit_number', 'like', "%$search%");
-                    });
-                });
-        });
-    }
+			$query->where(function ($q) use ($search) {
+				$q->where('name', 'like', "%$search%")
+					->orWhere('id_number', 'like', "%$search%")
+					->orWhere('phone', 'like', "%$search%")
+					->orWhereHas('contracts', function ($q3) use ($search) {
+						$q3->whereHas('unit', function ($q4) use ($search) {
+							$q4->where('unit_number', 'like', "%$search%");
+						});
+					});
+			});
+		}
 
-    // جلب كل المستأجرين مع العقود
-    $tenants = $query->get();
+		// جلب كل المستأجرين مع العقود
+		$tenants = $query->get();
 
-    // ترتيبهم حسب أحدث نشاط
-    $tenants = $tenants->sortByDesc(function ($tenant) {
-        $latestContract = $tenant->contracts->sortByDesc('updated_at')->first();
-        $latestActivity = max(
-            $tenant->updated_at->timestamp,
-            optional($latestContract?->updated_at)->timestamp ?? 0
-        );
-        return $latestActivity;
-    });
+		// ترتيبهم حسب أحدث نشاط
+		$tenants = $tenants->sortByDesc(function ($tenant) {
+			$latestContract = $tenant->contracts->sortByDesc('updated_at')->first();
+			$latestActivity = max(
+				$tenant->updated_at->timestamp,
+				optional($latestContract?->updated_at)->timestamp ?? 0
+			);
+			return $latestActivity;
+		});
 
-    // تحويل إلى pagination يدويًا
-    $perPage = 15;
-    $page = request()->get('page', 1);
-    $items = $tenants->values();
+		// تحويل إلى pagination يدويًا
+		$perPage = 15;
+		$page = request()->get('page', 1);
+		$items = $tenants->values();
 
-    $paginated = new LengthAwarePaginator(
-        $items->forPage($page, $perPage),
-        $items->count(),
-        $perPage,
-        $page,
-        ['path' => request()->url(), 'query' => request()->query()]
-    );
+		$paginated = new LengthAwarePaginator(
+			$items->forPage($page, $perPage),
+			$items->count(),
+			$perPage,
+			$page,
+			['path' => request()->url(), 'query' => request()->query()]
+		);
 
-    return view('admin.tenants.index', [
-        'tenants' => $paginated
-    ]);
-}
+		return view('admin.tenants.index', [
+			'tenants' => $paginated
+		]);
+	}
 
 
 
@@ -84,63 +84,63 @@ class TenantController extends Controller
 	}
 
 
-//---------------------------------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------------------------------
 
 	public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:100',
-        'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
-        'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
-        'id_number' => 'nullable|digits:15|unique:tenants,id_number',
-        'family_type' => 'required|in:individual,family',
-        'email' => 'nullable|email|max:100',
-        'notes' => 'nullable|string|max:500',
-        'debt' => 'nullable|numeric|min:0',
-        'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-        'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-    ]);
+	{
+		$request->validate([
+			'name' => 'required|string|max:100',
+			'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
+			'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
+			'id_number' => 'nullable|digits:15|unique:tenants,id_number',
+			'family_type' => 'required|in:individual,family',
+			'email' => 'nullable|email|max:100',
+			'notes' => 'nullable|string|max:500',
+			'debt' => 'nullable|numeric|min:0',
+			'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+			'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+		]);
 
-    // تحقق من خيار واتساب
-    $isWhatsapp = $request->has('is_whatsapp');
+		// تحقق من خيار واتساب
+		$isWhatsapp = $request->has('is_whatsapp');
 
-    // رفع الصور
-    $idFrontPath = $request->hasFile('id_front')
-        ? $request->file('id_front')->store('tenant_ids', 'public')
-        : null;
+		// رفع الصور
+		$idFrontPath = $request->hasFile('id_front')
+			? $request->file('id_front')->store('tenant_ids', 'public')
+			: null;
 
-    $idBackPath = $request->hasFile('id_back')
-        ? $request->file('id_back')->store('tenant_ids', 'public')
-        : null;
+		$idBackPath = $request->hasFile('id_back')
+			? $request->file('id_back')->store('tenant_ids', 'public')
+			: null;
 
-    // إنشاء المستأجر
-    $tenant = Tenant::create([
-        'tenant_status' => 'active',
-        'name' => $request->name,
-        'phone' => $request->phone,
-        'phone_secondary' => $request->phone_secondary,
-        'is_whatsapp' => $isWhatsapp,
-        'id_number' => $request->id_number,
-        'family_type' => $request->family_type,
-        'email' => $request->email,
-        'notes' => $request->notes,
-        'debt' => $request->debt ?? 0,
-        'id_front' => $idFrontPath,
-        'id_back' => $idBackPath,
-    ]);
+		// إنشاء المستأجر
+		$tenant = Tenant::create([
+			'tenant_status' => 'active',
+			'name' => $request->name,
+			'phone' => $request->phone,
+			'phone_secondary' => $request->phone_secondary,
+			'is_whatsapp' => $isWhatsapp,
+			'id_number' => $request->id_number,
+			'family_type' => $request->family_type,
+			'email' => $request->email,
+			'notes' => $request->notes,
+			'debt' => $request->debt ?? 0,
+			'id_front' => $idFrontPath,
+			'id_back' => $idBackPath,
+		]);
 
-    // إشعار للمستخدمين بصلاحية تنبيه
-    $notifiables = User::permission('notify.tenants.create')->get();
-    Notification::send($notifiables, new NewTenantNotification($tenant->name));
-	
-    log_action('👤 تم إضافة مستأجر جديد: ' . $tenant->name . ' - رقم الهاتف: ' . $tenant->phone);
+		// إشعار للمستخدمين بصلاحية تنبيه
+		$notifiables = User::permission('notify.tenants.create')->get();
+		Notification::send($notifiables, new NewTenantNotification($tenant->name));
 
-    return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
-}
+		log_action('👤 تم إضافة مستأجر جديد: ' . $tenant->name . ' - رقم الهاتف: ' . $tenant->phone);
+
+		return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
+	}
 
 
 
-//-------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -156,69 +156,69 @@ class TenantController extends Controller
 	}
 
 
-//-------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------
 
 
 
 	public function update(Request $request, Tenant $tenant)
-{
-	$request->validate([
-		'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue,blocked', 
-		'unit_id' => 'nullable|exists:units,id',
-		'name' => 'required|string|max:100',
-		'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
-		'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
-		'id_number' => ['nullable', 'string', 'max:50', Rule::unique('tenants', 'id_number')->ignore($tenant->id)],
-		'family_type' => 'required|in:individual,family',
-		'email' => 'nullable|email|max:100',
-		'move_in_date' => 'nullable|date',
-		'notes' => 'nullable|string|max:500',
-		'debt' => 'nullable|numeric|min:0',
-		'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-		'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
-	]);
+	{
+		$request->validate([
+			'tenant_status' => 'required|string|in:active,late_payer,has_debt,absent,abroad,legal_issue,blocked',
+			'unit_id' => 'nullable|exists:units,id',
+			'name' => 'required|string|max:100',
+			'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
+			'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
+			'id_number' => ['nullable', 'string', 'max:50', Rule::unique('tenants', 'id_number')->ignore($tenant->id)],
+			'family_type' => 'required|in:individual,family',
+			'email' => 'nullable|email|max:100',
+			'move_in_date' => 'nullable|date',
+			'notes' => 'nullable|string|max:500',
+			'debt' => 'nullable|numeric|min:0',
+			'id_front' => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+			'id_back'  => 'nullable|image|mimes:jpg,jpeg,png|max:30720',
+		]);
 
-	// 🏠 تحديث حالة الوحدة القديمة لو اتغيرت
-	if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
-		Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
+		// 🏠 تحديث حالة الوحدة القديمة لو اتغيرت
+		if ($tenant->unit_id && $tenant->unit_id != $request->unit_id) {
+			Unit::where('id', $tenant->unit_id)->update(['status' => 'available']);
+		}
+
+		// 🖼️ رفع الصور الجديدة إن وجدت
+		$idFrontPath = $request->hasFile('id_front')
+			? $request->file('id_front')->store('tenant_ids', 'public')
+			: $tenant->id_front;
+
+		$idBackPath = $request->hasFile('id_back')
+			? $request->file('id_back')->store('tenant_ids', 'public')
+			: $tenant->id_back;
+
+		$tenant->update([
+			'tenant_status' => $request->tenant_status,
+			'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
+			'name' => $request->name,
+			'phone' => $request->phone,
+			'phone_secondary' => $request->phone_secondary,
+			'is_whatsapp' => $request->has('is_whatsapp'),
+			'id_number' => $request->id_number,
+			'family_type' => $request->family_type,
+			'email' => $request->email,
+			'move_in_date' => $request->move_in_date,
+			'notes' => $request->notes,
+			'debt' => $request->debt ?? 0,
+			'id_front' => $idFrontPath,
+			'id_back' => $idBackPath,
+		]);
+
+		// 🏠 تحديث حالة الوحدة الجديدة لو تم التخصيص
+		if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
+			Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
+		}
+		log_action('👤 تم تعديل بيانات المستأجر: ' . $tenant->name);
+
+		return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
 	}
 
-	// 🖼️ رفع الصور الجديدة إن وجدت
-	$idFrontPath = $request->hasFile('id_front')
-		? $request->file('id_front')->store('tenant_ids', 'public')
-		: $tenant->id_front;
-
-	$idBackPath = $request->hasFile('id_back')
-		? $request->file('id_back')->store('tenant_ids', 'public')
-		: $tenant->id_back;
-
-	$tenant->update([
-		'tenant_status' => $request->tenant_status,
-		'unit_id' => $request->tenant_status === 'active' ? $request->unit_id : null,
-		'name' => $request->name,
-		'phone' => $request->phone,
-		'phone_secondary' => $request->phone_secondary,
-		'is_whatsapp' => $request->has('is_whatsapp'),
-		'id_number' => $request->id_number,
-		'family_type' => $request->family_type,
-		'email' => $request->email,
-		'move_in_date' => $request->move_in_date,
-		'notes' => $request->notes,
-		'debt' => $request->debt ?? 0,
-		'id_front' => $idFrontPath,
-		'id_back' => $idBackPath,
-	]);
-
-	// 🏠 تحديث حالة الوحدة الجديدة لو تم التخصيص
-	if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
-		Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
-	}
-    log_action('👤 تم تعديل بيانات المستأجر: ' . $tenant->name);
-
-	return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
-}
-
-//-------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------
 
 
 	public function search(Request $request)
@@ -366,7 +366,4 @@ class TenantController extends Controller
 
 		return redirect()->route('admin.tenants.index')->with('success', 'تم إلغاء ربط الوحدة بنجاح');
 	}
-	
-
-
 }

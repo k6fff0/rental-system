@@ -12,7 +12,8 @@
                 </h1>
 
                 {{-- Total Count Card --}}
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl p-3 mb-4 shadow-lg">
+                <div
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl p-3 mb-4 shadow-lg">
                     <p class="text-white font-semibold text-sm">
                         {{ __('messages.total_requests') }}:
                         <span class="text-xl font-bold">{{ $requests->total() }}</span>
@@ -20,7 +21,8 @@
                 </div>
 
                 {{-- Compact Filter Section --}}
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-3 mb-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-xl p-3 mb-4 shadow-sm border border-gray-100 dark:border-gray-700">
                     <form method="GET" action="{{ request()->url() }}" id="filterForm">
                         {{-- Building Filter --}}
                         <div class="mb-3">
@@ -59,43 +61,48 @@
             {{-- Organized Requests Grid --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
                 @forelse ($requests as $request)
-                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
-                        
-                        
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+
+
 
                         {{-- Header Row --}}
-<div class="flex items-center justify-between mb-3">
-    <div class="flex items-center gap-2">
-        <span class="text-lg font-bold text-blue-600 dark:text-blue-400">#{{ $request->id }}</span>
-        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-xs font-bold">
-            {{ $request->unit->unit_number ?? '—' }}
-        </span>
-    </div>
-    <span class="text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="text-lg font-bold text-blue-600 dark:text-blue-400">#{{ $request->id }}</span>
+                                <span
+                                    class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-xs font-bold">
+                                    {{ $request->unit->unit_number ?? '—' }}
+                                </span>
+                            </div>
+                            <span
+                                class="text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap
         @if ($request->status === 'new') bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300
         @elseif($request->status === 'in_progress') bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
         @elseif($request->status === 'completed') bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300
         @elseif($request->status === 'delayed') bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300
         @elseif($request->status === 'rejected') bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300
         @else bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 @endif">
-        {{ __('messages.status_labels.' . $request->status) }}
-    </span>
-</div>
+                                {{ __('messages.status_labels.' . $request->status) }}
+                            </span>
+                        </div>
 
-@php
-    $building = $request->unit->building ?? $request->building;
-    $buildingName = $building->name ?? '—';
-    $buildingLocation = $building->location ?? null;
-@endphp
+                        @php
+                            $building = $request->unit->building ?? $request->building;
+                            $buildingName = $building->name ?? '—';
+                            $buildingLocation = $building->location ?? null;
+                        @endphp
 
- <div class="mb-3">
- 
+                        <div class="mb-3">
+
                             <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($request->unit->building->location ?? '') }}"
                                 target="_blank"
                                 class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline block truncate">
                                 📍 {{ $buildingName }}
                             </a>
-                            <span class="inline-block bg-blue-200 dark:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 px-2 py-1 rounded mt-1">
+                            <span
+                                class="inline-block bg-blue-200 dark:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 px-2 py-1 rounded mt-1">
                                 {{ $request->subSpecialty->name ?? 'غير محدد' }}
                             </span>
                         </div>
@@ -104,53 +111,53 @@
 
 
 
-{{-- Contact Info --}}
-@php
-    $unit = $request->unit;
-    $contract = $unit?->latestContract;
-    $tenant = $contract?->tenant;
-    $showTenantPhone = $unit?->status === 'occupied' && $contract && $tenant;
-@endphp
+                        {{-- Contact Info --}}
+                        @php
+                            $unit = $request->unit;
+                            $contract = $unit?->latestContract;
+                            $tenant = $contract?->tenant;
+                            $showTenantPhone = $unit?->status === 'occupied' && $contract && $tenant;
+                        @endphp
 
-@if ($showTenantPhone || $request->extra_phone)
-    <div class="mb-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
-        <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-            <i class="fas fa-phone text-blue-500"></i> {{ __('messages.contact') }}:
-        </div>
+                        @if ($showTenantPhone || $request->extra_phone)
+                            <div class="mb-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
+                                <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                    <i class="fas fa-phone text-blue-500"></i> {{ __('messages.contact') }}:
+                                </div>
 
-        {{-- رقم المستأجر المرتبط بالعقد --}}
-        @if ($showTenantPhone)
-            <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1 mb-1">
-                <a href="tel:{{ $tenant->phone }}"
-                    class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
-                    {{ $tenant->phone }}
-                </a>
-                @if ($tenant->is_whatsapp)
-                    <a href="https://wa.me/{{ ltrim($tenant->phone, '+') }}"
-                        target="_blank" class="text-green-600 dark:text-green-400">
-                        <i class="fab fa-whatsapp text-sm"></i>
-                    </a>
-                @endif
-            </div>
-        @endif
+                                {{-- رقم المستأجر المرتبط بالعقد --}}
+                                @if ($showTenantPhone)
+                                    <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1 mb-1">
+                                        <a href="tel:{{ $tenant->phone }}"
+                                            class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
+                                            {{ $tenant->phone }}
+                                        </a>
+                                        @if ($tenant->is_whatsapp)
+                                            <a href="https://wa.me/{{ ltrim($tenant->phone, '+') }}" target="_blank"
+                                                class="text-green-600 dark:text-green-400">
+                                                <i class="fab fa-whatsapp text-sm"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
 
-        {{-- رقم إضافي (زوج / أخ / أي جهة تواصل) --}}
-        @if ($request->extra_phone)
-            <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1">
-                <a href="tel:{{ $request->extra_phone }}"
-                    class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
-                    {{ $request->extra_phone }}
-                </a>
-                @if ($request->is_whatsapp)
-                    <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}"
-                        target="_blank" class="text-green-600 dark:text-green-400">
-                        <i class="fab fa-whatsapp text-sm"></i>
-                    </a>
-                @endif
-            </div>
-        @endif
-    </div>
-@endif
+                                {{-- رقم إضافي (زوج / أخ / أي جهة تواصل) --}}
+                                @if ($request->extra_phone)
+                                    <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1">
+                                        <a href="tel:{{ $request->extra_phone }}"
+                                            class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
+                                            {{ $request->extra_phone }}
+                                        </a>
+                                        @if ($request->is_whatsapp)
+                                            <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}" target="_blank"
+                                                class="text-green-600 dark:text-green-400">
+                                                <i class="fab fa-whatsapp text-sm"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
 
 
                         {{-- Creator Info --}}
@@ -158,12 +165,14 @@
                             <div class="flex items-center gap-2 text-xs">
                                 <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
                                 <span class="text-gray-600 dark:text-gray-400">{{ __('messages.created_by') }}:</span>
-                                <span class="font-medium text-gray-800 dark:text-gray-200 truncate">{{ $request->creator->name ?? __('messages.not_specified') }}</span>
+                                <span
+                                    class="font-medium text-gray-800 dark:text-gray-200 truncate">{{ $request->creator->name ?? __('messages.not_specified') }}</span>
                             </div>
                         </div>
                         {{-- Emergency Alert --}}
                         @if ($request->is_emergency)
-                            <div class="bg-red-700 text-white px-3 py-1 rounded-lg mb-4 text-center text-xl font-bold animate-pulse">
+                            <div
+                                class="bg-red-700 text-white px-3 py-1 rounded-lg mb-4 text-center text-xl font-bold animate-pulse">
                                 🚨 {{ __('messages.emergency_request') }} 🚨
                             </div>
                         @endif
@@ -176,38 +185,47 @@
                                 <div class="flex items-center gap-2">
                                     <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
                                     <span class="text-gray-600 dark:text-gray-400">{{ __('messages.created_at') }}:</span>
-                                    <span class="font-medium text-gray-800 dark:text-gray-200">{{ $request->created_at->format('d/m/Y - H:i') }}</span>
+                                    <span
+                                        class="font-medium text-gray-800 dark:text-gray-200">{{ $request->created_at->format('d/m/Y - H:i') }}</span>
                                 </div>
 
                                 @if ($request->in_progress_at)
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('messages.started_at') }}:</span>
-                                        <span class="font-medium text-yellow-600 dark:text-yellow-400">  {{ $request->in_progress_at->format('d/m/Y - H:i') }}</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('messages.started_at') }}:</span>
+                                        <span class="font-medium text-yellow-600 dark:text-yellow-400">
+                                            {{ $request->in_progress_at->format('d/m/Y - H:i') }}</span>
                                     </div>
                                 @endif
 
                                 @if ($request->delayed_at)
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('messages.delayed_at') }}:</span>
-                                        <span class="font-medium text-orange-600 dark:text-orange-400">{{ $request->delayed_at->format('d/m/Y - H:i') }}</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('messages.delayed_at') }}:</span>
+                                        <span
+                                            class="font-medium text-orange-600 dark:text-orange-400">{{ $request->delayed_at->format('d/m/Y - H:i') }}</span>
                                     </div>
                                 @endif
 
                                 @if ($request->completed_at)
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('messages.completed_at') }}:</span>
-                                        <span class="font-medium text-green-600 dark:text-green-400">{{ $request->completed_at->format('d/m/Y - H:i') }}</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('messages.completed_at') }}:</span>
+                                        <span
+                                            class="font-medium text-green-600 dark:text-green-400">{{ $request->completed_at->format('d/m/Y - H:i') }}</span>
                                     </div>
                                 @endif
 
                                 @if ($request->rejected_at)
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 bg-red-500 rounded-full"></span>
-                                        <span class="text-gray-600 dark:text-gray-400">{{ __('messages.rejected_at') }}:</span>
-                                        <span class="font-medium text-red-600 dark:text-red-400">{{ $request->rejected_at->format('d/m/Y - H:i') }}</span>
+                                        <span
+                                            class="text-gray-600 dark:text-gray-400">{{ __('messages.rejected_at') }}:</span>
+                                        <span
+                                            class="font-medium text-red-600 dark:text-red-400">{{ $request->rejected_at->format('d/m/Y - H:i') }}</span>
                                     </div>
                                 @endif
                             </div>
@@ -236,7 +254,8 @@
 
                         {{-- Delay Note --}}
                         @if ($request->status === 'delayed' && $request->note)
-                            <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-2 mb-3">
+                            <div
+                                class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-2 mb-3">
                                 <div class="text-xs font-medium text-orange-600 dark:text-orange-400 mb-1">
                                     <i class="fas fa-clock"></i> {{ __('messages.delay_note') }}:
                                 </div>
@@ -249,7 +268,8 @@
                         {{-- Rejection Note --}}
                         @if ($request->rejected_at && $request->rejection_note)
                             <div class="mb-3">
-                                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+                                <div
+                                    class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
                                     <div class="text-xs font-medium text-red-600 dark:text-red-400 mb-1">
                                         <i class="fas fa-exclamation-triangle"></i> {{ __('messages.rejection_note') }}:
                                     </div>
@@ -259,15 +279,15 @@
                                 </div>
                             </div>
                         @endif
-@if ($request->audio_note)
-    <div class="mt-4">
-        <p class="text-sm text-gray-600 mb-2">🎧 التسجيل الصوتي:</p>
-        <audio controls class="w-full max-w-sm rounded shadow">
-            <source src="{{ asset('storage/' . $request->audio_note) }}" type="audio/webm">
-            المتصفح لا يدعم تشغيل ملفات webm.
-        </audio>
-    </div>
-@endif
+                        @if ($request->audio_note)
+                            <div class="mt-4">
+                                <p class="text-sm text-gray-600 mb-2">🎧 التسجيل الصوتي:</p>
+                                <audio controls class="w-full max-w-sm rounded shadow">
+                                    <source src="{{ asset('storage/' . $request->audio_note) }}" type="audio/webm">
+                                    المتصفح لا يدعم تشغيل ملفات webm.
+                                </audio>
+                            </div>
+                        @endif
                         {{-- Action Buttons --}}
                         <div class="space-y-2">
                             {{-- Start Work Button --}}
@@ -317,7 +337,8 @@
                                             action="{{ route('maintenance.delay', $request->id) }}" method="POST"
                                             class="flex-1">
                                             @csrf
-                                            <input type="hidden" name="note" id="delay-note-input-{{ $request->id }}">
+                                            <input type="hidden" name="note"
+                                                id="delay-note-input-{{ $request->id }}">
                                             <input type="hidden" name="status" value="delayed">
                                             <button type="button" onclick="promptDelay({{ $request->id }})"
                                                 class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
@@ -446,7 +467,7 @@
         }
 
         /* Ensure consistent card heights */
-        .grid > div {
+        .grid>div {
             display: flex;
             flex-direction: column;
         }
@@ -541,7 +562,7 @@
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
-            
+
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -609,6 +630,7 @@
                 opacity: 0;
                 transform: scale(0.9);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -621,7 +643,7 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 1rem;
             }
-            
+
             .bg-white {
                 border: 1px solid #ccc;
             }

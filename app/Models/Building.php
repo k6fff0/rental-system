@@ -17,7 +17,7 @@ class Building extends Model
         'building_number',
         'address',
         'location_url',
-        'image', 
+        'image',
         'owner_name',
         'owner_nationality',
         'owner_id_number',
@@ -25,7 +25,7 @@ class Building extends Model
         'municipality_number',
         'rent_amount',
         'initial_renovation_cost',
-        'families_only', 
+        'families_only',
     ];
 
 
@@ -54,22 +54,21 @@ class Building extends Model
     {
         return $this->hasMany(BuildingUtility::class);
     }
-	
-	
+
+
     public function users()
     {
         return $this->belongsToMany(User::class);
     }
-	
-	
+
+
     public function expenses()
     {
         return $this->morphMany(Expense::class, 'expensable');
     }
-	
-public function supervisors()
-{
-    return $this->belongsToMany(User::class, 'building_user');
-}
 
+    public function supervisors()
+    {
+        return $this->belongsToMany(User::class, 'building_user');
+    }
 }

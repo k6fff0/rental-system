@@ -18,10 +18,10 @@ use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
-	public function __construct()
-{
-    $this->middleware('permission_or_super:view dashboard')->only(['index', 'show']);
-}
+    public function __construct()
+    {
+        $this->middleware('permission_or_super:view dashboard')->only(['index', 'show']);
+    }
 
     public function index()
     {
@@ -50,18 +50,18 @@ class AdminDashboardController extends Controller
 
         // 7. أحدث الأنشطة
         $recentActivities = ActivityLog::latest()->paginate(5);
-		if ($recentActivities->isEmpty()) {
-    $recentActivities = collect([
-        (object)[
-            'description' => 'تم تعديل بيانات الوحدة رقم 305',
-            'created_at' => now()->subMinutes(5),
-        ],
-        (object)[
-            'description' => 'تم إنشاء عقد جديد',
-            'created_at' => now()->subHours(1),
-        ],
-    ]);
-}
+        if ($recentActivities->isEmpty()) {
+            $recentActivities = collect([
+                (object)[
+                    'description' => 'تم تعديل بيانات الوحدة رقم 305',
+                    'created_at' => now()->subMinutes(5),
+                ],
+                (object)[
+                    'description' => 'تم إنشاء عقد جديد',
+                    'created_at' => now()->subHours(1),
+                ],
+            ]);
+        }
 
 
         // 8. مجموع المصروفات لهذا الشهر

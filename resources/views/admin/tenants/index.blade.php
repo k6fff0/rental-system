@@ -106,18 +106,20 @@
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($tenants as $tenant)
-                               @php
-    $status = $tenant->tenant_status;
-    $colors = [
-        'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-        'late_payer' => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-        'has_debt' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-        'absent' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-        'abroad' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-        'legal_issue' => 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-        'blocked' => 'bg-black text-white dark:bg-black dark:text-white', // ✅ الجديد
-    ];
-@endphp
+                                @php
+                                    $status = $tenant->tenant_status;
+                                    $colors = [
+                                        'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                                        'late_payer' =>
+                                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                                        'has_debt' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                                        'absent' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+                                        'abroad' => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                                        'legal_issue' =>
+                                            'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                                        'blocked' => 'bg-black text-white dark:bg-black dark:text-white', // ✅ الجديد
+                                    ];
+                                @endphp
 
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap">

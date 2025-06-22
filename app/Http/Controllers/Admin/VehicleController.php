@@ -29,107 +29,107 @@ class VehicleController extends Controller
         return view('admin.vehicles.create', compact('users'));
     }
 
-  public function store(Request $request)
-{
-    $request->validate([
-        'plate_category'         => 'required|string|max:3',
-        'plate_number'           => 'required|numeric|digits_between:1,6',
-        'brand'                  => 'required|string|max:255',
-		'model'                  => 'nullable|string',
-        'color'                  => 'nullable|string|max:255',
-        'user_id'                => 'nullable|exists:users,id',
-        'status'                 => 'required|string|in:available,in_service,broken',
-        'photo'                  => 'nullable|image|max:22048',
-        'notes'                  => 'nullable|string',
-        'license_expiry_date'    => 'nullable|date',
-        'insurance_expiry_date'  => 'nullable|date',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'plate_category'         => 'required|string|max:3',
+            'plate_number'           => 'required|numeric|digits_between:1,6',
+            'brand'                  => 'required|string|max:255',
+            'model'                  => 'nullable|string',
+            'color'                  => 'nullable|string|max:255',
+            'user_id'                => 'nullable|exists:users,id',
+            'status'                 => 'required|string|in:available,in_service,broken',
+            'photo'                  => 'nullable|image|max:22048',
+            'notes'                  => 'nullable|string',
+            'license_expiry_date'    => 'nullable|date',
+            'insurance_expiry_date'  => 'nullable|date',
+        ]);
 
-    $fullPlate = $request->plate_category . '-' . $request->plate_number;
+        $fullPlate = $request->plate_category . '-' . $request->plate_number;
 
-    // تأكد إن الرقم ده مش موجود قبل كده
-    if (\App\Models\Vehicle::where('plate_number', $fullPlate)->exists()) {
-        return back()->withErrors(['plate_number' => 'رقم اللوحة هذا مستخدم بالفعل.'])->withInput();
+        // تأكد إن الرقم ده مش موجود قبل كده
+        if (\App\Models\Vehicle::where('plate_number', $fullPlate)->exists()) {
+            return back()->withErrors(['plate_number' => 'رقم اللوحة هذا مستخدم بالفعل.'])->withInput();
+        }
+
+        $vehicle = new Vehicle($request->except('photo'));
+        $vehicle->plate_number = $fullPlate;
+
+        if ($request->hasFile('photo')) {
+            $vehicle->photo = $request->file('photo')->store('vehicles', 'public');
+        }
+
+        $vehicle->save();
+
+        return redirect()->route('vehicles.index')->with('success', 'تم إنشاء السيارة بنجاح');
     }
 
-    $vehicle = new Vehicle($request->except('photo'));
-    $vehicle->plate_number = $fullPlate;
 
-    if ($request->hasFile('photo')) {
-        $vehicle->photo = $request->file('photo')->store('vehicles', 'public');
+
+    public function edit($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        $users = User::all();
+
+        return view('admin.vehicles.edit', compact('vehicle', 'users'));
     }
 
-    $vehicle->save();
 
-    return redirect()->route('vehicles.index')->with('success', 'تم إنشاء السيارة بنجاح');
-}
+    public function update(Request $request, $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
 
+        $request->validate([
+            'plate_category'         => 'required|string|max:3',
+            'plate_number'           => 'required|numeric|digits_between:1,6',
+            'brand'                  => 'required|string|max:255',
+            'model'                  => 'nullable|string',
+            'color'                  => 'nullable|string|max:255',
+            'user_id'                => 'nullable|exists:users,id',
+            'status'                 => 'required|string|in:available,in_service,broken',
+            'photo'                  => 'nullable|image|max:2048',
+            'notes'                  => 'nullable|string',
+            'license_expiry_date'    => 'nullable|date',
+            'insurance_expiry_date'  => 'nullable|date',
+        ]);
 
-	
-public function edit($id)
-{
-    $vehicle = Vehicle::findOrFail($id);
-    $users = User::all(); 
+        $fullPlate = $request->plate_category . '-' . $request->plate_number;
 
-    return view('admin.vehicles.edit', compact('vehicle', 'users'));
-}
-
-
-  public function update(Request $request, $id)
-{
-    $vehicle = Vehicle::findOrFail($id);
-
-    $request->validate([
-        'plate_category'         => 'required|string|max:3',
-        'plate_number'           => 'required|numeric|digits_between:1,6',
-        'brand'                  => 'required|string|max:255',
-		'model'                  => 'nullable|string',
-        'color'                  => 'nullable|string|max:255',
-        'user_id'                => 'nullable|exists:users,id',
-        'status'                 => 'required|string|in:available,in_service,broken',
-        'photo'                  => 'nullable|image|max:2048',
-        'notes'                  => 'nullable|string',
-        'license_expiry_date'    => 'nullable|date',
-        'insurance_expiry_date'  => 'nullable|date',
-    ]);
-
-    $fullPlate = $request->plate_category . '-' . $request->plate_number;
-
-    if (
-        \App\Models\Vehicle::where('plate_number', $fullPlate)
+        if (
+            \App\Models\Vehicle::where('plate_number', $fullPlate)
             ->where('id', '!=', $vehicle->id)
             ->exists()
-    ) {
-        return back()->withErrors(['plate_number' => 'رقم اللوحة هذا مستخدم بالفعل.'])->withInput();
-    }
-
-    $vehicle->fill($request->except('photo'));
-    $vehicle->plate_number = $fullPlate;
-
-    if ($request->hasFile('photo')) {
-        if ($vehicle->photo) {
-            Storage::disk('public')->delete($vehicle->photo);
+        ) {
+            return back()->withErrors(['plate_number' => 'رقم اللوحة هذا مستخدم بالفعل.'])->withInput();
         }
-        $vehicle->photo = $request->file('photo')->store('vehicles', 'public');
+
+        $vehicle->fill($request->except('photo'));
+        $vehicle->plate_number = $fullPlate;
+
+        if ($request->hasFile('photo')) {
+            if ($vehicle->photo) {
+                Storage::disk('public')->delete($vehicle->photo);
+            }
+            $vehicle->photo = $request->file('photo')->store('vehicles', 'public');
+        }
+
+        $vehicle->save();
+
+        return redirect()->route('vehicles.index')->with('success', 'تم تحديث بيانات السيارة بنجاح');
     }
 
-    $vehicle->save();
-
-    return redirect()->route('vehicles.index')->with('success', 'تم تحديث بيانات السيارة بنجاح');
-}
 
 
+    public function show($id)
+    {
+        $vehicle = Vehicle::with([
+            'user',
+            'expenses' => fn($q) => $q->orderByDesc('expense_date'),
+            'violations' => fn($q) => $q->orderByDesc('date') // لو ده كمان فيه نفس المشكلة راجعه
+        ])->findOrFail($id);
 
-public function show($id)
-{
-    $vehicle = Vehicle::with([
-        'user',
-        'expenses' => fn($q) => $q->orderByDesc('expense_date'),
-        'violations' => fn($q) => $q->orderByDesc('date') // لو ده كمان فيه نفس المشكلة راجعه
-    ])->findOrFail($id);
-
-    return view('admin.vehicles.show', compact('vehicle'));
-}
+        return view('admin.vehicles.show', compact('vehicle'));
+    }
 
 
 
@@ -147,74 +147,73 @@ public function show($id)
     }
 
 
-public function reports(Request $request)
-{
-	
-    $startDate = $request->start_date ? Carbon::parse($request->start_date) : null;
-    $endDate   = $request->end_date ? Carbon::parse($request->end_date) : null;
-    $vehicleId = $request->vehicle_id;
-    $userId    = $request->user_id;
+    public function reports(Request $request)
+    {
 
-    $vehicles = Vehicle::all();
-    $users    = User::all();
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : null;
+        $endDate   = $request->end_date ? Carbon::parse($request->end_date) : null;
+        $vehicleId = $request->vehicle_id;
+        $userId    = $request->user_id;
 
-    // تحميل المصروفات المرتبطة بالسيارات فقط
-    $expenses = Expense::with('expensable')
-    ->where('expensable_type', Vehicle::class);
+        $vehicles = Vehicle::all();
+        $users    = User::all();
 
-if ($vehicleId) {
-    $expenses->where('expensable_id', $vehicleId);
-}
+        // تحميل المصروفات المرتبطة بالسيارات فقط
+        $expenses = Expense::with('expensable')
+            ->where('expensable_type', Vehicle::class);
 
-    // تحميل الغرامات مع علاقاتها
-    $violations = Violation::with(['vehicle', 'user']);
+        if ($vehicleId) {
+            $expenses->where('expensable_id', $vehicleId);
+        }
 
-    // فلاتر التاريخ
-    if ($startDate) {
-        $expenses->whereDate('expense_date', '>=', $startDate);
-        $violations->whereDate('date', '>=', $startDate);
+        // تحميل الغرامات مع علاقاتها
+        $violations = Violation::with(['vehicle', 'user']);
+
+        // فلاتر التاريخ
+        if ($startDate) {
+            $expenses->whereDate('expense_date', '>=', $startDate);
+            $violations->whereDate('date', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $expenses->whereDate('expense_date', '<=', $endDate);
+            $violations->whereDate('date', '<=', $endDate);
+        }
+
+        // فلتر السيارة
+        if ($vehicleId) {
+            $expenses->where('expensable_id', $vehicleId);
+            $violations->where('vehicle_id', $vehicleId);
+        }
+
+        // فلتر السائق
+        if ($userId) {
+            $violations->where('user_id', $userId);
+        }
+
+        return view('admin.vehicles.reports.index', [
+            'vehicles'   => $vehicles,
+            'users'      => $users,
+            'expenses'   => $expenses->get(),
+            'violations' => $violations->get(),
+            'startDate'  => $startDate,
+            'endDate'    => $endDate,
+            'vehicleId'  => $vehicleId,
+            'userId'     => $userId,
+        ]);
     }
 
-    if ($endDate) {
-        $expenses->whereDate('expense_date', '<=', $endDate);
-        $violations->whereDate('date', '<=', $endDate);
+
+    public function exportPdf(Request $request)
+    {
+        $data = VehicleReportService::getReportData($request);
+
+        $pdf = Pdf::loadView('admin.vehicles.reports.pdf', $data);
+        return $pdf->download('vehicle-report.pdf');
     }
 
-    // فلتر السيارة
-    if ($vehicleId) {
-        $expenses->where('expensable_id', $vehicleId);
-        $violations->where('vehicle_id', $vehicleId);
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(new VehicleReportExport($request), 'vehicle-report.xlsx');
     }
-
-    // فلتر السائق
-    if ($userId) {
-        $violations->where('user_id', $userId);
-    }
-
-    return view('admin.vehicles.reports.index', [
-        'vehicles'   => $vehicles,
-        'users'      => $users,
-        'expenses'   => $expenses->get(),
-        'violations' => $violations->get(),
-        'startDate'  => $startDate,
-        'endDate'    => $endDate,
-        'vehicleId'  => $vehicleId,
-        'userId'     => $userId,
-    ]);
-}
-
-
-public function exportPdf(Request $request)
-{
-    $data = VehicleReportService::getReportData($request);
-
-    $pdf = Pdf::loadView('admin.vehicles.reports.pdf', $data);
-    return $pdf->download('vehicle-report.pdf');
-}
-
-public function exportExcel(Request $request)
-{
-    return Excel::download(new VehicleReportExport($request), 'vehicle-report.xlsx');
-}
-
 }

@@ -46,9 +46,9 @@ class SystemOwnerController extends Controller
 
         // هنا أنواع العقود الثابتة المؤقتة
         $contractTypes = collect([
-           ['key' => 'type1', 'name' => 'نوع 1', 'updated_at' => now()->subDays(1), 'is_active' => true],
-           ['key' => 'type2', 'name' => 'نوع 2', 'updated_at' => now()->subDays(3), 'is_active' => false],
-           ['key' => 'type3', 'name' => 'نوع 3', 'updated_at' => now()->subDays(5), 'is_active' => true],
+            ['key' => 'type1', 'name' => 'نوع 1', 'updated_at' => now()->subDays(1), 'is_active' => true],
+            ['key' => 'type2', 'name' => 'نوع 2', 'updated_at' => now()->subDays(3), 'is_active' => false],
+            ['key' => 'type3', 'name' => 'نوع 3', 'updated_at' => now()->subDays(5), 'is_active' => true],
         ]);
 
         return view('admin.system-owner.index', [

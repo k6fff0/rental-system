@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class BuildingController extends Controller
 
@@ -23,7 +24,7 @@ class BuildingController extends Controller
     }
 
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
 
     public function index(Request $request)
@@ -50,7 +51,7 @@ class BuildingController extends Controller
 
 
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
 
 
@@ -77,14 +78,14 @@ class BuildingController extends Controller
         }
 
         Building::create($data);
-		
-		
+
+
         log_action("🏢 تم إضافة مبنى جديد: {$building->name}");
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم إضافة المبنى بنجاح.');
     }
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
 
     public function show(Building $building)
@@ -100,7 +101,7 @@ class BuildingController extends Controller
     }
 
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
     public function update(Request $request, Building $building)
     {
@@ -116,28 +117,28 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
-            'image' => 'nullable|image|max:2048', 
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        
+
         if ($request->hasFile('image')) {
-           
+
             if ($building->image) {
                 Storage::disk('public')->delete($building->image);
             }
 
-            
+
             $data['image'] = $request->file('image')->store('buildings', 'public');
         }
 
         $building->update($data);
-		
+
         log_action('🏢 تم تعديل بيانات المبنى: ' . $building->name);
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم تعديل المبنى بنجاح.');
     }
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
     public function destroy(Building $building)
     {
@@ -148,7 +149,7 @@ class BuildingController extends Controller
 
 
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
 
 
@@ -162,7 +163,7 @@ class BuildingController extends Controller
         return back()->with('success', 'تم حذف صورة المبنى بنجاح.');
     }
 
-//--------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------
 
 
 
@@ -172,7 +173,7 @@ class BuildingController extends Controller
         $building->families_only = !$building->families_only;
         $building->save();
 
-        
+
         return redirect()->route('admin.buildings.edit', $building->id)
             ->with('success', 'تم تحديث الحالة بنجاح');
     }

@@ -28,19 +28,19 @@ class ProfileController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-		
-		
+
+
         $user = $request->user();
 
-$validated = $request->validate([
-    'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
-    'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-    'phone' => ['nullable', 'string', 'max:20', Rule::unique('users')->ignore($user->id)],
-    'preferred_language' => ['nullable', 'in:ar,en'],
-    'technician_status' => ['nullable', 'in:available,busy,unavailable'],
-    'photo_url' => ['nullable', 'image', 'max:12120'],
-    'password' => ['nullable', 'confirmed', 'min:8'],
-]);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20', Rule::unique('users')->ignore($user->id)],
+            'preferred_language' => ['nullable', 'in:ar,en'],
+            'technician_status' => ['nullable', 'in:available,busy,unavailable'],
+            'photo_url' => ['nullable', 'image', 'max:12120'],
+            'password' => ['nullable', 'confirmed', 'min:8'],
+        ]);
 
         // ✅ تحديث كلمة المرور لو اتغيرت
         if ($validated['password'] ?? false) {

@@ -21,19 +21,19 @@ class Contract extends Model
         'end_date',
         'rent_amount',
         'contract_file',
-		'contract_image',
+        'contract_image',
         'notes',
-		'status',
-		'contract_number',
+        'status',
+        'contract_number',
     ];
 
     /**
      * تحويل الحقول لتواريخ تلقائياً
      */
-     protected $casts = [
-       'start_date' => 'datetime',
-       'end_date'   => 'datetime',
-     ];
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date'   => 'datetime',
+    ];
 
 
     /**
@@ -46,18 +46,18 @@ class Contract extends Model
             $contract->contract_number = 'C-' . str_pad($lastId, 6, '0', STR_PAD_LEFT);
         });
     }
-public function payments()
-{
-    return $this->hasMany(\App\Models\Payment::class);
-}
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
 
     /**
      * علاقة العقد بالمستأجر
      */
-public function tenant()
-{
-    return $this->belongsTo(Tenant::class);
-}
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 
 
     /**
@@ -67,67 +67,66 @@ public function tenant()
     {
         return $this->belongsTo(Unit::class);
     }
-	public function isActive(): bool
-{
-    return $this->status === 'active';
-}
-public function getVisualStatusAttribute(): string
-{
-    if ($this->status !== 'active') {
-        return $this->status;
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
     }
+    public function getVisualStatusAttribute(): string
+    {
+        if ($this->status !== 'active') {
+            return $this->status;
+        }
 
-    if (now()->gt($this->end_date)) {
-        return 'expired';
+        if (now()->gt($this->end_date)) {
+            return 'expired';
+        }
+
+        if (now()->diffInDays($this->end_date) <= 30) {
+            return 'expiring';
+        }
+
+        return 'active';
     }
+    public function getFormattedDurationAttribute()
+    {
+        if (!$this->start_date || !$this->end_date) {
+            return null;
+        }
 
-    if (now()->diffInDays($this->end_date) <= 30) {
-        return 'expiring';
+        $start = \Carbon\Carbon::parse($this->start_date);
+        $end = \Carbon\Carbon::parse($this->end_date);
+
+        $diff = $start->diff($end);
+
+        $months = $diff->m + ($diff->y * 12); // عدد الشهور الكلي
+        $days = $diff->d; // باقي الأيام
+
+        $output = '';
+
+        if ($months > 0) {
+            $output .= $months . ' ' . __('messages.months');
+        }
+
+        if ($days > 0) {
+            $output .= ($months > 0 ? ' ' : '') . $days . ' ' . __('messages.days');
+        }
+
+        return $output ?: __('messages.no_duration');
     }
+    public function getDaysRemainingTextAttribute()
+    {
+        if (!$this->end_date) {
+            return __('messages.no_duration');
+        }
 
-    return 'active';
-}
-public function getFormattedDurationAttribute()
-{
-    if (!$this->start_date || !$this->end_date) {
-        return null;
+        $now = \Carbon\Carbon::now();
+        $end = \Carbon\Carbon::parse($this->end_date);
+
+        if ($end->isPast()) {
+            return __('messages.expired');
+        }
+
+        $daysLeft = $now->diffInDays($end, false);
+        return __('messages.remaining_in', ['days' => $daysLeft]);
     }
-
-    $start = \Carbon\Carbon::parse($this->start_date);
-    $end = \Carbon\Carbon::parse($this->end_date);
-
-    $diff = $start->diff($end);
-
-    $months = $diff->m + ($diff->y * 12); // عدد الشهور الكلي
-    $days = $diff->d; // باقي الأيام
-
-    $output = '';
-
-    if ($months > 0) {
-        $output .= $months . ' ' . __('messages.months');
-    }
-
-    if ($days > 0) {
-        $output .= ($months > 0 ? ' ' : '') . $days . ' ' . __('messages.days');
-    }
-
-    return $output ?: __('messages.no_duration');
-}
-public function getDaysRemainingTextAttribute()
-{
-    if (!$this->end_date) {
-        return __('messages.no_duration');
-    }
-
-    $now = \Carbon\Carbon::now();
-    $end = \Carbon\Carbon::parse($this->end_date);
-
-    if ($end->isPast()) {
-        return __('messages.expired');
-    }
-
-    $daysLeft = $now->diffInDays($end, false);
-    return __('messages.remaining_in', ['days' => $daysLeft]);
-}
-
 }

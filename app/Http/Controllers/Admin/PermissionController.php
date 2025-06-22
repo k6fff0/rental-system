@@ -8,13 +8,13 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
-	public function __construct()
-{
-    $this->middleware('permission:view permissions')->only(['index', 'show']);
-    $this->middleware('permission:create permissions')->only(['create', 'store']);
-    $this->middleware('permission:edit permissions')->only(['edit', 'update']);
-    $this->middleware('permission:delete permissions')->only(['destroy']);
-}
+    public function __construct()
+    {
+        $this->middleware('permission:view permissions')->only(['index', 'show']);
+        $this->middleware('permission:create permissions')->only(['create', 'store']);
+        $this->middleware('permission:edit permissions')->only(['edit', 'update']);
+        $this->middleware('permission:delete permissions')->only(['destroy']);
+    }
 
     /**
      * Display a listing of the resource.
@@ -45,7 +45,7 @@ class PermissionController extends Controller
         Permission::create(['name' => $request->name]);
 
         return redirect()->route('admin.permissions.index')
-                         ->with('success', __('messages.permission_created_successfully'));
+            ->with('success', __('messages.permission_created_successfully'));
     }
 
     /**
@@ -71,7 +71,7 @@ class PermissionController extends Controller
         $permission->update(['name' => $request->name]);
 
         return redirect()->route('admin.permissions.index')
-                         ->with('success', __('messages.permission_updated_successfully'));
+            ->with('success', __('messages.permission_updated_successfully'));
     }
 
     /**
@@ -83,6 +83,6 @@ class PermissionController extends Controller
         $permission->delete();
 
         return redirect()->route('admin.permissions.index')
-                         ->with('success', __('messages.permission_deleted_successfully'));
+            ->with('success', __('messages.permission_deleted_successfully'));
     }
 }
