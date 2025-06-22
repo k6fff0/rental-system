@@ -43,6 +43,7 @@
                     </a>
 
                     <!-- Create User Button -->
+					@can('create users')
                     <a href="{{ route('admin.users.create') }}"
                         class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-900 transition-all duration-200">
                         <svg class="w-5 h-5 {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}" fill="none"
@@ -52,6 +53,7 @@
                         </svg>
                         {{ __('messages.create_user') }}
                     </a>
+					@endcan
                 </div>
             </div>
 
@@ -197,7 +199,7 @@
                                     </svg>
                                     {{ __('messages.view') }}
                                 </a>
-
+                                @role("Admin's")
                                 <a href="{{ route('admin.users.edit', $user->id) }}"
                                     class="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200">
                                     <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
@@ -207,7 +209,8 @@
                                     </svg>
                                     {{ __('messages.edit') }}
                                 </a>
-
+								@endrole
+                                @role("Admin's")
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
                                     class="flex-1 min-w-0">
                                     @csrf
@@ -223,6 +226,7 @@
                                         {{ __('messages.delete') }}
                                     </button>
                                 </form>
+								@endrole
                             </div>
                         </div>
                     @empty
@@ -373,6 +377,7 @@
                                         <div
                                             class="flex items-center space-x-2 {{ app()->getLocale() === 'ar' ? 'space-x-reverse' : '' }}">
                                             <!-- View Button -->
+											@can('view users')
                                             <a href="{{ route('admin.users.show', $user->id) }}"
                                                 class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200">
                                                 <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
@@ -384,8 +389,10 @@
                                                 </svg>
                                                 {{ __('messages.view') }}
                                             </a>
+											@endcan
 
                                             <!-- Edit Button -->
+											@role("Admin's")
                                             <a href="{{ route('admin.users.edit', $user->id) }}"
                                                 class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200">
                                                 <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
@@ -395,8 +402,10 @@
                                                 </svg>
                                                 {{ __('messages.edit') }}
                                             </a>
+											@endrole
 
                                             <!-- Delete Button -->
+											@role("Admin's")
                                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
                                                 class="inline">
                                                 @csrf
@@ -413,6 +422,7 @@
                                                     {{ __('messages.delete') }}
                                                 </button>
                                             </form>
+											@endrole
                                         </div>
                                     </td>
                                 </tr>

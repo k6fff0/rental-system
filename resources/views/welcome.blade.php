@@ -12,8 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     
-    <!-- تحميل Tailwind CSS بشكل غير متزامن -->
-    <script src="https://cdn.tailwindcss.com" async></script>
+    @vite(['resources/css/app.css']) 
     
     <!-- أنماط مخصصة مع تحسينات الأداء -->
     <style>
@@ -292,7 +291,7 @@
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(100, 116, 139, 0.5);
         }
         
         .contact-form input:focus,
@@ -766,7 +765,7 @@
         <div class="container mx-auto px-4">
             <div class="grid lg:grid-cols-2 gap-16">
                 <!-- نموذج الاتصال -->
-                <div class="animate-fadeInLeft">
+                <div class="animate-fadeInLeft ">
                     <div class="inline-block px-4 py-2 bg-gradient-to-r from-indigo-100 to-cyan-100 rounded-full text-indigo-600 font-semibold text-sm mb-6">
                         تواصل معنا
                     </div>
@@ -814,7 +813,7 @@
                     <div class="glass-card rounded-3xl p-10 shadow-xl h-full">
                         <h3 class="text-3xl font-bold text-gray-800 mb-10">{{ __('messages.contact_info_title') }}</h3>
                         
-                        <div class="space-y-8">
+                        <div class="space-y-8 ">
                             <div class="flex items-start space-x-6 space-x-reverse">
                                 <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center flex-shrink-0">
                                     <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -41,37 +41,7 @@
                 </div>
             </div>
 
-            {{-- Simplified Filter Section --}}
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 border border-gray-100 dark:border-gray-700 transition-colors duration-300">
-                <form method="GET" action="{{ route('admin.technicians.index') }}" id="filterForm">
-                    <div class="flex flex-col md:flex-row gap-4 items-end">
-                        {{-- Technician Name Filter --}}
-                        <div class="flex-1 w-full">
-                            <label for="search_filter" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1 transition-colors duration-300">
-                                <svg class="w-4 h-4 inline {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                </svg>
-                                {{ __('messages.search_technicians') }}
-                            </label>
-                            <div class="relative">
-                                <input type="text" name="search" id="search_filter" value="{{ request('search') }}"
-                                    placeholder="{{ __('messages.enter_technician_name') }}"
-                                    class="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
-                                    autocomplete="off">
-                                <div id="search_results"
-                                    class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-700 shadow-lg rounded-lg border border-gray-200 dark:border-gray-600 hidden max-h-60 overflow-auto">
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit"
-                            class="px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                            {{ __('messages.search') }}
-                        </button>
-                    </div>
-                </form>
-            </div>
+           
 
             {{-- Technicians Table --}}
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-colors duration-300">
@@ -287,79 +257,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Enhanced search functionality with live results
-            const searchInput = document.getElementById('search_filter');
-            const searchResults = document.getElementById('search_results');
-
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const query = this.value.trim();
-
-                    if (query.length < 2) {
-                        searchResults.classList.add('hidden');
-                        return;
-                    }
-
-                    fetch(`/admin/technicians/search?query=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.length > 0) {
-                                let html = '';
-                                data.forEach(tech => {
-                                    html += `
-                                <div class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-0 transition-colors duration-200"
-                                     onclick="selectTechnician('${tech.name}')">
-                                    <div class="font-medium text-gray-800 dark:text-white">${tech.name}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400">${tech.email}</div>
-                                </div>
-                            `;
-                                });
-                                searchResults.innerHTML = html;
-                                searchResults.classList.remove('hidden');
-                            } else {
-                                searchResults.innerHTML =
-                                    '<div class="px-4 py-2 text-gray-500 dark:text-gray-400">لا توجد نتائج</div>';
-                                searchResults.classList.remove('hidden');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            searchResults.classList.add('hidden');
-                        });
-                });
-
-                // Hide results when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                        searchResults.classList.add('hidden');
-                    }
-                });
-            }
-
-            // Initialize Fancybox for image galleries
-            if (typeof Fancybox !== 'undefined') {
-                Fancybox.bind("[data-fancybox]", {
-                    Toolbar: {
-                        display: {
-                            left: ["infobar"],
-                            middle: [],
-                            right: ["slideshow", "download", "thumbs", "close"],
-                        },
-                    },
-                });
-            }
-        });
-
-        function selectTechnician(name) {
-            const searchInput = document.getElementById('search_filter');
-            const searchResults = document.getElementById('search_results');
-            searchInput.value = name;
-            searchResults.classList.add('hidden');
-            document.getElementById('filterForm').submit();
-        }
-    </script>
+    
 
     <style>
         /* Enhanced Dark Mode Styles */

@@ -93,6 +93,7 @@
 
                         <!-- Quick Actions -->
                         <div class="flex flex-col sm:flex-row lg:flex-col gap-3">
+						    @role("Admin's")
                             <a href="{{ route('admin.users.edit', $user->id) }}"
                                 class="inline-flex items-center justify-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm">
                                 <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,6 +101,8 @@
                                 </svg>
                                 {{ __('messages.edit') }}
                             </a>
+							@endrole
+							@role("Admin's")
                             @if($user->is_active)
                                 <button onclick="confirmAction('disable')"
                                     class="inline-flex items-center justify-center px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-white rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm">
@@ -117,6 +120,7 @@
                                     {{ __('messages.enable') }}
                                 </button>
                             @endif
+							@endrole
                         </div>
                     </div>
                 </div>

@@ -264,6 +264,7 @@
                         </div>
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إضافة مستأجر</span>
                     </a>
+					
                     <!-- units.available -->
                     <a href="{{ route('units.available') }}"
                         class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
@@ -324,6 +325,32 @@
                         </div>
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">طلبات الصيانة</span>
                     </a>
+					<!-- role_manager -->
+					@role("Admin's")
+                    <a href="{{ route('admin.role_manager.index') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
+    <div
+        class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4.354l6.364 2.122a1 1 0 01.636.928v4.338c0 5.052-3.507 9.607-8.5 10.258-4.993-.65-8.5-5.206-8.5-10.258V7.404a1 1 0 01.636-.928L12 4.354z" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الصلاحيات</span>
+</a>
+@endrole
+<!-- maintenance archive -->
+<a href="{{ route('admin.maintenance_requests.archive') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+    <div
+        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">أرشيف الصيانة</span>
+</a>
 
 
                 </div>
@@ -490,7 +517,7 @@
             <!-- Financial Overview -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <!-- Total Income -->
-                <div
+               <!--  <div
                     class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
                     <div class="relative">
@@ -525,10 +552,10 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <!-- Total Expenses -->
-                <div
+             <!--    <div
                     class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
                     <div class="relative">
@@ -563,7 +590,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
 
         </div>

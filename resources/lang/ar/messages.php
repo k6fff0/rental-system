@@ -597,14 +597,11 @@ return [
     'choose_unit' => 'اختر الغرفة',
     'confirm_booking' => 'تأكيد الحجز',
     'notes' => 'ملاحظات',
-    // الإشعارات الأساسية
     'new_notifications' => ' إشعار جديد',
     'notifications' => 'الإشعارات',
     'notification' => 'إشعار',
     'no_notifications' => 'لا توجد إشعارات',
     'no_notifications_description' => 'لا توجد إشعارات حالياً. ستظهر الإشعارات الجديدة هنا عند وصولها.',
-
-    // الإحصائيات
     'total_notifications' => 'إجمالي الإشعارات',
     'unread' => 'غير مقروءة',
     'read' => 'مقروءة',
@@ -613,8 +610,6 @@ return [
     'yesterday' => 'أمس',
     'this_week' => 'هذا الأسبوع',
     'this_month' => 'هذا الشهر',
-
-    // التصنيفات والحالات
     'new' => 'جديد',
     'urgent' => 'عاجل',
     'important' => 'مهم',
@@ -629,7 +624,6 @@ return [
     'no_expenses_found' => 'لا توجد مصروفات',
     'try_changing_filters' => 'حاول تغيير عوامل التصفية أو إضافة مصروف جديد',
     'add_first_expense' => 'إضافة أول مصروف',
-    'currency' => 'درهم',
     'actions' => 'الإجراءات',
     'furniture' => 'أثاث',
     'painting' => 'دهان',
@@ -883,8 +877,6 @@ return [
     'back_to_bookings' => 'العودة إلى الحجوزات',
     'id_front' => 'صورة الهوية (الوجه)',
     'id_back' => 'صورة الهوية (الظهر)',
-
-    // حالات
     'active' => 'نشط',
     'expired' => 'منتهي',
     'cancelled' => 'ملغي',
@@ -1164,7 +1156,6 @@ return [
     'no_violations_found' => 'لا توجد مخالفات في هذه الفترة.',
     'no_expenses_found' => 'لا توجد مصروفات في هذه الفترة.',
     'back_to_report_index' => 'الرجوع إلى التقارير',
-    'currency' => 'درهم',
     'manage_vehicle_fleet'      => 'إدارة أسطول المركبات',
     'metrics'                   => 'الإحصائيات',
     'report'                    => 'التقارير',
@@ -1338,37 +1329,26 @@ return [
     'shortcuts_dashboard' => 'لوحة الاختصارات',
     'shortcuts_dashboard_title' => 'لوحة الاختصارات السريعة',
     'shortcuts_dashboard_subtitle' => 'الوصول السريع للمهام الأساسية في النظام',
-
-    // Card titles
     'available_rooms' => 'الغرف المتاحة',
     'available_rooms_desc' => 'عرض الوحدات الجاهزة للإيجار',
     'available_text_rooms' => 'الوحدات المتاحه النسخة الكتابية',
-
     'logo_alt' => 'شعار سمارت ستيب',
     'company_name' => 'سمارت ستيب',
-
-    // التنقل
     'nav_home' => 'الرئيسية',
     'nav_about' => 'من نحن',
     'nav_services' => 'خدماتنا',
     'nav_properties' => 'العقارات',
     'nav_contact' => 'اتصل بنا',
-
-    // الهيرو
     'hero_title' => 'عقارك.. أولويتنا',
     'hero_subtitle' => 'نقدم حلولاً عقارية متكاملة في مدينة العين بأعلى معايير الجودة والاحترافية',
     'explore_properties' => 'استكشف عقاراتنا',
     'book_consultation' => 'احجز استشارة',
-
-    // من نحن
     'about_title' => 'نبني الثقة في كل عقار',
     'about_description' => 'شركة سمارت ستيب هي رائدة في مجال العقارات والمقاولات في مدينة العين...',
     'about_properties' => 'عقار مُدار',
     'about_experience' => 'سنوات خبرة',
     'about_clients' => 'عميل سعيد',
     'contact_us' => 'تواصل معنا',
-
-    // الخدمات
     'services_title' => 'خدماتنا المتميزة',
     'services_description' => 'نقدم مجموعة شاملة من الخدمات العقارية والإنشائية لتلبية جميع احتياجاتك',
     'service_rent' => 'تأجير العقارات',
@@ -1379,8 +1359,6 @@ return [
     'service_maintenance_desc' => 'خدمات صيانة احترافية لجميع أنواع العقارات',
     'service_construction' => 'المقاولات العامة',
     'service_construction_desc' => 'تنفيذ مشاريع البناء والتشييد بأعلى جودة',
-
-    // العقارات
     'properties_title' => 'عقارات مميزة',
     'properties_description' => 'اكتشف مجموعتنا المختارة من أفضل العقارات في مدينة العين',
     'for_rent' => 'للإيجار',
@@ -1402,7 +1380,6 @@ return [
     'request_type'      => 'نوع الطلب',
     'start_recording'   => 'ابدأ التسجيل',
     'stop_recording'    => 'إيقاف التسجيل',
-
     'rooms_description' => 'اختر من بين مجموعة من الغرف المفروشة المجهزة لتناسب جميع الاحتياجات.',
     'room_1_title' => 'غرفة مفروشة بجانب الجامعة',
     'room_1_desc' => 'سرير مزدوج • حمام خاص • إنترنت مجاني • مساحة 20 م²',
@@ -1417,14 +1394,9 @@ return [
     'new' => 'جديد',
     'commercial' => 'تجاري',
     'more_details' => 'المزيد من التفاصيل',
-
-
-    // CTA
     'cta_title' => 'هل تبحث عن عقار أحلامك؟',
     'cta_description' => 'فريقنا من الخبراء جاهز لمساعدتك في العثور على العقار المثالي',
     'contact_now' => 'تواصل معنا الآن',
-
-    // الاتصال
     'contact_title' => 'تواصل معنا',
     'contact_subtitle' => 'نحن هنا لخدمتك. لأي استفسار أو طلب خدمة لا تتردد',
     'full_name' => 'الاسم الكامل',
@@ -1432,15 +1404,11 @@ return [
     'email' => 'البريد الإلكتروني',
     'message' => 'الرسالة',
     'send_message' => 'إرسال الرسالة',
-
-    // معلومات الاتصال
     'contact_info_title' => 'معلومات التواصل',
     'address' => 'العنوان',
     'phone' => 'الهاتف',
     'email_title' => 'البريد الإلكتروني',
     'working_hours' => 'ساعات العمل',
-
-    // الفوتر
     'footer_about' => 'شريكك الموثوق في العقارات والمقاولات في مدينة العين',
     'quick_links' => 'روابط سريعة',
     'our_services' => 'خدماتنا',
@@ -1450,46 +1418,31 @@ return [
     'rights_reserved' => ' 2025 سمارت ستيب. جميع الحقوق محفوظة',
     'book_room' => 'حجز غرفة',
     'book_room_desc' => 'إضافة حجز جديد لوحدة متاحة',
-
-
     'my_bookings' => 'حجوزاتي',
     'my_bookings_desc' => 'عرض حجوزاتك الخاصة',
-
     'add_payment' => 'إضافة دفعة',
     'add_payment_desc' => 'تسجيل دفعة مالية من مستأجر',
-
     'add_expense' => 'إضافة مصروف',
     'add_expense_desc' => 'تسجيل مصروف جديد للمبنى',
-
     'cleaning_dashboard' => 'داشبورد النظافة',
     'cleaning_dashboard_desc' => 'متابعة وتنفيذ مهام تنظيف الغرف',
-
     'add_maintenance_request' => 'إضافة طلب صيانة',
     'add_maintenance_request_desc' => 'تسجيل بلاغ صيانة لوحدة محددة',
     'our_team' => 'فريقنا المحترف',
     'explore_services' => 'استكشف خدماتنا',
-
     'real_estate_experts' => 'خبراء العقارات والمقاولات',
     'smart_step_team' => 'فريق سمارت ستيب',
-
-
     'maintenance' => 'أعمال الصيانة',
     'maintenance_desc' => 'متابعة وتنفيذ طلبات الصيانة',
     'utilities' => 'المرافق',
     'utilities_desc' => 'إدارة طلبات الصيانة ومتابعة المرافق العامة',
     'quick_access' => 'دخول سريع',
-
-    // Common terms
     'quick_access' => 'وصول سريع',
     'loading' => 'جاري التحميل',
-
-    // Mobile navigation
     'available' => 'متاح',
     'book' => 'حجز',
     'payment' => 'دفع',
     'cleaning' => 'نظافة',
-
-    // Legacy compatibility
     'maintenance_card_title' => 'أعمال الصيانة',
     'maintenance_card_desc' => 'متابعة وتنفيذ طلبات الصيانة',
     'enable_user_confirmation' => 'هل أنت متأكد من تفعيل هذا المستخدم؟',
@@ -1568,54 +1521,34 @@ return [
     'edit_technician' => 'تعديل الفني',
     'technician_information' => 'معلومات الفني',
     'editing_technician_data_for' => 'تعديل بيانات الفني:',
-
-    // التخصصات
     'technical_specialization' => 'التخصص الفني',
     'main_specialty' => 'التخصص الرئيسي',
     'choose_specialty' => 'اختر التخصص',
-
-    // حالات الفني
     'status_and_availability' => 'الحالة والتوفر',
     'technician_status' => 'حالة الفني',
     'technician_status_available' => 'متاح',
     'technician_status_busy' => 'مشغول',
     'technician_status_unavailable' => 'غير متاح',
-
-    // المعلومات الإضافية
     'additional_information' => 'المعلومات الإضافية',
     'technician_notes_placeholder' => 'أضف ملاحظات حول الفني، خبراته، أو معلومات إضافية...',
-
-    // الأزرار والإجراءات
     'save_changes' => 'حفظ التعديلات',
     'saving_changes' => 'جاري حفظ التعديلات',
     'exit_without_saving_changes' => 'هل تريد الخروج بدون حفظ التغييرات؟',
-
-    // رسائل النظام
     'please_fill_required_fields' => 'يرجى ملء جميع الحقول المطلوبة',
-
-    // عامة (إذا لم تكن موجودة)
     'fixed' => 'ثابت',
     'technician_profile' => 'ملف الفني',
     'view_technician_details' => 'عرض تفاصيل الفني',
     'current_status' => 'الحالة الحالية',
     'status_description' => 'وصف الحالة',
-
-    // وصف حالات الفني
     'technician_available_desc' => 'متاح لاستقبال مهام جديدة',
     'technician_busy_desc' => 'يعمل حالياً على مهام أخرى',
     'technician_unavailable_desc' => 'غير متاح في الوقت الحالي',
     'status_unknown' => 'حالة غير معروفة',
-
-    // المهام الإضافية
     'additional_tasks' => 'المهام الإضافية',
     'no_additional_tasks' => 'لا توجد مهام إضافية',
-
-    // الإجراءات السريعة
     'quick_actions' => 'إجراءات سريعة',
     'call_technician' => 'اتصال بالفني',
     'send_email' => 'إرسال بريد إلكتروني',
-
-    // الإحصائيات
     'statistics' => 'الإحصائيات',
     'total_tasks' => 'إجمالي المهام',
     'completed_tasks' => 'المهام المكتملة',
@@ -1634,7 +1567,6 @@ return [
     'fastest_task' => 'أسرع طلب',
     'slowest_task' => 'أبطأ طلب',
     'total_cost' => 'إجمالي التكلفة',
-    'currency' => 'درهم',
     'minutes' => 'دقيقة',
     'detailed_performance_report' => 'تقرير الأداء التفصيلي',
     'date_filter' => 'فلتر التواريخ',
@@ -1675,7 +1607,6 @@ return [
     'slowest_task' => 'أبطأ مهمة',
     'total_cost' => 'التكلفة الإجمالية',
     'minutes' => 'دقيقة',
-    'currency' => 'ر.س',
     'week' => 'الأسبوع',
     'saturday' => 'السبت',
     'sunday' => 'الأحد',
@@ -1697,43 +1628,27 @@ return [
     'export_starting' => 'بدء تصدير التقرير...',
     'export_completed' => 'تم تصدير التقرير بنجاح!',
     'hours' => 'ساعة',
-
-
-
-
-    // عامة
     'call' => 'اتصال',
     'specialty' => 'التخصص',
     'back_to_list' => 'العودة للقائمة',
-
-    // General
     'language' => 'اللغة',
     'arabic' => 'العربية',
     'english' => 'الإنجليزية',
-
-    // Validation Messages
     'required' => 'هذا الحقل مطلوب',
     'email' => 'يجب أن يكون البريد الإلكتروني صحيحاً',
     'min' => 'يجب أن يكون الحقل على الأقل :min أحرف',
     'max' => 'يجب أن لا يزيد الحقل عن :max حرف',
-
-    // Status Messages
     'login_success' => 'تم تسجيل الدخول بنجاح',
     'login_failed' => 'بيانات الدخول غير صحيحة',
     'logout_success' => 'تم تسجيل الخروج بنجاح',
     'password_reset_sent' => 'تم إرسال رابط إعادة تعيين كلمة المرور',
     'all_rights_reserved' => 'جميع الحقوق محفوظة.',
-
-
-    // Navigation
     'home' => 'الرئيسية',
     'dashboard' => 'لوحة التحكم',
     'profile' => 'الملف الشخصي',
     'settings' => 'الإعدادات',
     'logout' => 'تسجيل الخروج',
     'privacy_terms_note' => 'هذا النظام مملوك حصريًا لشركة Smart Step، ولا يجوز نسخه أو استخدامه أو تعديله بأي شكل من الأشكال دون الرجوع إلى المطور يمكن التواصل عبر الواتساب.',
-
-
 
     'status_labels' => [
         'new' => 'جديد',

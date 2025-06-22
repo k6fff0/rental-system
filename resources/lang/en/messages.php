@@ -185,25 +185,21 @@ return [
     'view' => 'View',
     'logo_alt' => 'Smart Step Logo',
     'company_name' => 'Smart Step',
-
     'nav_home' => 'Home',
     'nav_about' => 'About Us',
     'nav_services' => 'Services',
     'nav_properties' => 'Properties',
     'nav_contact' => 'Contact',
-
     'hero_title' => 'Your Property, Our Priority',
     'hero_subtitle' => 'We provide comprehensive real estate solutions in Al Ain with the highest standards.',
     'explore_properties' => 'Explore Properties',
     'book_consultation' => 'Book a Consultation',
-
     'about_title' => 'Building Trust in Every Property',
     'about_description' => 'Smart Step is a leader in real estate and contracting in Al Ain...',
     'about_properties' => 'Managed Properties',
     'about_experience' => 'Years of Experience',
     'about_clients' => 'Happy Clients',
     'contact_us' => 'Contact Us',
-
     'services_title' => 'Our Premium Services',
     'services_description' => 'We offer a full range of real estate and construction services to meet all your needs.',
     'service_rent' => 'Property Rentals',
@@ -214,7 +210,6 @@ return [
     'service_maintenance_desc' => 'Professional maintenance for all types of properties.',
     'service_construction' => 'General Contracting',
     'service_construction_desc' => 'Executing construction projects with top quality and safety standards.',
-
     'properties_title' => 'Featured Properties',
     'properties_description' => 'Discover our handpicked selection of top properties in Al Ain.',
     'for_rent' => 'For Rent',
@@ -228,11 +223,9 @@ return [
     'property_3_desc' => '200 sqm • Prime Location • Private Parking • Security System',
     'more_details' => 'More Details',
     'view_all_properties' => 'View All Properties',
-
     'cta_title' => '? Looking for Your Dream Property ',
     'cta_description' => 'Our expert team is ready to help you find the perfect match.',
     'contact_now' => 'Contact Now',
-
     'contact_title' => 'Get in Touch',
     'explore_services' => 'Explore Our Services',
     'rooms_title' => 'Available Rooms',
@@ -263,7 +256,6 @@ return [
     'request_type'      => 'Request Type',
     'start_recording'   => 'Start Recording',
     'stop_recording'    => 'Stop Recording',
-
     'room_2_title' => 'Family Room with Shared Kitchen',
     'room_2_desc' => 'Fits 3 People • Shared Kitchen • Central AC • 30 sqm',
     'audio_note' => 'Audio Note',
@@ -276,25 +268,20 @@ return [
     'new' => 'New',
     'commercial' => 'Commercial',
     'more_details' => 'More Details',
-
-
     'contact_subtitle' => 'We’re here to help you. Reach out for any inquiry or service request.',
     'full_name' => 'Full Name',
     'our_team' => 'Our Professional Team',
     'real_estate_experts' => 'Real Estate & Contracting Experts',
     'smart_step_team' => 'Smart Step Team',
-
     'phone_number' => 'Phone Number',
     'email' => 'Email',
     'message' => 'Message',
     'send_message' => 'Send Message',
-
     'contact_info_title' => 'Contact Information',
     'address' => 'Address',
     'phone' => 'Phone',
     'email_title' => 'Email',
     'working_hours' => 'Working Hours',
-
     'footer_about' => 'Your trusted partner in real estate and contracting in Al Ain',
     'quick_links' => 'Quick Links',
     'our_services' => 'Our Services',
@@ -307,51 +294,33 @@ return [
     'edit_technician' => 'Edit Technician',
     'technician_information' => 'Technician Information',
     'editing_technician_data_for' => 'Editing technician data for:',
-
-    // Specializations
     'technical_specialization' => 'Technical Specialization',
     'main_specialty' => 'Main Specialty',
     'choose_specialty' => 'Choose Specialty',
-
-    // Technician Status
     'status_and_availability' => 'Status and Availability',
     'technician_status' => 'Technician Status',
     'technician_status_available' => 'Available',
     'technician_status_busy' => 'Busy',
     'technician_status_unavailable' => 'Unavailable',
-
-    // Additional Information
     'additional_information' => 'Additional Information',
     'technician_notes_placeholder' => 'Add notes about the technician, experience, or additional information...',
-
-    // Buttons and Actions
     'save_changes' => 'Save Changes',
     'saving_changes' => 'Saving Changes',
     'exit_without_saving_changes' => 'Do you want to exit without saving changes?',
-
-    // System Messages
     'please_fill_required_fields' => 'Please fill all required fields',
     'technician_profile' => 'Technician Profile',
     'view_technician_details' => 'View technician details',
     'current_status' => 'Current Status',
     'status_description' => 'Status Description',
-
-    // Technician Status Descriptions
     'technician_available_desc' => 'Available to receive new tasks',
     'technician_busy_desc' => 'Currently working on other tasks',
     'technician_unavailable_desc' => 'Not available at the moment',
     'status_unknown' => 'Unknown status',
-
-    // Additional Tasks
     'additional_tasks' => 'Additional Tasks',
     'no_additional_tasks' => 'No additional tasks',
-
-    // Quick Actions
     'quick_actions' => 'Quick Actions',
     'call_technician' => 'Call Technician',
     'send_email' => 'Send Email',
-
-    // Statistics
     'statistics' => 'Statistics',
     'total_tasks' => 'Total Tasks',
     'completed_tasks' => 'Completed Tasks',
@@ -370,7 +339,6 @@ return [
     'fastest_task' => 'Fastest Task',
     'slowest_task' => 'Slowest Task',
     'total_cost' => 'Total Cost',
-    'currency' => 'AED',
     'minutes' => 'min',
     'detailed_performance_report' => 'Detailed Performance Report',
     'date_filter' => 'Date Filter',
@@ -411,7 +379,6 @@ return [
     'slowest_task' => 'Slowest Task',
     'total_cost' => 'Total Cost',
     'minutes' => 'minutes',
-    'currency' => 'SAR',
     'week' => 'Week',
     'saturday' => 'Saturday',
     'sunday' => 'Sunday',
@@ -433,11 +400,9 @@ return [
     'end_date_must_be_after_start' => 'End date must be after start date',
     'export_starting' => 'Starting report export...',
     'export_completed' => 'Report exported successfully!',
-    // General
     'call' => 'Call',
     'specialty' => 'Specialty',
     'back_to_list' => 'Back to List',
-    // General (if not already present)
     'fixed' => 'Fixed',
     'welcome' => 'Welcome',
     'supervisor' => 'Supervisor',
@@ -473,47 +438,32 @@ return [
     'shortcuts_dashboard' => 'Shortcuts Dashboard',
     'shortcuts_dashboard_title' => 'Quick Shortcuts Dashboard',
     'shortcuts_dashboard_subtitle' => 'Fast access to essential system tasks',
-
-    // Card titles
     'available_rooms' => 'Available Rooms',
     'available_rooms_desc' => 'View units ready for rent',
     'available_text_rooms' => 'Available Text Rooms',
-
     'book_room' => 'Book Room',
     'book_room_desc' => 'Add new booking for available unit',
-
     'my_bookings' => 'My Bookings',
     'my_bookings_desc' => 'View your personal bookings',
-
     'add_payment' => 'Add Payment',
     'add_payment_desc' => 'Record financial payment from tenant',
-
     'add_expense' => 'Add Expense',
     'add_expense_desc' => 'Record new building expense',
-
     'cleaning_dashboard' => 'Cleaning Dashboard',
     'cleaning_dashboard_desc' => 'Track and manage room cleaning tasks',
-
     'add_maintenance_request' => 'Add Maintenance Request',
     'add_maintenance_request_desc' => 'Submit maintenance report for specific unit',
-
     'maintenance' => 'Maintenance Work',
     'maintenance_desc' => 'Track and execute maintenance requests',
     'utilities' => 'Utilities',
     'utilities_desc' => 'Manage maintenance requests and public facilities',
     'quick_access' => 'Quick Access',
-
-    // Common terms
     'quick_access' => 'Quick Access',
     'loading' => 'Loading',
-
-    // Mobile navigation
     'available' => 'Available',
     'book' => 'Book',
     'payment' => 'Payment',
     'cleaning' => 'Cleaning',
-
-    // Legacy compatibility
     'maintenance_card_title' => 'Maintenance Work',
     'maintenance_card_desc' => 'Track and execute maintenance requests',
     'is_emergency' => 'Emergency Request?',
@@ -1097,8 +1047,6 @@ return [
     'notification' => 'Notification',
     'no_notifications' => 'No Notifications',
     'no_notifications_description' => 'You have no notifications right now. New notifications will appear here when they arrive.',
-
-    // Statistics
     'total_notifications' => 'Total Notifications',
     'unread' => 'Unread',
     'read' => 'Read',
@@ -1107,22 +1055,16 @@ return [
     'yesterday' => 'Yesterday',
     'this_week' => 'This Week',
     'this_month' => 'This Month',
-
-    // Categories and Status
     'new' => 'New',
     'urgent' => 'Urgent',
     'important' => 'Important',
     'normal' => 'Normal',
     'low_priority' => 'Low Priority',
-
-    // Notification Types
     'success' => 'Success',
     'warning' => 'Warning',
     'error' => 'Error',
     'info' => 'Info',
     'message' => 'Message',
-
-    // Actions
     'mark_as_read' => 'Mark as Read',
     'mark_as_unread' => 'Mark as Unread',
     'mark_all_read' => 'Mark All as Read',
@@ -1139,7 +1081,6 @@ return [
     'no_expenses_found' => 'No expenses found',
     'try_changing_filters' => 'Try changing your filters or add a new expense',
     'add_first_expense' => 'Add First Expense',
-    'currency' => 'AED',
     'actions' => 'Actions',
     'furniture' => 'Furniture',
     'painting' => 'Painting',
@@ -1445,7 +1386,6 @@ return [
     'no_violations_found' => 'No violations found in this period.',
     'no_expenses_found' => 'No expenses found in this period.',
     'back_to_report_index' => 'Back to Reports',
-    'currency' => 'AED',
     'manage_vehicle_fleet'      => 'Manage Vehicle Fleet',
     'metrics'                   => 'Metrics',
     'report'                    => 'Report',
@@ -1668,36 +1608,24 @@ return [
     'create_account' => 'Create new account',
     'footer_text' => 'All rights reserved  2025',
     'login' => 'Login',
-
-
-    // General
     'language' => 'Language',
     'arabic' => 'Arabic',
     'english' => 'English',
-
-    // Validation Messages
     'required' => 'This field is required',
     'email' => 'Please enter a valid email address',
     'min' => 'This field must be at least :min characters',
     'max' => 'This field must not exceed :max characters',
-
-    // Status Messages
     'login_success' => 'Login successful',
     'login_failed' => 'Invalid login credentials',
     'logout_success' => 'Logout successful',
     'password_reset_sent' => 'Password reset link has been sent',
     'privacy_terms_note' => 'This system is exclusively owned by Smart Step and may not be copied, used, or modified in any form without prior permission from the developer Contact via WhatsApp.',
-
-
-    // Navigation
     'home' => 'Home',
     'dashboard' => 'Dashboard',
     'profile' => 'Profile',
     'settings' => 'Settings',
     'logout' => 'Logout',
     'all_rights_reserved' => 'All rights reserved.',
-
-
 
     'status_labels' => [
         'new' => 'New',

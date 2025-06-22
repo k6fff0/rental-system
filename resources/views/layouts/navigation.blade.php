@@ -104,11 +104,7 @@
             'label' => __('messages.building_supervisors'),
             'icon' => 'heroicon-o-user',
         ],
-        [
-            'route' => 'admin.role_manager.index',
-            'label' => __('messages.permissions'),
-            'icon' => 'heroicon-o-shield-check',
-        ],
+
         [
             'route' => '#',
             'label' => __('messages.ratings'),
@@ -133,7 +129,7 @@
 
             {{-- الشعار --}}
             <div class="flex items-center gap-4 rtl:flex-row-reverse min-w-0">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group hover:scale-105 transition-transform duration-300">
+                <a href="{{ url('/') }}" class="flex items-center gap-3 group hover:scale-105 transition-transform duration-300">
                     @if (settings()->app_logo)
                         <div class="relative">
                             <img src="{{ asset('storage/' . settings()->app_logo) }}" alt="Logo" class="h-10 w-10 rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-300">
