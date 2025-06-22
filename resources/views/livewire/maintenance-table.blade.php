@@ -290,101 +290,7 @@
                 </form>
             </div>
 
-            {{-- Statistics Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                @php
-                    $totalRequests = collect($statusCounts)->sum();
-                    $activeRequests = ($statusCounts['new'] ?? 0) + ($statusCounts['in_progress'] ?? 0);
-                @endphp
-
-                <!-- Total Requests -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ __('messages.total_requests_stat') }}</h3>
-                            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $totalRequests }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                {{ __('messages.maintenance_request_unit') }}</p>
-                        </div>
-                        <div
-                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Requests -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ __('messages.active_requests') }}</h3>
-                            <p class="text-3xl font-bold text-orange-600 mt-2">{{ $activeRequests }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                {{ __('messages.under_processing') }}</p>
-                        </div>
-                        <div
-                            class="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Completed Requests -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ __('messages.completed_requests') }}</h3>
-                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $statusCounts['completed'] ?? 0 }}
-                            </p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                {{ __('messages.completed_work') }}</p>
-                        </div>
-                        <div
-                            class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pending Requests -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                {{ __('messages.new_requests') }}</h3>
-                            <p class="text-3xl font-bold text-yellow-600 mt-2">{{ $statusCounts['new'] ?? 0 }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('messages.pending') }}</p>
-                        </div>
-                        <div
-                            class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
 
             {{-- No Results Message --}}
             <div id="noResults"
@@ -866,7 +772,7 @@
             {{-- Pagination --}}
             @if (method_exists($requests, 'hasPages') && $requests->hasPages())
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-6 py-4">
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 px-6 py-4 mb-6">
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <!-- Results Info -->
                         <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -875,7 +781,7 @@
                         </div>
 
                         <!-- Pagination Links -->
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                        <div class="flex items-center space-x-2 rtl:space-x-reverse ">
                             {{-- Previous Button --}}
                             @if ($requests->onFirstPage())
                                 <span
@@ -930,7 +836,7 @@
                         </div>
 
                         <!-- Items per page -->
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                        <div class="flex items-center space-x-2 rtl:space-x-reverse  ">
                             <label for="per_page"
                                 class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.display') }}:</label>
                             <select id="per_page" onchange="changePerPage(this.value)"
@@ -948,7 +854,104 @@
                     </div>
                 </div>
             @endif
-        </div>
+			
+			
+			  {{-- Statistics Cards --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-1">
+                @php
+                    $totalRequests = collect($statusCounts)->sum();
+                    $activeRequests = ($statusCounts['new'] ?? 0) + ($statusCounts['in_progress'] ?? 0);
+                @endphp
+
+                <!-- Total Requests -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                {{ __('messages.total_requests_stat') }}</h3>
+                            <p class="text-3xl font-bold text-blue-600 mt-2">{{ $totalRequests }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                {{ __('messages.maintenance_request_unit') }}</p>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Requests -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                {{ __('messages.active_requests') }}</h3>
+                            <p class="text-3xl font-bold text-orange-600 mt-2">{{ $activeRequests }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                {{ __('messages.under_processing') }}</p>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-orange-100 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center">
+                            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Requests -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                {{ __('messages.completed_requests') }}</h3>
+                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $statusCounts['completed'] ?? 0 }}
+                            </p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                {{ __('messages.completed_work') }}</p>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-2xl flex items-center justify-center">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Requests -->
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                {{ __('messages.new_requests') }}</h3>
+                            <p class="text-3xl font-bold text-yellow-600 mt-2">{{ $statusCounts['new'] ?? 0 }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ __('messages.pending') }}</p>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-yellow-100 dark:bg-yellow-900/20 rounded-2xl flex items-center justify-center">
+                            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>		
     </div>
 
     {{-- Loading Indicator --}}

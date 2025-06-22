@@ -21,6 +21,7 @@ class Contract extends Model
         'end_date',
         'rent_amount',
         'contract_file',
+		'contract_image',
         'notes',
 		'status',
 		'contract_number',

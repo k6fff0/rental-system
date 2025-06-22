@@ -303,23 +303,5 @@
         @endif
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const input = document.getElementById('searchInput');
-                let timeout = null;
 
-                // البحث التلقائي بعد التوقف عن الكتابة
-                input.addEventListener('input', () => {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        document.getElementById('smartSearchForm').submit();
-                    }, 500);
-                });
-
-                // التركيز على حقل البحث عند تحميل الصفحة
-                input.focus();
-            });
-        </script>
-    @endpush
 @endsection

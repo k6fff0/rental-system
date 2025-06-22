@@ -77,6 +77,9 @@ class BuildingController extends Controller
         }
 
         Building::create($data);
+		
+		
+        log_action("🏢 تم إضافة مبنى جديد: {$building->name}");
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم إضافة المبنى بنجاح.');
     }
@@ -128,6 +131,8 @@ class BuildingController extends Controller
         }
 
         $building->update($data);
+		
+        log_action('🏢 تم تعديل بيانات المبنى: ' . $building->name);
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم تعديل المبنى بنجاح.');
     }

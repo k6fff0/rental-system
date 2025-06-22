@@ -49,7 +49,7 @@ class AdminDashboardController extends Controller
         $expiringContracts = Contract::whereBetween('end_date', [$now, $now->copy()->addDays(30)])->get();
 
         // 7. أحدث الأنشطة
-        $recentActivities = ActivityLog::latest()->take(5)->get();
+        $recentActivities = ActivityLog::latest()->paginate(5);
 		if ($recentActivities->isEmpty()) {
     $recentActivities = collect([
         (object)[

@@ -113,6 +113,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/specialties/{id}/edit', [TechnicianController::class, 'editSpecialty'])->name('specialties.edit');
         Route::put('/specialties/{id}', [TechnicianController::class, 'updateSpecialty'])->name('specialties.update');
         Route::delete('/specialties/{id}', [TechnicianController::class, 'destroySpecialty'])->name('specialties.destroy');
+		Route::get('{id}/report', [TechnicianController::class, 'report'])->name('report');
+
+
 
         // ✅ الفنيين بعد التخصصات
         Route::get('/', [TechnicianController::class, 'index'])->name('index');

@@ -160,7 +160,7 @@
                                 <p class="text-base font-semibold text-gray-800 dark:text-gray-100 mt-1">{{ $contract->tenant->phone ?? '-' }}</p>
                             </div>
                             <div>
-                                <label class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.email') }}</label>
+                                <label class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.tenant_email') }}</label>
                                 <p class="text-base font-semibold text-gray-800 dark:text-gray-100 mt-1">{{ $contract->tenant->email ?? '-' }}</p>
                             </div>
                             <div>
@@ -204,7 +204,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 me-2 text-emerald-500 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-                            {{ __('messages.contract_details') }}
+                            {{ __('messages.contract_date') }}
                         </h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -217,14 +217,7 @@
                                     {{ $contract->end_date->format('Y-m-d') }}
                                 </p>
                             </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.payment_frequency') }}</label>
-                                <p class="text-base font-semibold text-gray-800 dark:text-gray-100 mt-1">{{ __('messages.' . $contract->payment_frequency) ?? __('messages.monthly') }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ __('messages.payment_method') }}</label>
-                                <p class="text-base font-semibold text-gray-800 dark:text-gray-100 mt-1">{{ __('messages.' . $contract->payment_method) ?? '-' }}</p>
-                            </div>
+
                         </div>
                     </div>
 
@@ -309,23 +302,26 @@
 
                     {{-- المرفقات --}}
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 me-2 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                                </svg>
-                                {{ __('messages.attachments') }}
-                            </h3>
-                            @can('add contract attachments')
-                                <button onclick="document.getElementById('attachmentModal').classList.remove('hidden')"
-                                    class="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                    </svg>
-                                    {{ __('messages.add') }}
-                                </button>
-                            @endcan
-                        </div>
+                        <div class="flex justify-between items-center mb-4">                          
+    <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 me-2 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+        </svg>
+        {{ __('messages.contract_image') }}
+    </h3>
+</div>
+
+@if ($contract->contract_image)
+    <div class="mb-4">
+        <a data-fancybox="contract" href="{{ asset('storage/' . $contract->contract_image) }}">
+            <img src="{{ asset('storage/' . $contract->contract_image) }}"
+                 alt="Contract Image"
+                 class="w-40 h-auto rounded shadow border border-gray-300 dark:border-gray-600 hover:opacity-80 transition" />
+        </a>
+    </div>
+@endif
+
 
                         @if(optional($contract->unit->images)->isEmpty())
                             <div class="text-center py-4">

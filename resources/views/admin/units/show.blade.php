@@ -380,6 +380,10 @@
                                                     class="px-6 py-3 text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                     {{ __('messages.tenant_name') }}
                                                 </th>
+												<th
+                                                    class="px-6 py-3 text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                                    {{ __('messages.contract_number') }}
+                                                </th>
                                                 <th
                                                     class="px-6 py-3 text-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                     {{ __('messages.contract_start') }}
@@ -417,6 +421,10 @@
                                                             <span
                                                                 class="text-sm font-medium text-gray-900 dark:text-white">{{ $contract->tenant->name ?? '-' }}</span>
                                                         </div>
+                                                    </td>
+													 <td
+                                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                                        {{ $contract->contract_number }}
                                                     </td>
                                                     <td
                                                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
@@ -567,6 +575,7 @@
                             </h2>
                         </div>
                         <div class="p-6 space-y-3">
+						    @can('edit units')
                             <a href="{{ route('admin.units.edit', $unit->id) }}"
                                 class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
                                 <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
@@ -576,6 +585,7 @@
                                 </svg>
                                 تعديل الوحدة
                             </a>
+							@endcan
 
                             @if ($unit->status === 'available')
                                 <a href="{{ route('admin.contracts.create', ['unit_id' => $unit->id]) }}"
@@ -588,7 +598,7 @@
                                     إنشاء عقد جديد
                                 </a>
                             @endif
-
+                            @can('view building details')
                             <a href="{{ route('admin.buildings.show', $unit->building->id) }}"
                                 class="w-full flex items-center justify-center px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors duration-200">
                                 <svg class="w-5 h-5 mr-2 rtl:ml-2" fill="none" stroke="currentColor"
@@ -598,6 +608,7 @@
                                 </svg>
                                 عرض المبنى
                             </a>
+							@endcan
 
                             <a href="{{ route('admin.units.index', ['building_id' => $unit->building->id]) }}"
                                 class="w-full flex items-center justify-center px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200">

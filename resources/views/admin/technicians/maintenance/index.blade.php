@@ -64,73 +64,94 @@
                         
 
                         {{-- Header Row --}}
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">#{{ $request->id }}</span>
-                                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-xs font-bold">
-                                    {{ $request->unit->unit_number ?? '-' }}
-                                </span>
-                            </div>
-                            <span class="text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap   
-                                @if ($request->status === 'new') bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300
-                                @elseif($request->status === 'in_progress') bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
-                                @elseif($request->status === 'completed') bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300
-                                @elseif($request->status === 'delayed') bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300
-                                @elseif($request->status === 'rejected') bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300
-                                @else bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 @endif">
-                                {{ __('messages.status_labels.' . $request->status) }}
-                            </span>
-                        </div>
+<div class="flex items-center justify-between mb-3">
+    <div class="flex items-center gap-2">
+        <span class="text-lg font-bold text-blue-600 dark:text-blue-400">#{{ $request->id }}</span>
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white text-xs font-bold">
+            {{ $request->unit->unit_number ?? '—' }}
+        </span>
+    </div>
+    <span class="text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap
+        @if ($request->status === 'new') bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300
+        @elseif($request->status === 'in_progress') bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300
+        @elseif($request->status === 'completed') bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300
+        @elseif($request->status === 'delayed') bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300
+        @elseif($request->status === 'rejected') bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300
+        @else bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 @endif">
+        {{ __('messages.status_labels.' . $request->status) }}
+    </span>
+</div>
 
-                        {{-- Building & Location --}}
-                        <div class="mb-3">
+@php
+    $building = $request->unit->building ?? $request->building;
+    $buildingName = $building->name ?? '—';
+    $buildingLocation = $building->location ?? null;
+@endphp
+
+ <div class="mb-3">
+ 
                             <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($request->unit->building->location ?? '') }}"
                                 target="_blank"
                                 class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline block truncate">
-                                📍 {{ $request->unit->building->name ?? '-' }}
+                                📍 {{ $buildingName }}
                             </a>
                             <span class="inline-block bg-blue-200 dark:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 px-2 py-1 rounded mt-1">
                                 {{ $request->subSpecialty->name ?? 'غير محدد' }}
                             </span>
                         </div>
 
-                        {{-- Contact Info --}}
-                        @if (($request->unit->status === 'occupied' && $request->unit->latestContract && $request->unit->latestContract->tenant) || $request->extra_phone)
-                            <div class="mb-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
-                                <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                    <i class="fas fa-phone text-blue-500"></i> {{ __('messages.contact') }}:
-                                </div>
-                                @if ($request->unit->status === 'occupied' && $request->unit->latestContract && $request->unit->latestContract->tenant)
-                                    <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1 mb-1">
-                                        <a href="tel:{{ $request->unit->latestContract->tenant->phone }}"
-                                            class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
-                                            {{ $request->unit->latestContract->tenant->phone }}
-                                        </a>
-                                        @if ($request->unit->latestContract->tenant->is_whatsapp)
-                                            <a href="https://wa.me/{{ ltrim($request->unit->latestContract->tenant->phone, '+') }}"
-                                                target="_blank" class="text-green-600 dark:text-green-400">
-                                                <i class="fab fa-whatsapp text-sm"></i>
-                                            </a>
-                                        @endif
-                                    </div>
-                                @endif
 
-                                @if ($request->extra_phone)
-                                    <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1">
-                                        <a href="tel:{{ $request->extra_phone }}"
-                                            class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
-                                            {{ $request->extra_phone }}
-                                        </a>
-                                        @if ($request->is_whatsapp)
-                                            <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}"
-                                                target="_blank" class="text-green-600 dark:text-green-400">
-                                                <i class="fab fa-whatsapp text-sm"></i>
-                                            </a>
-                                        @endif
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
+
+
+
+{{-- Contact Info --}}
+@php
+    $unit = $request->unit;
+    $contract = $unit?->latestContract;
+    $tenant = $contract?->tenant;
+    $showTenantPhone = $unit?->status === 'occupied' && $contract && $tenant;
+@endphp
+
+@if ($showTenantPhone || $request->extra_phone)
+    <div class="mb-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-2">
+        <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+            <i class="fas fa-phone text-blue-500"></i> {{ __('messages.contact') }}:
+        </div>
+
+        {{-- رقم المستأجر المرتبط بالعقد --}}
+        @if ($showTenantPhone)
+            <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1 mb-1">
+                <a href="tel:{{ $tenant->phone }}"
+                    class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
+                    {{ $tenant->phone }}
+                </a>
+                @if ($tenant->is_whatsapp)
+                    <a href="https://wa.me/{{ ltrim($tenant->phone, '+') }}"
+                        target="_blank" class="text-green-600 dark:text-green-400">
+                        <i class="fab fa-whatsapp text-sm"></i>
+                    </a>
+                @endif
+            </div>
+        @endif
+
+        {{-- رقم إضافي (زوج / أخ / أي جهة تواصل) --}}
+        @if ($request->extra_phone)
+            <div class="flex items-center gap-2 bg-white dark:bg-gray-600 rounded px-2 py-1">
+                <a href="tel:{{ $request->extra_phone }}"
+                    class="text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline flex-1 truncate">
+                    {{ $request->extra_phone }}
+                </a>
+                @if ($request->is_whatsapp)
+                    <a href="https://wa.me/{{ ltrim($request->extra_phone, '+') }}"
+                        target="_blank" class="text-green-600 dark:text-green-400">
+                        <i class="fab fa-whatsapp text-sm"></i>
+                    </a>
+                @endif
+            </div>
+        @endif
+    </div>
+@endif
+
 
                         {{-- Creator Info --}}
                         <div class="mb-3">

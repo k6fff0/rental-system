@@ -4,29 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('messages.shortcuts_dashboard') }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'arabic': ['Cairo', 'sans-serif'],
-                        'english': ['Inter', 'sans-serif']
-                    },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'fade-in': 'fadeIn 0.6s ease-out',
-                        'slide-down': 'slideDown 0.3s ease-out',
-                        'scale-in': 'scaleIn 0.2s ease-out'
-                    }
-                }
-            }
-        }
-    </script>
+    @vite(['resources/css/app.css']) 
+    <link href="{{ asset('assets/fontawesome/all.min.css') }}" rel="stylesheet">
+
+   
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -142,6 +123,7 @@
                 <!-- Logo and Company Section -->
                 <div class="flex items-center space-x-4 rtl:space-x-reverse animate-slide-up">
                     <!-- Logo Container -->
+					<a href="{{ url('/') }}" class="flex items-center space-x-3 rtl:space-x-reverse group">
                     <div class="flex-shrink-0">
                         <div class="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg logo-bounce">
                             <!-- Default Logo Icon -->
@@ -156,7 +138,7 @@
                         <h2 class="company-name text-lg sm:text-xl lg:text-2xl font-bold text-white leading-tight">
                            {{ config('app.name') }}
                         </h2>
-                        
+                        </a>
                         <!-- Dashboard Title -->
                         <h1 class="text-sm sm:text-base lg:text-lg font-semibold text-blue-100 leading-tight">
                             {{ __('messages.shortcuts_dashboard') }}

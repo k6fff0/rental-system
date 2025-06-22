@@ -426,6 +426,67 @@
                 </div>
             </div>
 
+            <!-- Recent Activities -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('messages.recent_activities') }}
+                    </h2>
+                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    @forelse ($recentActivities as $activity)
+                        <div
+                            class="flex items-start space-x-4 rtl:space-x-reverse p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+
+                            {{-- دائرة الأيقونة --}}
+                            <div
+                                class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-sm">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+
+                            {{-- تفاصيل النشاط --}}
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ $activity->description }}
+                                </p>
+
+                                {{-- معلومات إضافية --}}
+                                <div class="flex flex-wrap text-xs text-gray-500 dark:text-gray-400 mt-1 gap-x-2 gap-y-1">
+                                    <span class="flex items-center">
+                                        <i class="fa-regular fa-user-circle mr-1"></i>
+                                        {{ $activity->user->name ?? 'مستخدم غير معروف' }}
+                                    </span>
+
+                                    <span class="flex items-center">
+                                        <i class="fa-regular fa-clock mr-1"></i>
+                                        {{ $activity->created_at->translatedFormat('Y/m/d h:i A') }}
+                                    </span>
+
+                                    <span class="flex items-center">
+                                        <i class="fa-solid fa-hourglass-half mr-1"></i>
+                                        {{ $activity->created_at->diffForHumans() }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-gray-500 dark:text-gray-300 py-8">
+                            لا يوجد نشاطات حتى الآن.
+                        </div>
+                    @endforelse
+                    {{ $recentActivities->links() }}
+                </div>
+            </div>
             <!-- Financial Overview -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <!-- Total Income -->
@@ -505,49 +566,6 @@
                 </div>
             </div>
 
-            <!-- Recent Activities -->
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ __('messages.recent_activities') }}
-                    </h2>
-                    <button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="space-y-4">
-                    @forelse ($recentActivities as $activity)
-                        <div
-                            class="flex items-start space-x-4 rtl:space-x-reverse p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                            <div
-                                class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-sm">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $activity->description }}
-                                </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                                    <svg class="w-3 h-3 mr-1 rtl:ml-1" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-
-                                    {{ $activity->created_at->diffForHumans() }}
-                                </p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
         </div>
     </div>
 

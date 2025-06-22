@@ -307,6 +307,8 @@
                     <tr>
                         <th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
                             {{ __('messages.building') }}</th>
+						<th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
+                            {{ __('messages.residency_type') }}</th>
                         <th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
                             {{ __('messages.unit_number') }}</th>
                         <th class="px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">
@@ -352,6 +354,29 @@
                             <td class="px-4 py-4 text-sm font-medium text-gray-900 dark:text-gray-100 text-right">
                                 {{ $unit->building->name }}
                             </td>
+<td class="px-6 py-4 whitespace-nowrap">
+    @if ($unit->building && $unit->building->families_only)
+        <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 dark:bg-pink-900/20 text-pink-800 dark:text-pink-200">
+            <svg class="w-3 h-3 mr-1 rtl:ml-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                    clip-rule="evenodd" />
+            </svg>
+            {{ __('messages.only_families') }}
+        </span>
+    @else
+        <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+            <svg class="w-3 h-3 mr-1 rtl:ml-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                    clip-rule="evenodd" />
+            </svg>
+            {{ __('messages.general') }}
+        </span>
+    @endif
+</td>
 
                             {{-- رقم الغرفة --}}
                             <td class="px-4 py-4 text-sm text-gray-900 dark:text-gray-100 text-right">
@@ -588,15 +613,15 @@
 
 <script>
     // 🌙 نظام الوضع الليلي
-    document.addEventListener('DOMContentLoaded', function() {
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
-        
-        // التحقق من الوضع المحفوظ في localStorage
+   document.addEventListener('DOMContentLoaded', function () {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+
+    // نكمل بس لو العناصر موجودة
+    if (darkModeToggle && sunIcon && moonIcon) {
         const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        
-        // تطبيق الوضع المحفوظ
+
         if (isDarkMode) {
             document.documentElement.classList.add('dark');
             sunIcon.classList.remove('hidden');
@@ -606,11 +631,10 @@
             sunIcon.classList.add('hidden');
             moonIcon.classList.remove('hidden');
         }
-        
-        // إضافة مستمع الحدث لزر التبديل
-        darkModeToggle.addEventListener('click', function() {
+
+        darkModeToggle.addEventListener('click', function () {
             const isDark = document.documentElement.classList.contains('dark');
-            
+
             if (isDark) {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('darkMode', 'false');
@@ -623,7 +647,9 @@
                 moonIcon.classList.add('hidden');
             }
         });
-    });
+    }
+});
+
 
     // 🔍 فلترة البيانات
     function filterBy(status) {

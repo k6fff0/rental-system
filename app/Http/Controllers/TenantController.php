@@ -11,6 +11,7 @@ use App\Enums\UnitStatus;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewTenantNotification;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,32 +26,55 @@ class TenantController extends Controller
 	}
 
 	public function index(Request $request)
-	{
-		$query = Tenant::query()->with(['activeContracts.unit']);
+{
+    $query = Tenant::with(['contracts.unit']);
 
-		if ($request->filled('search')) {
-			$search = $request->search;
+    if ($request->filled('search')) {
+        $search = $request->search;
 
-			$query->where(function ($q) use ($search) {
-				$q->where('name', 'like', "%$search%")
-					->orWhere('id_number', 'like', "%$search%")
-					->orWhere('phone', 'like', "%$search%")
-					->orWhereHas('contracts', function ($q3) use ($search) {
-						$q3->where('status', 'active')
-							->whereDate('start_date', '<=', now())
-							->whereDate('end_date', '>=', now())
-							->whereHas('unit', function ($q4) use ($search) {
-								$q4->where('unit_number', 'like', "%$search%");
-							});
-					});
-			});
-		}
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%$search%")
+                ->orWhere('id_number', 'like', "%$search%")
+                ->orWhere('phone', 'like', "%$search%")
+                ->orWhereHas('contracts', function ($q3) use ($search) {
+                    $q3->whereHas('unit', function ($q4) use ($search) {
+                        $q4->where('unit_number', 'like', "%$search%");
+                    });
+                });
+        });
+    }
 
-		$tenants = $query->latest()->paginate(15);
+    // جلب كل المستأجرين مع العقود
+    $tenants = $query->get();
 
+    // ترتيبهم حسب أحدث نشاط
+    $tenants = $tenants->sortByDesc(function ($tenant) {
+        $latestContract = $tenant->contracts->sortByDesc('updated_at')->first();
+        $latestActivity = max(
+            $tenant->updated_at->timestamp,
+            optional($latestContract?->updated_at)->timestamp ?? 0
+        );
+        return $latestActivity;
+    });
 
-		return view('admin.tenants.index', compact('tenants'));
-	}
+    // تحويل إلى pagination يدويًا
+    $perPage = 15;
+    $page = request()->get('page', 1);
+    $items = $tenants->values();
+
+    $paginated = new LengthAwarePaginator(
+        $items->forPage($page, $perPage),
+        $items->count(),
+        $perPage,
+        $page,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    return view('admin.tenants.index', [
+        'tenants' => $paginated
+    ]);
+}
+
 
 
 	public function create()
@@ -108,6 +132,8 @@ class TenantController extends Controller
     // إشعار للمستخدمين بصلاحية تنبيه
     $notifiables = User::permission('notify.tenants.create')->get();
     Notification::send($notifiables, new NewTenantNotification($tenant->name));
+	
+    log_action('👤 تم إضافة مستأجر جديد: ' . $tenant->name . ' - رقم الهاتف: ' . $tenant->phone);
 
     return redirect()->route('admin.tenants.index')->with('success', 'تم إضافة المستأجر بنجاح');
 }
@@ -187,6 +213,7 @@ class TenantController extends Controller
 	if ($request->tenant_status === 'active' && $request->filled('unit_id')) {
 		Unit::where('id', $request->unit_id)->update(['status' => 'occupied']);
 	}
+    log_action('👤 تم تعديل بيانات المستأجر: ' . $tenant->name);
 
 	return redirect()->route('admin.tenants.index')->with('success', 'تم تعديل بيانات المستأجر');
 }

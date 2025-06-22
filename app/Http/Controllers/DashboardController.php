@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     $user = auth()->user();
 
-    // هنا من غير شرط الرول لأننا تأكدنا إنه technician فعلاً
+    
     $requestCount = \App\Models\MaintenanceRequest::where('assigned_worker_id', $user->id)->count();
 
     return view('dashboard', compact('requestCount'));

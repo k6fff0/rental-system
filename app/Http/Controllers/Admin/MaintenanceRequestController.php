@@ -73,9 +73,10 @@ class MaintenanceRequestController extends Controller
     //-------------------------------------------------------------------------------------------------------------------------------------------
 
 
-  public function create()
+public function create()
 {
-    // ✅ لم نعد نحتاج المباني والوحدات في الصفحة
+    // ✅ جلب المباني للمبنى-only select
+    $buildings = \App\Models\Building::orderBy('name')->get();
 
     // جلب التخصصات الفرعية مع التخصص الرئيسي
     $subSpecialties = Specialty::subtasks()
@@ -89,10 +90,12 @@ class MaintenanceRequestController extends Controller
         ->get();
 
     return view('admin.maintenance_requests.create', compact(
+        'buildings',         // ✅ أضفنا ده
         'subSpecialties',
         'technicians'
     ));
 }
+
 
 
     //-------------------------------------------------------------------------------------------------------------------------------------------
@@ -107,7 +110,9 @@ class MaintenanceRequestController extends Controller
  public function store(Request $request)
 {
     $request->validate([
-        'unit_id'          => 'required|exists:units,id',
+            'request_type' => 'required|in:unit,building',
+    'unit_id'      => 'required_if:request_type,unit|nullable|exists:units,id',
+    'building_id'  => 'required_if:request_type,building|nullable|exists:buildings,id',
         'sub_specialty_id' => 'required|exists:specialties,id',
         'description'      => 'nullable|string',
         'image'            => 'nullable|image|max:20480',
@@ -127,23 +132,24 @@ class MaintenanceRequestController extends Controller
         return back()->with('error', 'يوجد بلاغ جاري لهذا العطل في هذه الوحدة بالفعل.');
     }
 
-    $unit = Unit::with('latestContract.tenant')->find($request->unit_id);
+    $unit = $request->unit_id ? Unit::with('latestContract.tenant')->find($request->unit_id) : null;
 
-    $data = $request->only([
-        'unit_id',
-        'sub_specialty_id',
-        'description',
-    ]);
-    $data['building_id'] = $unit->building_id;
-    $data['extra_phone'] = $request->input('extra_phone');
-    $data['is_whatsapp'] = $request->boolean('is_whatsapp');
-    $data['is_emergency'] = $request->boolean('is_emergency');
-    $data['created_by'] = auth()->id();
-    $data['tenant_id'] = $unit->latestContract?->tenant?->id;
+  $data = [
+    'unit_id'          => $unit?->id,
+    'sub_specialty_id' => $request->sub_specialty_id,
+    'description'      => $request->description,
+    'building_id'      => $request->building_id ?? $unit?->building_id,
+    'extra_phone'      => $request->input('extra_phone'),
+    'is_whatsapp'      => $request->boolean('is_whatsapp'),
+    'is_emergency'     => $request->boolean('is_emergency'),
+    'created_by'       => auth()->id(),
+    'tenant_id'        => $unit?->latestContract?->tenant?->id,
+];
 
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('maintenance_images', 'public');
-    }
+// رفع الصورة إن وُجدت
+if ($request->hasFile('image')) {
+    $data['image'] = $request->file('image')->store('maintenance_images', 'public');
+}
 
     // 🔊 تسجيل صوتي
     if ($request->filled('audio_data')) {
@@ -469,23 +475,27 @@ class MaintenanceRequestController extends Controller
 
     //-------------------------------------------------------------------------------------------------------------------------------------------
 
-    public function myRequests(Request $request)
-    {
-        $technicianId = auth()->id();
+   public function myRequests(Request $request)
+{
+    $technicianId = auth()->id();
 
-        $requests = \App\Models\MaintenanceRequest::with(['unit.building', 'subSpecialty'])
-            ->where('assigned_worker_id', $technicianId)
-            ->whereNotIn('status', ['completed', 'rejected'])
-            ->when($request->building_id, fn($q) => $q->where('building_id', $request->building_id))
-            ->when($request->status, fn($q) => $q->where('status', $request->status))
-			->orderByDesc('is_emergency')
-            ->orderBy('updated_at', 'desc')
-            ->paginate(20);
+    $requests = \App\Models\MaintenanceRequest::with([
+            'unit.building',
+            'building',
+            'subSpecialty'
+        ])
+        ->where('assigned_worker_id', $technicianId)
+        ->whereNotIn('status', ['completed', 'rejected'])
+        ->when($request->building_id, fn($q) => $q->where('building_id', $request->building_id))
+        ->when($request->status, fn($q) => $q->where('status', $request->status))
+        ->orderByDesc('is_emergency')
+        ->orderBy('updated_at', 'desc')
+        ->paginate(20);
 
-        $buildings = \App\Models\Building::all(); // علشان نعبي السلكت في الفيو
+    $buildings = \App\Models\Building::all();
 
-        return view('admin.technicians.maintenance.index', compact('requests', 'buildings'));
-    }
+    return view('admin.technicians.maintenance.index', compact('requests', 'buildings'));
+}
 
     //-------------------------------------------------------------------------------------------------------------------------------------------
 

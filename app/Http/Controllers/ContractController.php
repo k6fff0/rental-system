@@ -83,7 +83,7 @@ class ContractController extends Controller
         $query->whereDate('end_date', '<=', $request->to_date);
     }
 
-    $contracts = $query->latest()->paginate(10);
+    $contracts = $query->orderBy('updated_at', 'desc')->paginate(10);
 
     // إحصائيات الكروت
     $activeCount = Contract::whereDate('end_date', '>', now())
@@ -102,7 +102,7 @@ class ContractController extends Controller
         })->count();
 
     $contractTypes = ContractType::orderBy('updated_at', 'desc')->get();
-
+   
     return view('admin.contracts.index', compact(
         'contracts',
         'activeCount',
@@ -131,7 +131,7 @@ class ContractController extends Controller
         'end_date'      => 'required|date|after:start_date',
         'rent_amount'   => 'required|numeric',
         'notes'         => 'nullable|string',
-        'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+        'contract_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:22048',
     ]);
 
     $tenant = Tenant::findOrFail($request->tenant_id);
@@ -178,7 +178,9 @@ class ContractController extends Controller
     if ($request->hasFile('contract_file')) {
         $data['contract_file'] = $request->file('contract_file')->store('contracts', 'public');
     }
-
+if ($request->hasFile('contract_image')) {
+    $data['contract_image'] = $request->file('contract_image')->store('contract_images', 'public');
+}
     // ✅ إنشاء العقد
     $contract = Contract::create($data);
 
@@ -205,6 +207,8 @@ class ContractController extends Controller
         ->whereIn('status', ['tentative', 'confirmed']) // لو في غيره
         ->where('id', '!=', $booking?->id)
         ->update(['status' => 'cancelled_due_to_rent']);
+		
+        log_action("📄 تم توقيع عقد إيجار مع المستأجر: {$contract->tenant->name} للوحدة رقم {$contract->unit->unit_number} بمبلغ {$contract->rent_amount} من {$contract->start_date->format('Y-m-d')} إلى {$contract->end_date->format('Y-m-d')}");
 
     return redirect()->route('admin.contracts.index')
         ->with('success', __('messages.contract_created_successfully'));
@@ -284,6 +288,8 @@ class ContractController extends Controller
         } else {
             $contract->unit()->update(['status' => UnitStatus::OCCUPIED->value]);
         }
+		
+        log_action("✏️ تم تعديل عقد الإيجار للوحدة رقم {$contract->unit->unit_number} - المستأجر: {$contract->tenant->name}");
 
         return redirect()->route('admin.contracts.index')
             ->with('success', __('messages.contract_updated_successfully'));

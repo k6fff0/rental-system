@@ -42,45 +42,45 @@ class UnitController extends Controller
     //-----------------------------------------------------------------------------------------------------------------------
 
 
-    public function index(Request $request)
-    {
-        $query = Unit::with(['building', 'contracts.tenant', 'latestContract']);
+   public function index(Request $request)
+{
+    $query = Unit::with(['building', 'contracts.tenant', 'latestContract'])
+        ->orderByDesc('updated_at'); // ✅ الترتيب حسب آخر تحديث
 
-        if ($request->filled('building_id')) {
-            $query->where('building_id', $request->building_id);
-        }
-
-        if ($request->filled('search')) {
-            $query->where('unit_number', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->filled('unit_type')) {
-            $query->where('unit_type', $request->unit_type);
-        }
-
-        // ✅ جلب النتائج مع pagination فعلي
-        $units = $query->paginate(10);
-
-        // ✅ أضف الحقول المساعدة لكل عنصر من غير ما تغيّر نوع العنصر
-        $units->getCollection()->transform(function ($unit) {
-            $contract = $unit->latestContract;
-
-            $unit->actual_rent = ($contract && $contract->status !== 'terminated')
-                ? $contract->rent_amount
-                : $unit->rent_price;
-
-            $unit->has_discount = $unit->actual_rent != $unit->rent_price;
-            $unit->contract_status = $contract?->status;
-            $unit->building_name = optional($unit->building)->name;
-
-            return $unit;
-        });
-
-        $buildings = Building::all();
-        $unitTypes = UnitType::values();
-
-        return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
+    // ✅ فلترة لو المستخدم اختارها
+    if ($request->filled('building_id')) {
+        $query->where('building_id', $request->building_id);
     }
+
+    if ($request->filled('search')) {
+        $query->where('unit_number', 'like', '%' . $request->search . '%');
+    }
+
+    if ($request->filled('unit_type')) {
+        $query->where('unit_type', $request->unit_type);
+    }
+
+    $units = $query->paginate(10);
+
+    $units->getCollection()->transform(function ($unit) {
+        $contract = $unit->latestContract;
+
+        $unit->actual_rent = ($contract && $contract->status !== 'terminated')
+            ? $contract->rent_amount
+            : $unit->rent_price;
+
+        $unit->has_discount = $unit->actual_rent != $unit->rent_price;
+        $unit->contract_status = $contract?->status;
+        $unit->building_name = optional($unit->building)->name;
+
+        return $unit;
+    });
+
+    $buildings = Building::all();
+    $unitTypes = UnitType::values();
+
+    return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
+}
 
     //-----------------------------------------------------------------------------------------------------------------------
 
@@ -122,6 +122,7 @@ class UnitController extends Controller
             $filename = ImageService::uploadAndOptimize($request->file('image'), 'units');
             $unit->images()->create(['image_path' => $filename]);
         }
+        log_action("🏠 تم إضافة وحدة جديدة رقم {$unit->unit_number} في مبنى: {$unit->building->name}");
 
         return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
     }
@@ -176,6 +177,8 @@ class UnitController extends Controller
 
         // ✅ التحديث
         $unit->update($validated);
+		
+        log_action('🏠 تم تعديل بيانات الغرفة: ' . $unit->unit_number . ' - ' . $unit->building->name);
 
         return redirect()
             ->route('admin.units.index')
