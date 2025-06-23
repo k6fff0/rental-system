@@ -22,6 +22,7 @@ return [
     'new' => 'New',
     'in_progress' => 'In Progress',
     'completed' => 'Completed',
+	'new_buildings' => 'New Buildings This Month',
     'rejected' => 'Rejected',
     'messages.home_page' => 'Home Page',
     'add_another_phone' => 'Add another number',

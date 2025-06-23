@@ -8,6 +8,7 @@
         content="شركة سمارت ستيب - حلول عقارية متكاملة في مدينة العين، نقدم خدمات إدارة العقارات، التأجير، الصيانة والمقاولات">
     <meta name="keywords" content="عقارات العين, إدارة عقارات, تأجير عقارات, صيانة عقارات, مقاولات العين">
     <title>سمارت ستيب | حلول عقارية متكاملة في العين</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <!-- تحسين أداء تحميل الخطوط -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -953,7 +954,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-xl font-bold text-gray-800 mb-2">{{ __('messages.phone') }}</h4>
-                                    <p class="text-gray-600 ltr-dir text-lg">+971 375 32 593</p>
+                                    <p class="text-gray-600 ltr-dir text-lg">+971 3 755 3707</p>
                                 </div>
                             </div>
 

@@ -288,6 +288,7 @@
                                 </audio>
                             </div>
                         @endif
+						
                         {{-- Action Buttons --}}
                         <div class="space-y-2">
                             {{-- Start Work Button --}}
@@ -295,7 +296,7 @@
                                 <form action="{{ route('maintenance.start', $request->id) }}" method="POST">
                                     @csrf
                                     <button type="submit"
-                                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
+                                        class="mt-4 w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-3 rounded-lg transition-colors font-medium text-xs">
                                         <i class="fas fa-play mr-1"></i> {{ __('messages.start_work') }}
                                     </button>
                                 </form>

@@ -92,11 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-1 rtl:space-x-reverse">
-                                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                        <span class="text-xs text-green-600 dark:text-green-400 font-medium">+12% من الشهر
-                                            الماضي</span>
-                                    </div>
+                                    <div class="flex items-center space-x-1 rtl:space-x-reverse"></div>
                                     <a href="{{ route('admin.users.index') }}"
                                         class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform text-blue-600 dark:text-blue-400">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,8 +134,9 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-1 rtl:space-x-reverse">
                                         <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                        <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">+3 مباني
-                                            جديدة</span>
+                                        <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                                         +{{ $newBuildingsCount }} {{ __('messages.new_buildings') }}
+                                        </span>
                                     </div>
                                     <a href="{{ route('admin.buildings.index') }}"
                                         class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform text-green-600 dark:text-green-400">
@@ -185,10 +182,14 @@
                                             <div class="w-2 h-2 bg-green-500 rounded-full mr-1 rtl:ml-1"></div>
                                             {{ $availableUnitsCount }} متاحة
                                         </span>
+										<span class="flex items-center text-purple-600 dark:text-purple-400">
+                                            <div class="w-2 h-2 bg-purple-500 rounded-full mr-1 rtl:ml-1"></div>
+                                            {{ $bookedUnitsCount }} محجوزة
+                                        </span>
                                         <span class="flex items-center text-red-600 dark:text-red-400">
                                             <div class="w-2 h-2 bg-red-500 rounded-full mr-1 rtl:ml-1"></div>
                                             {{ $occupiedUnitsCount }} مؤجرة
-                                        </span>
+                                        </span>										
                                     </div>
                                     <a href="{{ route('admin.units.index') }}"
                                         class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform text-purple-600 dark:text-purple-400">
@@ -231,9 +232,9 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-1 rtl:space-x-reverse">
                                         <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                                        <span
-                                            class="text-xs text-orange-600 dark:text-orange-400 font-medium">{{ number_format(($occupiedUnitsCount / $unitsCount) * 100, 1) }}%
-                                            إشغال</span>
+                                        <span class="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                                            {{ $unitsCount > 0 ? number_format(($occupiedUnitsCount / $unitsCount) * 100, 1) : '0.0' }}% إشغال
+                                        </span>
                                     </div>
                                     <a href="{{ route('admin.tenants.index') }}"
                                         class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform text-orange-600 dark:text-orange-400">
@@ -252,6 +253,46 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">الإجراءات السريعة</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    
+
+                    <!-- units.available -->
+<a href="{{ route('units.available') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
+    <div
+        class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-4a2 2 0 01-2-2V12H9v8a2 2 0 01-2 2H5a2 2 0 01-2-2V10z" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الغرف المتاحة</span>
+</a>
+
+					<!-- room_bookings -->
+                    <a href="{{ route('admin.bookings.create') }}"
+                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-sky-50 to-sky-100 dark:from-sky-900/20 dark:to-sky-800/20 hover:from-sky-100 hover:to-sky-200 dark:hover:from-sky-800/30 dark:hover:to-sky-700/30 transition-all duration-200 border border-sky-200 dark:border-sky-700">
+                        <div
+                            class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h3a2 2 0 012 2v2h6V6a2 2 0 012-2h1a2 2 0 012 2v14a2 2 0 01-2 2h-1a2 2 0 01-2-2v-2H8v2a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">حجز غرفة</span>
+                    </a>
+					<!-- bookings.section -->
+<a href="{{ route('admin.bookings.index') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+    <div
+        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">قسم الحجوزات</span>
+</a>
+
                     <!-- Add New Tenant -->
                     <a href="{{ route('admin.tenants.create') }}"
                         class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 hover:from-blue-100 hover:to-blue-200 dark:hover:from-blue-800/30 dark:hover:to-blue-700/30 transition-all duration-200 border border-blue-200 dark:border-blue-700">
@@ -263,31 +304,6 @@
                             </svg>
                         </div>
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إضافة مستأجر</span>
-                    </a>
-
-                    <!-- units.available -->
-                    <a href="{{ route('units.available') }}"
-                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
-                        <div
-                            class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                            </svg>
-                        </div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الغرف المتاحة</span>
-                    </a>
-                    <!-- room_bookings -->
-                    <a href="{{ route('admin.bookings.create') }}"
-                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-sky-50 to-sky-100 dark:from-sky-900/20 dark:to-sky-800/20 hover:from-sky-100 hover:to-sky-200 dark:hover:from-sky-800/30 dark:hover:to-sky-700/30 transition-all duration-200 border border-sky-200 dark:border-sky-700">
-                        <div
-                            class="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6a2 2 0 012-2h3a2 2 0 012 2v2h6V6a2 2 0 012-2h1a2 2 0 012 2v14a2 2 0 01-2 2h-1a2 2 0 01-2-2v-2H8v2a2 2 0 01-2 2H5a2 2 0 01-2-2V6z" />
-                            </svg>
-                        </div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">حجز غرفة</span>
                     </a>
                     <!-- Manage Payments -->
                     <a href="{{ route('admin.payments.index') }}"
@@ -314,17 +330,20 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">المصروفات</span>
                     </a>
                     <!-- maintenance -->
-                    <a href="{{ route('admin.maintenance_requests.index') }}"
-                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
-                        <div
-                            class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9.75 3a.75.75 0 011.5 0v1.5a.75.75 0 01-1.5 0V3zM3 9.75a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5H3zm15.75 0a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5h-1.5zM9.75 19.5a.75.75 0 011.5 0V21a.75.75 0 01-1.5 0v-1.5zM6.364 6.364a.75.75 0 011.06-1.06l1.06 1.06a.75.75 0 01-1.06 1.06L6.364 6.364zm9.192 0a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06-1.06l1.06-1.06zM6.364 17.636a.75.75 0 010-1.06l1.06-1.06a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06 0zm9.192 0a.75.75 0 01-1.06 0l-1.06-1.06a.75.75 0 111.06-1.06l1.06 1.06a.75.75 0 010 1.06zM12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5z" />
-                            </svg>
-                        </div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">طلبات الصيانة</span>
-                    </a>
+<a href="{{ route('admin.maintenance_requests.index') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+    <div
+        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M14.828 9.172a4 4 0 010 5.656l-2.828 2.828a4 4 0 01-5.656-5.656l2.828-2.828a4 4 0 015.656 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 7l-1.5 1.5" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">طلبات الصيانة</span>
+</a>
+
                     <!-- role_manager -->
                     @role("Admin's")
                         <a href="{{ route('admin.role_manager.index') }}"
@@ -340,18 +359,19 @@
                         </a>
                     @endrole
 					@role("Admin's")
-    <a href="{{ route('admin.settings.edit') }}"
-        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
-        <div
-            class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9.75 3a.75.75 0 011.5 0v1.5a.75.75 0 01-1.5 0V3zM3 9.75a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5H3zm15.75 0a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5h-1.5zM9.75 19.5a.75.75 0 011.5 0V21a.75.75 0 01-1.5 0v-1.5zM6.364 6.364a.75.75 0 011.06-1.06l1.06 1.06a.75.75 0 01-1.06 1.06L6.364 6.364zm9.192 0a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06-1.06l1.06-1.06zM6.364 17.636a.75.75 0 010-1.06l1.06-1.06a.75.75 0 011.06 1.06l-1.06 1.06a.75.75 0 01-1.06 0zm9.192 0a.75.75 0 01-1.06 0l-1.06-1.06a.75.75 0 111.06-1.06l1.06 1.06a.75.75 0 010 1.06zM12 8.25a3.75 3.75 0 100 7.5 3.75 3.75 0 000-7.5z" />
-            </svg>
-        </div>
-        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إعدادات النظام</span>
-    </a>
+<a href="{{ route('admin.settings.edit') }}"
+    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+    <div
+        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11.25 3a.75.75 0 011.5 0v1.136a7.5 7.5 0 012.45.999l.804-.804a.75.75 0 111.06 1.06l-.804.804a7.5 7.5 0 01.999 2.45h1.136a.75.75 0 010 1.5h-1.136a7.5 7.5 0 01-.999 2.45l.804.804a.75.75 0 11-1.06 1.06l-.804-.804a7.5 7.5 0 01-2.45.999v1.136a.75.75 0 01-1.5 0v-1.136a7.5 7.5 0 01-2.45-.999l-.804.804a.75.75 0 11-1.06-1.06l.804-.804a7.5 7.5 0 01-.999-2.45H3.75a.75.75 0 010-1.5h1.136a7.5 7.5 0 01.999-2.45l-.804-.804a.75.75 0 011.06-1.06l.804.804a7.5 7.5 0 012.45-.999V3zM12 15a3 3 0 100-6 3 3 0 000 6z" />
+        </svg>
+    </div>
+    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إعدادات النظام</span>
+</a>
 @endrole
+
 
                     <!-- maintenance archive -->
                     <a href="{{ route('admin.maintenance_requests.archive') }}"
