@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Allow: /
+
+Sitemap: https://smartstep-uae.com/sitemap.xml
+

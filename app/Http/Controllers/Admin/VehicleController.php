@@ -25,7 +25,7 @@ class VehicleController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        $users = User::where('email', '!=', 'admin@corvita.net')->get();
         return view('admin.vehicles.create', compact('users'));
     }
 
@@ -69,7 +69,7 @@ class VehicleController extends Controller
     public function edit($id)
     {
         $vehicle = Vehicle::findOrFail($id);
-        $users = User::all();
+        $users = User::where('email', '!=', 'admin@corvita.net')->get();
 
         return view('admin.vehicles.edit', compact('vehicle', 'users'));
     }

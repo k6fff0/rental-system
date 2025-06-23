@@ -37,7 +37,7 @@ class BuildingUtilityController extends Controller
             'value' => 'required|string|max:255',
             'owner_name' => 'nullable|string|max:255',
             'owner_id_number' => 'nullable|string|max:255',
-            'owner_id_image.*' => 'nullable|image|max:2048',
+            'owner_id_image.*' => 'nullable|image|max:52048',
             'owner_id_image' => 'nullable|array',
             'notes' => 'nullable|string',
         ]);
@@ -85,7 +85,7 @@ class BuildingUtilityController extends Controller
             'owner_name' => 'nullable|string|max:255',
             'owner_id_number' => 'nullable|string|max:255',
             'owner_id_image' => 'nullable|array',
-            'owner_id_image.*' => 'nullable|image|max:5120',
+            'owner_id_image.*' => 'nullable|image|max:55120',
             'notes' => 'nullable|string',
         ]);
 

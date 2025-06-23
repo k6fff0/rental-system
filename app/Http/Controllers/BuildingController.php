@@ -77,7 +77,7 @@ class BuildingController extends Controller
             $data['image'] = $request->file('image')->store('buildings', 'public');
         }
 
-        Building::create($data);
+        $building = Building::create($data);
 
 
         log_action("🏢 تم إضافة مبنى جديد: {$building->name}");

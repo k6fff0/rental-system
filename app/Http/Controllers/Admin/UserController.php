@@ -19,7 +19,7 @@ class UserController extends Controller
         $this->middleware('permission:view users')->only(['index', 'show']);
         $this->middleware('permission:create users')->only(['create', 'store']);
         $this->middleware('permission:edit users')->only(['edit', 'update']);
-        $this->middleware('permission:delete users')->only(['destroy']);
+        //$this->middleware('permission:delete users')->only(['destroy']);
     }
 
 
@@ -237,7 +237,7 @@ class UserController extends Controller
                 ->with('error', __('messages.cannot_delete_super_admin'));
         }
 
-        $user->delete(); // soft delete
+        $user->delete();
 
         return redirect()->route('admin.users.index')
             ->with('success', __('messages.user_deleted_successfully'));

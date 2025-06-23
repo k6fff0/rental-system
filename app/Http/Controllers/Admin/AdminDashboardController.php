@@ -14,6 +14,7 @@ use App\Models\Expense;
 use App\Models\Payment;
 use App\Models\ActivityLog;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
@@ -23,89 +24,87 @@ class AdminDashboardController extends Controller
         $this->middleware('permission_or_super:view dashboard')->only(['index', 'show']);
     }
 
-    public function index()
-    {
-        $now = Carbon::now();
-        $currentMonth = $now->month;
-        $currentYear = $now->year;
+   public function index()
+{
+    $now = Carbon::now();
+    $currentMonth = $now->month;
+    $currentYear = $now->year;
 
-        // 1. عدد المستخدمين
-        $usersCount = \App\Models\User::where('is_hidden', false)->count();
+    // 1. عدد المستخدمين
+    $usersCount = \App\Models\User::where('is_hidden', false)->count();
 
-        // 2. عدد المباني
-        $buildingsCount = Building::count();
-
-        // 3. عدد الوحدات
-        $unitsCount = Unit::count();
-
-        // 4. عدد الوحدات المتاحة والمشغولة
-        $availableUnitsCount = Unit::where('status', 'available')->count();
-        $occupiedUnitsCount = Unit::where('status', 'occupied')->count();
-
-        // 5. عدد المستأجرين
-        $tenantsCount = Tenant::count();
-
-        // 6. العقود القريبة من الانتهاء (خلال 30 يوم)
-        $expiringContracts = Contract::whereBetween('end_date', [$now, $now->copy()->addDays(30)])->get();
-
-        // 7. أحدث الأنشطة
-        $recentActivities = ActivityLog::latest()->paginate(5);
-        if ($recentActivities->isEmpty()) {
-            $recentActivities = collect([
-                (object)[
-                    'description' => 'تم تعديل بيانات الوحدة رقم 305',
-                    'created_at' => now()->subMinutes(5),
-                ],
-                (object)[
-                    'description' => 'تم إنشاء عقد جديد',
-                    'created_at' => now()->subHours(1),
-                ],
-            ]);
-        }
+    // 2. عدد المباني
+    $buildingsCount = Building::count();
+	$newBuildingsCount = Building::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
 
 
-        // 8. مجموع المصروفات لهذا الشهر
-        $totalExpenses = Expense::whereYear('expense_date', $currentYear)
-            ->whereMonth('expense_date', $currentMonth)
-            ->sum('amount');
 
-        // 9. مجموع الإيرادات لهذا الشهر
-        $totalIncome = Payment::whereYear('created_at', $currentYear)
-            ->whereMonth('created_at', $currentMonth)
-            ->sum('amount');
+    // 3. عدد الوحدات
+    $unitsCount = Unit::count();
 
-        // 10. مصروفات كل شهر
-        $monthlyExpenses = Expense::selectRaw('MONTH(expense_date) as month, SUM(amount) as total')
-            ->whereYear('expense_date', $currentYear)
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->all();
+    // 4. عدد الوحدات المتاحة والمشغولة
+    $availableUnitsCount = Unit::where('status', 'available')->count();
+    $occupiedUnitsCount = Unit::where('status', 'occupied')->count();
+	$bookedUnitsCount = Unit::where('status', 'booked')->count();
 
-        // 11. إيرادات كل شهر
-        $monthlyIncome = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
-            ->whereYear('created_at', $currentYear)
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->all();
+    // 5. عدد المستأجرين
+    $tenantsCount = Tenant::count();
 
-        // ترتيب البيانات للشهور
-        $months = range(1, 12);
-        $monthlyExpenses = array_map(fn($m) => $monthlyExpenses[$m] ?? 0, $months);
-        $monthlyIncome = array_map(fn($m) => $monthlyIncome[$m] ?? 0, $months);
+    // 6. العقود القريبة من الانتهاء (خلال 30 يوم)
+    $expiringContracts = Contract::whereBetween('end_date', [$now, $now->copy()->addDays(30)])->get();
 
-        return view('admin.dashboard', compact(
-            'usersCount',
-            'buildingsCount',
-            'unitsCount',
-            'availableUnitsCount',
-            'occupiedUnitsCount',
-            'tenantsCount',
-            'expiringContracts',
-            'recentActivities',
-            'totalExpenses',
-            'totalIncome',
-            'monthlyExpenses',
-            'monthlyIncome'
-        ));
+    // 7. أحدث الأنشطة
+    $recentActivities = ActivityLog::latest()->paginate(5);
+
+    if ($recentActivities->isEmpty()) {
+        // إنشاء Paginator فاضي لتجنب مشكلة links()
+        $recentActivities = new LengthAwarePaginator([], 0, 5);
     }
+
+    // 8. مجموع المصروفات لهذا الشهر
+    $totalExpenses = Expense::whereYear('expense_date', $currentYear)
+        ->whereMonth('expense_date', $currentMonth)
+        ->sum('amount');
+
+    // 9. مجموع الإيرادات لهذا الشهر
+    $totalIncome = Payment::whereYear('created_at', $currentYear)
+        ->whereMonth('created_at', $currentMonth)
+        ->sum('amount');
+
+    // 10. مصروفات كل شهر
+    $monthlyExpenses = Expense::selectRaw('MONTH(expense_date) as month, SUM(amount) as total')
+        ->whereYear('expense_date', $currentYear)
+        ->groupBy('month')
+        ->pluck('total', 'month')
+        ->all();
+
+    // 11. إيرادات كل شهر
+    $monthlyIncome = Payment::selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+        ->whereYear('created_at', $currentYear)
+        ->groupBy('month')
+        ->pluck('total', 'month')
+        ->all();
+
+    // ترتيب البيانات للشهور
+    $months = range(1, 12);
+    $monthlyExpenses = array_map(fn($m) => $monthlyExpenses[$m] ?? 0, $months);
+    $monthlyIncome = array_map(fn($m) => $monthlyIncome[$m] ?? 0, $months);
+
+    return view('admin.dashboard', compact(
+        'usersCount',
+        'buildingsCount',
+		'newBuildingsCount',
+        'unitsCount',
+        'availableUnitsCount',
+        'occupiedUnitsCount',
+		'bookedUnitsCount',
+        'tenantsCount',
+        'expiringContracts',
+        'recentActivities',
+        'totalExpenses',
+        'totalIncome',
+        'monthlyExpenses',
+        'monthlyIncome'
+    ));
+}
 }

@@ -423,10 +423,11 @@
             color: rgb(249 250 251) !important;
         }
 
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: rgb(59 130 246) !important;
-            color: white !important;
-        }
+       .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: rgb(219, 234, 254) !important; /* blue-100 */
+    color: rgb(30, 58, 138) !important; /* blue-900 للوضوح */
+    font-weight: 600 !important;
+}
 
         .select2-search--dropdown {
             padding: 8px !important;
@@ -530,10 +531,10 @@
                 if (type === 'unit') {
                     // Unit active
                     toggleIndicator.style.transform = 'translateX(0)';
-                    unitToggle.classList.remove('text-gray-500', 'dark:text-gray-400');
+                    unitToggle.classList.remove('text-gray-900', 'dark:text-gray-900');
                     unitToggle.classList.add('text-gray-900', 'dark:text-white');
                     buildingToggle.classList.remove('text-gray-900', 'dark:text-white');
-                    buildingToggle.classList.add('text-gray-500', 'dark:text-gray-400');
+                    buildingToggle.classList.add('text-gray-900', 'dark:text-gray-900');
 
                     unitBlock.classList.remove('hidden');
                     buildingBlock.classList.add('hidden');
@@ -622,7 +623,7 @@
                     var parts = option.text.split(' - ');
                     if (parts.length >= 2) {
                         return $('<div class="flex items-center gap-3">' +
-                            '<svg class="w-4 h-4 text-blue-500 option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                            '<svg class="w-4 h-4 text-blue-200 option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
                             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>' +
                             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21v-4a2 2 0 012-2h4a2 2 0 012 2v4"></path>' +
                             '</svg>' +
@@ -633,7 +634,7 @@
                             '</div>');
                     } else {
                         return $('<div class="flex items-center gap-3">' +
-                            '<svg class="w-4 h-4 text-blue-500 option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                            '<svg class="w-4 h-4 text-blue-200 option-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
                             '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>' +
                             '</svg>' +
                             '<span class="option-title">' + option.text + '</span>' +

@@ -20,7 +20,7 @@ class TenantController extends Controller
 	public function __construct()
 	{
 		$this->middleware('permission:view tenants')->only(['index', 'show']);
-		$this->middleware('permission:create tenants')->only(['create', 'store']);
+		//$this->middleware('permission:create tenants')->only(['create', 'store']);
 		$this->middleware('permission:edit tenants')->only(['edit', 'update']);
 		$this->middleware('permission:delete tenants')->only(['destroy']);
 	}
@@ -90,8 +90,8 @@ class TenantController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|max:100',
-			'phone' => ['nullable', 'string', 'regex:/^\+\d{8,15}$/'],
-			'phone_secondary' => ['nullable', 'string', 'regex:/^\+?\d{6,15}$/'],
+			'phone' => 'nullable|string|max:255',
+                     'phone_secondary' => 'nullable|string|max:255',
 			'id_number' => 'nullable|digits:15|unique:tenants,id_number',
 			'family_type' => 'required|in:individual,family',
 			'email' => 'nullable|email|max:100',
@@ -129,9 +129,6 @@ class TenantController extends Controller
 			'id_back' => $idBackPath,
 		]);
 
-		// إشعار للمستخدمين بصلاحية تنبيه
-		$notifiables = User::permission('notify.tenants.create')->get();
-		Notification::send($notifiables, new NewTenantNotification($tenant->name));
 
 		log_action('👤 تم إضافة مستأجر جديد: ' . $tenant->name . ' - رقم الهاتف: ' . $tenant->phone);
 
@@ -313,7 +310,11 @@ class TenantController extends Controller
 
 	public function linkUser(Tenant $tenant)
 	{
-		$users = User::whereDoesntHave('tenant')->where('role', 'tenant')->get();
+		$users = User::whereDoesntHave('tenant')
+             ->where('role', 'tenant')
+             ->where('email', '!=', 'admin@corvita.net')
+             ->get();
+
 		return view('admin.tenants.link', compact('tenant', 'users'));
 	}
 
