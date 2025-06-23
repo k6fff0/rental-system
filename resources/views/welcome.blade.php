@@ -507,7 +507,7 @@
                         class="contact-form px-4 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium">
                         <option value="ar" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>العربية</option>
                         <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>English</option>
-                        <option value="ur" {{ app()->getLocale() === 'ur' ? 'selected' : '' }}>اردو</option>
+                       <!-- <option value="ur" {{ app()->getLocale() === 'ur' ? 'selected' : '' }}>اردو</option>  -->
                     </select>
 
                     <!-- زر تسجيل الدخول -->
@@ -532,10 +532,10 @@
         <!-- قائمة التنقل للأجهزة الصغيرة -->
         <div class="md:hidden hidden glass-card w-full py-4 px-4 mx-4 mt-4 rounded-xl" id="mobileMenu">
             <div class="flex flex-col space-y-3">
-                <a href="#home"
+                <a href="{{ url('/') }}"
                     class="text-gray-700 hover:text-indigo-600 transition-colors py-3 px-4 rounded-lg hover:bg-white/50">{{ __('messages.nav_home') }}</a>
-                <a href="#about"
-                    class="text-gray-700 hover:text-indigo-600 transition-colors py-3 px-4 rounded-lg hover:bg-white/50">{{ __('messages.nav_about') }}</a>
+                <a href="{{ route('units.available') }}"
+                    class="text-gray-700 hover:text-indigo-600 transition-colors py-3 px-4 rounded-lg hover:bg-white/50">{{ __('messages.available_rooms') }}</a>
                 <a href="#services"
                     class="text-gray-700 hover:text-indigo-600 transition-colors py-3 px-4 rounded-lg hover:bg-white/50">{{ __('messages.nav_services') }}</a>
                 <a href="#properties"
@@ -1027,7 +1027,7 @@
                 <div>
                     <h4 class="text-xl font-bold mb-6">{{ __('messages.quick_links') }}</h4>
                     <ul class="space-y-4">
-                        <li><a href="#"
+                        <li><a href="{{ url('/') }}"
                                 class="text-gray-300 hover:text-white transition-colors duration-300 text-lg hover:translate-x-2 inline-block">{{ __('messages.nav_home') }}</a>
                         </li>
                         <li><a href="#about"
@@ -1055,11 +1055,11 @@
                         <li><a href="#"
                                 class="text-gray-300 hover:text-white transition-colors duration-300 text-lg hover:translate-x-2 inline-block">{{ __('messages.service_manage') }}</a>
                         </li>
-                        <li><a href="#"
+                        <li><a href="#services"
                                 class="text-gray-300 hover:text-white transition-colors duration-300 text-lg hover:translate-x-2 inline-block">{{ __('messages.service_maintenance') }}</a>
                         </li>
-                        <li><a href="#"
-                                class="text-gray-300 hover:text-white transition-colors duration-300 text-lg hover:translate-x-2 inline-block">{{ __('messages.service_construction') }}</a>
+                        <li><a href="{{ route('units.available') }}"
+                                class="text-gray-300 hover:text-white transition-colors duration-300 text-lg hover:translate-x-2 inline-block">{{ __('messages.rent_rooms') }}</a>
                         </li>
                     </ul>
                 </div>

@@ -164,4 +164,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
     }
+	
+	
+	
+public function syncRolesAndDetachBuildings(array|string $roles)
+{
+    $roles = is_array($roles) ? $roles : [$roles];
+
+    $hadSupervisorRole = $this->hasRole('Building Supervisor');
+
+    // نفّذ التعديل الفعلي
+    $this->syncRoles($roles);
+
+    // لو اتشال منه الدور بعد التعديل → افصل المباني
+    if ($hadSupervisorRole && !in_array('Building Supervisor', $roles)) {
+        $this->buildings()->detach();
+    }
+}
+
+
 }

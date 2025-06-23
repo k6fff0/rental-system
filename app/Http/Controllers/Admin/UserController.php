@@ -184,10 +184,11 @@ class UserController extends Controller
         $user->save();
 
         if ($request->filled('role')) {
-            $user->syncRoles([$request->role]);
+           $user->syncRolesAndDetachBuildings([$request->role]);
         } else {
-            $user->syncRoles([]);
+           $user->syncRolesAndDetachBuildings([]);
         }
+
 
         $permissionNames = Permission::whereIn('id', $request->permissions ?? [])->pluck('name');
         $user->syncPermissions($permissionNames);

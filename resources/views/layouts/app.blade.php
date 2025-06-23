@@ -171,7 +171,7 @@
         @endisset
 
         {{-- ✅ محتوى الصفحة --}}
-        <main class="py-6 relative z-30">
+        <main class="py-1 relative z-30">
             @if (session('success'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 2000)"
                     class="max-w-4xl mx-auto mb-6 px-4 transition-opacity duration-500" x-transition:leave="opacity-0">
@@ -188,9 +188,9 @@
     </div>
     <footer class="bg-gray-100 dark:bg-gray-900 mt-10 border-t border-gray-200 dark:border-gray-700">
         <div class="border-t border-white/20 pt-8 text-center">
-            <p class="text-gray-300 text-lg">&copy; {{ __('messages.rights_reserved') }}</p>
+            <p class="text-gray-600 text-lg">&copy; {{ __('messages.rights_reserved') }}</p>
             <a href="https://wa.me/971503660507" target="_blank"
-                class="text-sm text-green-300 hover:text-green-400 underline">
+                class="text-sm text-blue-800 hover:text-gray-400 underline">
                 Developed by : Amr Mohammed
             </a>
         </div>
