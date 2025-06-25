@@ -228,11 +228,11 @@
             .responsive-padding {
                 padding: 6px;
             }
-            
+
             .header-container {
                 padding: 12px;
             }
-            
+
             .custom-textarea {
                 padding: 12px;
                 font-size: 0.75rem;
@@ -244,7 +244,7 @@
             .desktop-enhance {
                 max-width: 1200px;
             }
-            
+
             .custom-textarea {
                 font-size: 1rem;
                 padding: 24px;
@@ -253,9 +253,17 @@
 
         /* انيميشن للنسخ الناجح */
         @keyframes successPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .success-animation {
@@ -296,27 +304,34 @@
             </div>
 
             <!-- محتوى الغرف -->
-            <div class="content-box custom-scrollbar smooth-transition" style="height: calc(100vh - 240px); min-height: 400px;">
+            <div class="content-box custom-scrollbar smooth-transition"
+                style="height: calc(100vh - 240px); min-height: 400px;">
                 <textarea id="textContent" class="custom-textarea w-full h-full focus:outline-none smooth-transition" readonly>
 @foreach ($units as $buildingName => $buildingUnits)
-    @php
-        $building = $buildingUnits->first()->building;
-    @endphp
-🏠 {{ $buildingName }} @if($building->families_only) (عائلات فقط \ Only Families ) @endif
+@php
+    $building = $buildingUnits->first()->building;
+@endphp
+
+🏠 {{ $buildingName }} @if ($building->families_only)
+(عائلات فقط \ Only Families)
+@endif
 
     @foreach ($building->supervisors as $supervisor)
 👤 مسئول الفيلا: {{ $supervisor->name }} 
 📞 الهاتف: {{ $supervisor->phone }}
-    @endforeach
+@endforeach
         
     @foreach ($buildingUnits as $unit)
 🛏 غرفة رقم: {{ $unit->unit_number }}
 🏷️ النوع: {{ __('messages.' . $unit->unit_type) }}
 💵 الإيجار: {{ $unit->rent_price }} درهم
+@if ($unit->location)
+📍 الموقع: {{ __('messages.' . $unit->location) }}
+@endif
 ─────────────────────────────
-    @endforeach
-
 @endforeach
+@endforeach
+
                 </textarea>
             </div>
         </div>
@@ -327,17 +342,17 @@
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
+
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
+
             updateThemeButton(newTheme);
         }
 
         function updateThemeButton(theme) {
             const themeIcon = document.getElementById('themeIcon');
             const themeText = document.getElementById('themeText');
-            
+
             if (theme === 'dark') {
                 themeIcon.textContent = '☀️';
                 themeText.textContent = 'الوضع النهاري';
@@ -360,7 +375,7 @@
             const copyIcon = document.getElementById("copyIcon");
             const copyText = document.getElementById("copyText");
             const copyBtn = document.querySelector('.copy-btn');
-            
+
             textarea.select();
             textarea.setSelectionRange(0, 99999);
 
@@ -369,7 +384,7 @@
 
                 // إضافة انيميشن النجاح
                 copyBtn.classList.add('success-animation');
-                
+
                 // تغيير نص الزر مؤقتًا للإشارة إلى النجاح
                 copyIcon.textContent = '✅';
                 copyText.textContent = 'تم النسخ بنجاح!';
@@ -386,12 +401,12 @@
                 // في حالة الخطأ
                 copyIcon.textContent = '❌';
                 copyText.textContent = 'فشل النسخ';
-                
+
                 setTimeout(() => {
                     copyIcon.textContent = '📋';
                     copyText.textContent = 'نسخ كل النص';
                 }, 2000);
-                
+
                 console.error('خطأ في النسخ:', err);
             }
         }
@@ -401,7 +416,7 @@
             const windowHeight = window.innerHeight;
             const headerHeight = document.querySelector('.header-container').offsetHeight;
             const padding = 60; // مساحة إضافية للتباعد
-            
+
             const contentHeight = Math.max(400, windowHeight - headerHeight - padding);
             document.querySelector('.content-box').style.height = `${contentHeight}px`;
         }
@@ -433,7 +448,7 @@
 
         // منع التكبير المزدوج على iOS
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
+        document.addEventListener('touchend', function(event) {
             const now = (new Date()).getTime();
             if (now - lastTouchEnd <= 300) {
                 event.preventDefault();

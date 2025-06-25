@@ -1623,6 +1623,20 @@ return [
     'language' => 'Language',
     'arabic' => 'Arabic',
     'english' => 'English',
+    'entrance_a' => 'Entrance_A',
+    'entrance_b' => 'Entrance_B',
+    'entrance_c' => 'Entrance_C',
+    'entrance_d' => 'Entrance_D',
+    'entrance_1' => 'Entrance_1',
+    'entrance_2' => 'Entrance_2',
+    'entrance_3' => 'Entrance_3',
+    'entrance_4' => 'Entrance_4',
+    'building_1' => 'Building_1',
+    'building_2' => 'Building_2',
+    'building_3' => 'Building_3',
+    'building_4' => 'Building_4',
+    'unit_location' => 'Unit Location',
+    'private_entrance' => 'Private Entrance',
     'required' => 'This field is required',
     'email' => 'Please enter a valid email address',
     'min' => 'This field must be at least :min characters',
@@ -1650,5 +1664,6 @@ return [
         'customer_unavailable' => 'Customer Unavailable',
         'other' => 'Other',
     ],
+
 
 ];

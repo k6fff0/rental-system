@@ -1660,6 +1660,20 @@ return [
     'profile' => 'الملف الشخصي',
     'rent_rooms' => 'خدمات الوحدات السكنية',
     'settings' => 'الإعدادات',
+    'entrance_a' => 'المدخل _A',
+    'entrance_b' => 'المدخل _B',
+    'entrance_c' => 'المدخل _C',
+    'entrance_d' => 'المدخل _D',
+    'entrance_1' => 'المدخل_1',
+    'entrance_2' => 'المدخل_2',
+    'entrance_3' => 'المدخل_3',
+    'entrance_4' => 'المدخل_4',
+    'building_1' => 'مبنى_1',
+    'building_2' => 'مبنى_2',
+    'building_3' => 'مبنى_3',
+    'building_4' => 'مبنى_4',
+    'private_entrance' => 'مدخل خاص',
+    'unit_location' => 'موقع الوحدة',
     'logout' => 'تسجيل الخروج',
     'no_units_available' => 'لا توجد وحدات متاحة حالياً',
     'back_to_dashboard' => 'العودة إلى لوحة التحكم',
@@ -1676,6 +1690,7 @@ return [
         'customer_unavailable' => 'العميل غير متاح',
         'other' => 'أخرى',
     ],
+
 
 
 ];

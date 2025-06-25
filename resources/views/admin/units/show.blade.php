@@ -207,6 +207,26 @@
                                             {{ $unit->building->name }}</p>
                                     </div>
                                 </div>
+                                {{-- الموقع --}}
+                                <div
+                                    class="flex items-start p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
+                                    <div
+                                        class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 rtl:ml-3 flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17.657 16.657L13.414 12.414C13.039 12.039 13.039 11.461 13.414 11.086L17.657 6.843M9 6H7a2 2 0 00-2 2v8a2 2 0 002 2h2" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-medium text-indigo-700 dark:text-indigo-300 mb-1">
+                                            {{ __('messages.unit_location') }}</h3>
+                                        <p class="text-xl font-bold text-indigo-900 dark:text-indigo-100">
+                                            {{ __('messages.' . $unit->location) }}
+                                        </p>
+                                    </div>
+                                </div>
+
                             </div>
 
                             {{-- الملاحظات --}}

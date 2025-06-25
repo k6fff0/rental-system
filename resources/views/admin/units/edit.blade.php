@@ -193,6 +193,40 @@
                             </optgroup>
                         </select>
                     </div>
+                    {{-- موقع الغرفة --}}
+                    <div class="mb-6">
+                        <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            {{ __('messages.unit_location') }}
+                        </label>
+                        <select name="location" id="location"
+                            class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                            @php
+                                $locations = [
+                                    'entrance_a',
+                                    'entrance_b',
+                                    'entrance_c',
+                                    'entrance_d',
+                                    'entrance_1',
+                                    'entrance_2',
+                                    'entrance_3',
+                                    'entrance_4',
+                                    'building_1',
+                                    'building_2',
+                                    'building_3',
+                                    'building_4',
+                                    'private_entrance',
+                                ];
+                            @endphp
+
+                            @foreach ($locations as $value)
+                                <option value="{{ $value }}"
+                                    {{ old('location', $unit->location ?? '') === $value ? 'selected' : '' }}>
+                                    {{ __('messages.' . $value) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
 
                     {{-- ✅ الحالة بالألوان --}}
                     <div>

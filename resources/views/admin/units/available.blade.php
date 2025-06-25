@@ -174,6 +174,22 @@
                                         {{ __('messages.' . $unit->unit_type) }}
                                     </span>
                                 </div>
+                                @if ($unit->location)
+                                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                                        <span class="text-gray-600 dark:text-gray-400 flex items-center">
+                                            <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 rtl:ml-1 rtl:mr-0" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M10.293 15.707a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414L11 13.586V3a1 1 0 10-2 0v10.586L3.707 7.293A1 1 0 002.293 8.707l7 7z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                            {{ __('messages.unit_location') }}
+                                        </span>
+                                        <span class="font-semibold text-gray-900 dark:text-white">
+                                            {{ __('messages.' . $unit->location) }}
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- Price -->

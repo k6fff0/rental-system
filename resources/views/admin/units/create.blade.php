@@ -247,6 +247,34 @@
                                     </p>
                                 @enderror
                             </div>
+                            {{-- موقع الوحدة --}}
+                            <div class="space-y-2">
+                                <label for="location"
+                                    class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <svg class="w-4 h-4 mr-2 rtl:ml-2 text-blue-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    {{ __('messages.unit_location') }}
+                                </label>
+                                <select name="location" id="location"
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                                    @php
+                                        use App\Enums\UnitLocation;
+                                        $locations = UnitLocation::cases();
+                                    @endphp
+                                    @foreach ($locations as $location)
+                                        <option value="{{ $location->value }}"
+                                            {{ old('location', $unit->location ?? null) === $location->value ? 'selected' : '' }}>
+                                            {{ __('messages.' . $location->value) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('location')
+                                    <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 

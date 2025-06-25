@@ -20,6 +20,7 @@ class Unit extends Model
         'status',
         'notes',
         'rent_price',
+		'location',
     ];
 
     // ✅ حماية تلقائية عند التعديل لمنع تغيير الحالة أثناء وجود عقد نشط
