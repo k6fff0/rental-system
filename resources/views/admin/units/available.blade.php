@@ -157,8 +157,12 @@
                                         </svg>
                                         {{ __('messages.floor') }}
                                     </span>
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $unit->floor }}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">
+                                        {{ $unit->floor ? __('messages.floor_' . $unit->floor) : __('messages.not_specified') }}
+
+                                    </span>
                                 </div>
+
 
                                 <div class="flex items-center justify-between text-xs sm:text-sm">
                                     <span class="text-gray-600 dark:text-gray-400 flex items-center">

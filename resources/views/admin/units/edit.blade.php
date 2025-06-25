@@ -125,28 +125,29 @@
                             </label>
                             <select name="floor" id="floor"
                                 class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+
                                 <option value="">{{ __('messages.select_floor') }}</option>
+
                                 <option value="ground" {{ old('floor', $unit->floor) == 'ground' ? 'selected' : '' }}>
                                     {{ __('messages.floor_ground') }}
                                 </option>
-                                <option value="1" {{ old('floor', $unit->floor) == '1' ? 'selected' : '' }}>
+                                <option value="first" {{ old('floor', $unit->floor) == 'first' ? 'selected' : '' }}>
                                     {{ __('messages.floor_1') }}
                                 </option>
-                                <option value="2" {{ old('floor', $unit->floor) == '2' ? 'selected' : '' }}>
+                                <option value="second" {{ old('floor', $unit->floor) == 'second' ? 'selected' : '' }}>
                                     {{ __('messages.floor_2') }}
                                 </option>
-                                <option value="3" {{ old('floor', $unit->floor) == '3' ? 'selected' : '' }}>
+                                <option value="third" {{ old('floor', $unit->floor) == 'third' ? 'selected' : '' }}>
                                     {{ __('messages.floor_3') }}
                                 </option>
-                                <option value="4" {{ old('floor', $unit->floor) == '4' ? 'selected' : '' }}>
+                                <option value="fourth" {{ old('floor', $unit->floor) == 'fourth' ? 'selected' : '' }}>
                                     {{ __('messages.floor_4') }}
                                 </option>
-                                <option value="5" {{ old('floor', $unit->floor) == '5' ? 'selected' : '' }}>
+                                <option value="fifth" {{ old('floor', $unit->floor) == 'fifth' ? 'selected' : '' }}>
                                     {{ __('messages.floor_5') }}
                                 </option>
                             </select>
                         </div>
-
 
                         {{-- السعر --}}
                         <div>

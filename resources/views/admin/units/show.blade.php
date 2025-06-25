@@ -145,7 +145,10 @@
                                         <h3 class="text-sm font-medium text-purple-700 dark:text-purple-300 mb-1">
                                             {{ __('messages.floor') }}</h3>
                                         <p class="text-xl font-bold text-purple-900 dark:text-purple-100">
-                                            {{ $unit->floor ?? '-' }}</p>
+                                            {{ $unit->floor ? __('messages.floor_' . $unit->floor) : __('messages.not_specified') }}
+
+                                        </p>
+
                                     </div>
                                 </div>
 

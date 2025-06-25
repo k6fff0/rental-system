@@ -99,7 +99,7 @@ class UnitController extends Controller
     $request->validate([
         'building_id'   => 'required|exists:buildings,id',
         'unit_number'   => 'required|string|max:50|unique:units,unit_number,NULL,id,building_id,' . $request->building_id,
-        'floor'         => 'nullable|integer',
+        'floor'         => 'nullable|string|in:ground,first,second,third,fourth,fifth',
         'unit_type'     => 'required|string|in:' . implode(',', UnitType::values()),
         'status'        => 'required|string|in:' . implode(',', UnitStatus::values()),
         'notes'         => 'nullable|string|max:1000',
@@ -171,13 +171,14 @@ class UnitController extends Controller
     // ✅ التحقق من البيانات
     $validated = $request->validate([
         'unit_number' => 'required|string|max:255',
-        'floor'       => 'nullable|string|max:255',
+        'floor'       => 'nullable|string|in:ground,first,second,third,fourth,fifth',
         'rent_price'  => 'required|numeric',
         'status'      => 'required|in:' . implode(',', UnitStatus::values()),
         'unit_type'   => 'required|string|in:' . implode(',', UnitType::values()),
         'location'    => 'nullable|string|max:100', // ✅ أضفنا التحقق من الموقع
         'notes'       => 'nullable|string',
     ]);
+
 
     // ✅ التحديث
     $unit->update($validated);

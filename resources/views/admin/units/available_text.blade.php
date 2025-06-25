@@ -316,21 +316,26 @@
 (عائلات فقط \ Only Families)
 @endif
 
-    @foreach ($building->supervisors as $supervisor)
+@foreach ($building->supervisors as $supervisor)
 👤 مسئول الفيلا: {{ $supervisor->name }} 
 📞 الهاتف: {{ $supervisor->phone }}
 @endforeach
-        
-    @foreach ($buildingUnits as $unit)
+
+@foreach ($buildingUnits as $unit)
 🛏 غرفة رقم: {{ $unit->unit_number }}
 🏷️ النوع: {{ __('messages.' . $unit->unit_type) }}
 💵 الإيجار: {{ $unit->rent_price }} درهم
 @if ($unit->location)
 📍 الموقع: {{ __('messages.' . $unit->location) }}
 @endif
-─────────────────────────────
+@if ($unit->floor)
+🏢 الطابق: {{ __('messages.floor_' . $unit->floor) }}
+@endif
+
+    ─────────────────────────────
 @endforeach
 @endforeach
+
 
                 </textarea>
             </div>
