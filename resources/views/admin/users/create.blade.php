@@ -473,335 +473,55 @@
         }
     </style>
 
-    <!-- JavaScript for Enhanced Functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dark Mode Toggle
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const html = document.documentElement;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ✅ معاينة صورة اليوزر
+        const photoInput = document.getElementById('photo');
+        const photoPreview = document.getElementById('photoPreview');
 
-            // Check for saved dark mode preference or default to light mode
-            const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-                (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-            if (isDarkMode) {
-                html.classList.add('dark');
-            }
-
-            darkModeToggle?.addEventListener('click', function() {
-                html.classList.toggle('dark');
-                const isDark = html.classList.contains('dark');
-                localStorage.setItem('darkMode', isDark);
-
-                // Add animation effect
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-            });
-
-            // Photo Upload Preview
-            const photoInput = document.getElementById('photo');
-            const photoPreview = document.getElementById('photoPreview');
-
-            photoInput?.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        photoPreview.innerHTML =
-                            `<img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover rounded-full">`;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Password Toggle Functionality
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
-
-            togglePassword?.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-
-                if (type === 'text') {
-                    eyeIcon.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                    `;
-                } else {
-                    eyeIcon.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    `;
-                }
-            });
-
-            // Password Confirmation Toggle
-            const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
-            const passwordConfirmationInput = document.getElementById('password_confirmation');
-            const eyeIconConfirm = document.getElementById('eyeIconConfirm');
-
-            togglePasswordConfirmation?.addEventListener('click', function() {
-                const type = passwordConfirmationInput.getAttribute('type') === 'password' ? 'text' :
-                    'password';
-                passwordConfirmationInput.setAttribute('type', type);
-
-                if (type === 'text') {
-                    eyeIconConfirm.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
-                    `;
-                } else {
-                    eyeIconConfirm.innerHTML = `
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    `;
-                }
-            });
-
-            // Password Strength Checker
-            passwordInput?.addEventListener('input', function() {
-                const password = this.value;
-                const strengthIndicator = document.getElementById('passwordStrength');
-
-                if (!strengthIndicator) {
-                    // Create strength indicator if it doesn't exist
-                    const strengthDiv = document.createElement('div');
-                    strengthDiv.id = 'passwordStrength';
-                    strengthDiv.className = 'password-strength mt-2';
-                    this.parentNode.appendChild(strengthDiv);
-                }
-
-                const strength = calculatePasswordStrength(password);
-                updatePasswordStrength(strength);
-            });
-
-            function calculatePasswordStrength(password) {
-                let score = 0;
-                if (password.length >= 8) score++;
-                if (/[a-z]/.test(password)) score++;
-                if (/[A-Z]/.test(password)) score++;
-                if (/[0-9]/.test(password)) score++;
-                if (/[^A-Za-z0-9]/.test(password)) score++;
-                return score;
-            }
-
-            function updatePasswordStrength(strength) {
-                const indicator = document.getElementById('passwordStrength');
-                if (!indicator) return;
-
-                const classes = ['strength-weak', 'strength-fair', 'strength-good', 'strength-strong'];
-                indicator.className = 'password-strength mt-2';
-
-                if (strength > 0) {
-                    indicator.classList.add(classes[Math.min(strength - 1, 3)]);
-                }
-            }
-
-            // Real-time Form Validation
-            const form = document.getElementById('userForm');
-            const inputs = form.querySelectorAll('input[required], select[required]');
-
-            inputs.forEach(input => {
-                input.addEventListener('blur', validateField);
-                input.addEventListener('input', debounce(validateField, 500));
-            });
-
-            function validateField(e) {
-                const field = e.target;
-                const value = field.value.trim();
-
-                // Remove existing validation classes
-                field.classList.remove('field-error', 'field-success');
-
-                if (field.hasAttribute('required') && !value) {
-                    field.classList.add('field-error');
-                    return false;
-                }
-
-                // Email validation
-                if (field.type === 'email' && value) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(value)) {
-                        field.classList.add('field-error');
-                        return false;
-                    }
-                }
-
-                // Password confirmation validation
-                if (field.name === 'password_confirmation' && value) {
-                    const password = document.getElementById('password').value;
-                    if (value !== password) {
-                        field.classList.add('field-error');
-                        return false;
-                    }
-                }
-
-                field.classList.add('field-success');
-                return true;
-            }
-
-            // Form submission with loading state
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
-            const loadingIcon = document.getElementById('loadingIcon');
-
-            form?.addEventListener('submit', function(e) {
-                // Show loading state
-                submitBtn.disabled = true;
-                submitBtn.classList.add('button-loading');
-                submitText.textContent = '{{ __('messages.saving') }}...';
-                loadingIcon.classList.remove('hidden');
-
-                // Validate all fields before submission
-                let isValid = true;
-                inputs.forEach(input => {
-                    if (!validateField({
-                            target: input
-                        })) {
-                        isValid = false;
-                    }
-                });
-
-                if (!isValid) {
-                    e.preventDefault();
-                    // Reset button state
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('button-loading');
-                    submitText.textContent = '{{ __('messages.save') }}';
-                    loadingIcon.classList.add('hidden');
-                }
-            });
-
-            // Checkbox animations
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const checkDiv = this.nextElementSibling;
-                    if (this.checked) {
-                        checkDiv.style.transform = 'scale(1.1)';
-                        setTimeout(() => {
-                            checkDiv.style.transform = 'scale(1)';
-                        }, 150);
-                    }
-                });
-            });
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Quick dark mode toggle with Ctrl+D
-                if (e.ctrlKey && e.key === 'd') {
-                    e.preventDefault();
-                    darkModeToggle?.click();
-                }
-
-                // Quick save with Ctrl+S
-                if (e.ctrlKey && e.key === 's') {
-                    e.preventDefault();
-                    form?.requestSubmit();
-                }
-            });
-
-            // Debounce function for input validation
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
+        photoInput?.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoPreview.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover rounded-full">`;
                 };
-            }
-
-            // Auto-save draft functionality (optional)
-            let draftTimer;
-
-            function saveDraft() {
-                const formData = new FormData(form);
-                const draftData = {};
-                for (let [key, value] of formData.entries()) {
-                    if (key !== '_token' && key !== 'photo') {
-                        draftData[key] = value;
-                    }
-                }
-                localStorage.setItem('userFormDraft', JSON.stringify(draftData));
-            }
-
-            function loadDraft() {
-                const draft = localStorage.getItem('userFormDraft');
-                if (draft) {
-                    const draftData = JSON.parse(draft);
-                    Object.keys(draftData).forEach(key => {
-                        const field = form.querySelector(`[name="${key}"]`);
-                        if (field && field.type !== 'password') {
-                            field.value = draftData[key];
-                        }
-                    });
-                }
-            }
-
-            // Load draft on page load (uncomment if needed)
-            // loadDraft();
-
-            // Save draft periodically
-            inputs.forEach(input => {
-                input.addEventListener('input', () => {
-                    clearTimeout(draftTimer);
-                    draftTimer = setTimeout(saveDraft, 2000);
-                });
-            });
-
-            // Clear draft on successful submission
-            form?.addEventListener('submit', function() {
-                localStorage.removeItem('userFormDraft');
-            });
-
-            // Add form section animations
-            const formSections = document.querySelectorAll('.space-y-6 > *');
-            formSections.forEach((section, index) => {
-                section.classList.add('form-section');
-                section.style.animationDelay = `${index * 0.1}s`;
-            });
-
-            // Smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
-
-            // Intersection Observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Observe form elements for stagger animation
-            formSections.forEach((section, index) => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(20px)';
-                section.style.transition =
-                    `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-                observer.observe(section);
-            });
-        });
-
-        // System dark mode detection
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('darkMode')) {
-                if (e.matches) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
+                reader.readAsDataURL(file);
             }
         });
-    </script>
+
+        // ✅ إظهار/إخفاء كلمة المرور
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword?.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+        // ✅ إظهار/إخفاء تأكيد كلمة المرور
+        const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
+        const passwordConfirmationInput = document.getElementById('password_confirmation');
+
+        togglePasswordConfirmation?.addEventListener('click', function () {
+            const type = passwordConfirmationInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordConfirmationInput.setAttribute('type', type);
+        });
+
+        // ✅ تحقق من تأكيد كلمة المرور قبل الإرسال
+        const form = document.getElementById('userForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form?.addEventListener('submit', function (e) {
+            const password = passwordInput?.value;
+            const confirm = passwordConfirmationInput?.value;
+            if (password && confirm && password !== confirm) {
+                e.preventDefault();
+                alert('كلمة المرور وتأكيدها غير متطابقين.');
+            }
+        });
+    });
+</script>
+
 @endsection

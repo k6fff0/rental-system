@@ -593,171 +593,66 @@
         }
     </style>
 
-    <!-- JavaScript for Enhanced Functionality -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Confirm action function
-            window.confirmAction = function(action) {
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ✅ تفعيل المودال عند الضغط على تفعيل/تعطيل
+        window.confirmAction = function (action) {
+            const modal = document.getElementById('actionModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const actionForm = document.getElementById('actionForm');
+            const confirmButton = document.getElementById('confirmButton');
+
+            if (action === 'disable') {
+                modalTitle.textContent = '{{ __('messages.disable_user') }}';
+                modalMessage.innerHTML = '{{ __('messages.disable_user_confirmation') }} "<span class=text-gray-900 dark:text-gray-100 font-semibold">{{ $user->name }}</span>"?';
+                actionForm.action = '{{ route('admin.users.toggle-active', $user->id) }}';
+                confirmButton.textContent = '{{ __('messages.disable') }}';
+            } else if (action === 'enable') {
+                modalTitle.textContent = '{{ __('messages.enable_user') }}';
+                modalMessage.innerHTML = '{{ __('messages.enable_user_confirmation') }} "<span class=text-gray-900 dark:text-gray-100 font-semibold">{{ $user->name }}</span>"?';
+                actionForm.action = '{{ route('admin.users.toggle-active', $user->id) }}';
+                confirmButton.textContent = '{{ __('messages.enable') }}';
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        // ✅ إغلاق المودال
+        window.closeModal = function () {
+            const modal = document.getElementById('actionModal');
+            modal.classList.add('hidden');
+        };
+
+        // ✅ إغلاق عند الضغط برا المودال
+        window.addEventListener('click', function (e) {
+            const modal = document.getElementById('actionModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ✅ اختصارات لوحة المفاتيح
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
                 const modal = document.getElementById('actionModal');
-                const modalIcon = document.getElementById('modalIcon');
-                const modalTitle = document.getElementById('modalTitle');
-                const modalMessage = document.getElementById('modalMessage');
-                const actionForm = document.getElementById('actionForm');
-                const confirmButton = document.getElementById('confirmButton');
-
-                if (action === 'disable') {
-                    modalIcon.className =
-                        'mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 dark:bg-yellow-900 sm:mx-0 sm:h-10 sm:w-10';
-                    modalIcon.innerHTML = `
-                        <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    `;
-                    modalTitle.textContent = '{{ __('messages.disable_user') }}';
-                    modalMessage.innerHTML =
-                        '{{ __('messages.disable_user_confirmation') }} "<span class="font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</span>"?';
-                    actionForm.action = '{{ route('admin.users.toggle-active', $user->id) }}';
-                    confirmButton.className =
-                        'w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-yellow-600 text-base font-medium text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:focus:ring-offset-gray-800 sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-200';
-                    confirmButton.textContent = '{{ __('messages.disable') }}';
-                } else if (action === 'enable') {
-                    modalIcon.className =
-                        'mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 sm:mx-0 sm:h-10 sm:w-10';
-                    modalIcon.innerHTML = `
-                        <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    `;
-                    modalTitle.textContent = '{{ __('messages.enable_user') }}';
-                    modalMessage.innerHTML =
-                        '{{ __('messages.enable_user_confirmation') }} "<span class="font-semibold text-gray-900 dark:text-gray-100">{{ $user->name }}</span>"?';
-                    actionForm.action = '{{ route('admin.users.toggle-active', $user->id) }}';
-                    confirmButton.className =
-                        'w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800 sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-200';
-                    confirmButton.textContent = '{{ __('messages.enable') }}';
-                }
-
-                modal.classList.remove('hidden');
-                modal.classList.add('modal-enter');
-            };
-
-            // Close modal function
-            window.closeModal = function() {
-                const modal = document.getElementById('actionModal');
-                modal.style.opacity = '0';
-                modal.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    modal.style.opacity = '';
-                    modal.style.transform = '';
-                }, 150);
-            };
-
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                const modal = document.getElementById('actionModal');
-                if (e.target === modal) {
+                if (!modal.classList.contains('hidden')) {
                     closeModal();
                 }
-            });
-
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Close modal on Escape key
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('actionModal');
-                    if (!modal.classList.contains('hidden')) {
-                        closeModal();
-                    }
-                }
-
-                // Quick edit with Ctrl+E
-                if (e.ctrlKey && e.key === 'e') {
-                    e.preventDefault();
-                    window.location.href = '{{ route('admin.users.edit', $user->id) }}';
-                }
-
-                // Quick back with Ctrl+B
-                if (e.ctrlKey && e.key === 'b') {
-                    e.preventDefault();
-                    window.location.href = '{{ route('admin.users.index') }}';
-                }
-            });
-
-            // Add status pulse animation
-            const statusBadge = document.querySelector('.animate-pulse');
-            if (statusBadge) {
-                statusBadge.classList.add('status-pulse');
             }
 
-            // Add card hover effects
-            const cards = document.querySelectorAll('.bg-white.dark\\:bg-gray-800');
-            cards.forEach(card => {
-                card.classList.add('card-hover');
-            });
-
-            // Add profile image hover effect
-            const profileImage = document.querySelector('img[data-fancybox]');
-            if (profileImage) {
-                profileImage.classList.add('profile-image');
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                window.location.href = '{{ route('admin.users.edit', $user->id) }}';
             }
 
-            // Intersection Observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Observe permission items for stagger animation
-            const permissionItems = document.querySelectorAll('.grid .flex.items-center');
-            permissionItems.forEach((item, index) => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
-                item.style.transition =
-                    `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
-                item.classList.add('permission-item');
-                observer.observe(item);
-            });
-
-            // Smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
-
-            // Enhanced accessibility
-            const buttons = document.querySelectorAll('button, a');
-            buttons.forEach(button => {
-                button.addEventListener('focus', function() {
-                    this.style.outline = '2px solid #3b82f6';
-                    this.style.outlineOffset = '2px';
-                });
-
-                button.addEventListener('blur', function() {
-                    this.style.outline = 'none';
-                });
-            });
-
-            // Add loading state to action buttons
-            const actionButtons = document.querySelectorAll('button[onclick*="confirmAction"]');
-            actionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.style.opacity = '0.7';
-                    this.style.pointerEvents = 'none';
-
-                    setTimeout(() => {
-                        this.style.opacity = '1';
-                        this.style.pointerEvents = 'auto';
-                    }, 1000);
-                });
-            });
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                window.location.href = '{{ route('admin.users.index') }}';
+            }
         });
-    </script>
+    });
+</script>
+
 @endsection

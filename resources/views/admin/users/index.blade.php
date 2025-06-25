@@ -697,183 +697,26 @@
         }
     </style>
 
-    <!-- JavaScript for Dark Mode and Enhanced Functionality -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dark Mode Toggle
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const html = document.documentElement;
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ✅ فقط فلتر المباني والبحث التلقائي
 
-            // Check for saved dark mode preference or default to light mode
-            const isDarkMode = localStorage.getItem('darkMode') === 'true' ||
-                (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-            if (isDarkMode) {
-                html.classList.add('dark');
-            }
-
-            darkModeToggle?.addEventListener('click', function() {
-                html.classList.toggle('dark');
-                const isDark = html.classList.contains('dark');
-                localStorage.setItem('darkMode', isDark);
-
-                // Add a subtle animation effect
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-            });
-
-            // Delete confirmation modal
-            const deleteButtons = document.querySelectorAll('.confirm-delete');
-            const deleteModal = document.getElementById('deleteModal');
-            const userNameToDelete = document.getElementById('userNameToDelete');
-            const deleteForm = document.getElementById('deleteForm');
-            const cancelDelete = document.getElementById('cancelDelete');
-
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const userName = this.getAttribute('data-user-name');
-                    userNameToDelete.textContent = userName;
-                    deleteForm.action = this.closest('form').action;
-                    deleteModal.classList.remove('hidden');
-
-                    // Add animation
-                    deleteModal.style.opacity = '0';
-                    deleteModal.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        deleteModal.style.opacity = '1';
-                        deleteModal.style.transform = 'scale(1)';
-                    }, 10);
-                });
-            });
-
-            cancelDelete?.addEventListener('click', function() {
-                closeModal();
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target === deleteModal) {
-                    closeModal();
-                }
-            });
-
-            // Close modal with animation
-            function closeModal() {
-                deleteModal.style.opacity = '0';
-                deleteModal.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    deleteModal.classList.add('hidden');
-                }, 150);
-            }
-
-            // Search functionality
-            const searchInput = document.getElementById('search');
-            let searchTimeout;
-
-            searchInput?.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    // Add your search logic here
-                    console.log('Searching for:', this.value);
-                }, 300);
-            });
-
-            // Enhanced keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                // Close modal on Escape key
-                if (e.key === 'Escape' && !deleteModal.classList.contains('hidden')) {
-                    closeModal();
-                }
-
-                // Quick dark mode toggle with Ctrl+D
-                if (e.ctrlKey && e.key === 'd') {
-                    e.preventDefault();
-                    darkModeToggle?.click();
-                }
-            });
-
-            // Add loading states for buttons
-            const actionButtons = document.querySelectorAll('a[href], button[type="submit"]');
-            actionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.tagName === 'A' || this.type === 'submit') {
-                        this.style.opacity = '0.7';
-                        this.style.pointerEvents = 'none';
-
-                        // Reset after 2 seconds (in case navigation fails)
-                        setTimeout(() => {
-                            this.style.opacity = '1';
-                            this.style.pointerEvents = 'auto';
-                        }, 2000);
-                    }
-                });
-            });
-
-            // Improved responsive behavior
-            function handleResize() {
-                const width = window.innerWidth;
-                const mobileView = document.querySelector('.block.lg\\:hidden');
-                const desktopView = document.querySelector('.hidden.lg\\:block');
-
-                if (width < 1024) {
-                    // Mobile optimizations
-                    document.body.style.fontSize = '14px';
-                } else {
-                    // Desktop optimizations
-                    document.body.style.fontSize = '16px';
-                }
-            }
-
-            window.addEventListener('resize', handleResize);
-            handleResize(); // Initial call
-
-            // Add smooth scroll behavior
-            document.documentElement.style.scrollBehavior = 'smooth';
-
-            // Intersection Observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            // Observe table rows for stagger animation
-            const tableRows = document.querySelectorAll('tbody tr, .mobile-card');
-            tableRows.forEach((row, index) => {
-                row.style.opacity = '0';
-                row.style.transform = 'translateY(20px)';
-                row.style.transition =
-                    `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-                observer.observe(row);
-            });
-
-            // Add status indicator animation
-            const statusIndicators = document.querySelectorAll('[title*="نشط"], [title*="معطل"]');
-            statusIndicators.forEach(indicator => {
-                indicator.classList.add('status-indicator');
-            });
+        // فلتر بالاسم أو الرقم
+        const searchInput = document.getElementById('smartSearch');
+        let searchTimeout;
+        searchInput?.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                document.getElementById('filtersForm')?.submit();
+            }, 300);
         });
 
-        // System dark mode detection
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('darkMode')) {
-                if (e.matches) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }
+        // فلتر اختيار مبنى
+        const buildingSelect = document.getElementById('buildingSelect');
+        buildingSelect?.addEventListener('change', function () {
+            document.getElementById('filtersForm')?.submit();
         });
-    </script>
+    });
+</script>
+
 @endsection
