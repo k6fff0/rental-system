@@ -76,8 +76,9 @@
 
                         <div class="flex flex-col sm:flex-row gap-3">
                             <!-- Search Input -->
-                            <form method="GET" action="{{ route('admin.users.index') }}">
-                                <div class="relative rounded-lg shadow-sm">
+                            <form method="GET" action="{{ route('admin.users.index') }}"
+                                class="flex flex-col sm:flex-row gap-3 w-full">
+                                <div class="relative rounded-lg shadow-sm w-full sm:w-64">
                                     <div
                                         class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'right-0 pr-3' : 'left-0 pl-3' }} flex items-center pointer-events-none">
                                         <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none"
@@ -90,9 +91,23 @@
                                         class="focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 block w-full {{ app()->getLocale() === 'ar' ? 'pr-10' : 'pl-10' }} sm:text-sm border-gray-300 dark:border-gray-600 rounded-lg h-10 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
                                         placeholder="{{ __('messages.search_users') }}">
                                 </div>
-                            </form>
 
+                                <!-- Role Filter Dropdown -->
+                                <div class="relative w-full sm:w-64">
+                                    <select name="role" onchange="this.form.submit()"
+                                        class="block w-full h-10 pl-3 pr-10 text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-colors duration-300">
+                                        <option value="">{{ __('messages.all_roles') }}</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}"
+                                                {{ request('role') == $role->name ? 'selected' : '' }}>
+                                                {{ __($role->name) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
                 </div>
 
@@ -190,8 +205,8 @@
                             <div class="flex flex-wrap gap-2">
                                 <a href="{{ route('admin.users.show', $user->id) }}"
                                     class="flex-1 min-w-0 inline-flex items-center justify-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-200">
-                                    <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 {{ app()->getLocale() === 'ar' ? 'ml-1' : 'mr-1' }}"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -697,26 +712,26 @@
         }
     </style>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // ✅ فقط فلتر المباني والبحث التلقائي
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ✅ فقط فلتر المباني والبحث التلقائي
 
-        // فلتر بالاسم أو الرقم
-        const searchInput = document.getElementById('smartSearch');
-        let searchTimeout;
-        searchInput?.addEventListener('input', function () {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
+            // فلتر بالاسم أو الرقم
+            const searchInput = document.getElementById('smartSearch');
+            let searchTimeout;
+            searchInput?.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    document.getElementById('filtersForm')?.submit();
+                }, 300);
+            });
+
+            // فلتر اختيار مبنى
+            const buildingSelect = document.getElementById('buildingSelect');
+            buildingSelect?.addEventListener('change', function() {
                 document.getElementById('filtersForm')?.submit();
-            }, 300);
+            });
         });
-
-        // فلتر اختيار مبنى
-        const buildingSelect = document.getElementById('buildingSelect');
-        buildingSelect?.addEventListener('change', function () {
-            document.getElementById('filtersForm')?.submit();
-        });
-    });
-</script>
+    </script>
 
 @endsection

@@ -43,6 +43,12 @@ class UserController extends Controller
             });
         }
 
+        if ($request->filled('role')) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
         $users = $query->paginate(12);
         $roles = Role::all();
 
@@ -184,9 +190,9 @@ class UserController extends Controller
         $user->save();
 
         if ($request->filled('role')) {
-           $user->syncRolesAndDetachBuildings([$request->role]);
+            $user->syncRolesAndDetachBuildings([$request->role]);
         } else {
-           $user->syncRolesAndDetachBuildings([]);
+            $user->syncRolesAndDetachBuildings([]);
         }
 
 

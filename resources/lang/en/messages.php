@@ -1621,6 +1621,7 @@ return [
     'footer_text' => 'All rights reserved  2025',
     'login' => 'Login',
     'language' => 'Language',
+    'all_roles' => 'Filter by Role',
     'arabic' => 'Arabic',
     'english' => 'English',
     'entrance_a' => 'Entrance_A',
