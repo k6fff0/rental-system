@@ -176,14 +176,32 @@
                                     </svg>
                                     {{ __('messages.floor') }}
                                 </label>
-                                <input type="number" name="floor" id="floor" value="{{ old('floor') }}"
-                                    min="0"
-                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200"
-                                    placeholder="0">
+
+                                <select name="floor" id="floor"
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200">
+                                    <option value="">{{ __('messages.select_floor') }}</option>
+                                    <option value="ground"
+                                        {{ old('floor', $unit->floor ?? '') === 'ground' ? 'selected' : '' }}>
+                                        {{ __('messages.floor_ground') }}</option>
+                                    <option value="1"
+                                        {{ old('floor', $unit->floor ?? '') === '1' ? 'selected' : '' }}>
+                                        {{ __('messages.floor_1') }}</option>
+                                    <option value="2"
+                                        {{ old('floor', $unit->floor ?? '') === '2' ? 'selected' : '' }}>
+                                        {{ __('messages.floor_2') }}</option>
+                                    <option value="3"
+                                        {{ old('floor', $unit->floor ?? '') === '3' ? 'selected' : '' }}>
+                                        {{ __('messages.floor_3') }}</option>
+                                    <option value="4"
+                                        {{ old('floor', $unit->floor ?? '') === '4' ? 'selected' : '' }}>
+                                        {{ __('messages.floor_4') }}</option>
+                                </select>
+
                                 @error('floor')
                                     <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
+
 
                             {{-- نوع الوحدة --}}
                             <div class="space-y-2">
@@ -260,13 +278,18 @@
                                 </label>
                                 <select name="location" id="location"
                                     class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+
+                                    {{-- أول اختيار فارغ --}}
+                                    <option value="">{{ __('messages.select_location') }}</option>
+
                                     @php
                                         use App\Enums\UnitLocation;
                                         $locations = UnitLocation::cases();
                                     @endphp
+
                                     @foreach ($locations as $location)
                                         <option value="{{ $location->value }}"
-                                            {{ old('location', $unit->location ?? null) === $location->value ? 'selected' : '' }}>
+                                            {{ old('location') === $location->value ? 'selected' : '' }}>
                                             {{ __('messages.' . $location->value) }}
                                         </option>
                                     @endforeach
@@ -275,6 +298,7 @@
                                     <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
+
                         </div>
                     </div>
 

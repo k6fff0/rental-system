@@ -123,9 +123,30 @@
                             <label for="floor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ __('messages.floor') }}
                             </label>
-                            <input type="number" name="floor" id="floor" value="{{ old('floor', $unit->floor) }}"
+                            <select name="floor" id="floor"
                                 class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                                <option value="">{{ __('messages.select_floor') }}</option>
+                                <option value="ground" {{ old('floor', $unit->floor) == 'ground' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_ground') }}
+                                </option>
+                                <option value="1" {{ old('floor', $unit->floor) == '1' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_1') }}
+                                </option>
+                                <option value="2" {{ old('floor', $unit->floor) == '2' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_2') }}
+                                </option>
+                                <option value="3" {{ old('floor', $unit->floor) == '3' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_3') }}
+                                </option>
+                                <option value="4" {{ old('floor', $unit->floor) == '4' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_4') }}
+                                </option>
+                                <option value="5" {{ old('floor', $unit->floor) == '5' ? 'selected' : '' }}>
+                                    {{ __('messages.floor_5') }}
+                                </option>
+                            </select>
                         </div>
+
 
                         {{-- السعر --}}
                         <div>
@@ -194,38 +215,24 @@
                         </select>
                     </div>
                     {{-- موقع الغرفة --}}
-                    <div class="mb-6">
-                        <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {{ __('messages.unit_location') }}
-                        </label>
-                        <select name="location" id="location"
-                            class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
-                            @php
-                                $locations = [
-                                    'entrance_a',
-                                    'entrance_b',
-                                    'entrance_c',
-                                    'entrance_d',
-                                    'entrance_1',
-                                    'entrance_2',
-                                    'entrance_3',
-                                    'entrance_4',
-                                    'building_1',
-                                    'building_2',
-                                    'building_3',
-                                    'building_4',
-                                    'private_entrance',
-                                ];
-                            @endphp
+                    @php
+                        use App\Enums\UnitLocation;
+                        $locations = UnitLocation::cases();
+                    @endphp
 
-                            @foreach ($locations as $value)
-                                <option value="{{ $value }}"
-                                    {{ old('location', $unit->location ?? '') === $value ? 'selected' : '' }}>
-                                    {{ __('messages.' . $value) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <select name="location" id="location"
+                        class="w-full border border-gray-300 dark:border-gray-600 rounded-xl shadow-sm py-3 px-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+
+                        <option value="">{{ __('messages.select_location') }}</option>
+
+                        @foreach ($locations as $location)
+                            <option value="{{ $location->value }}"
+                                {{ old('location', $unit->location ?? '') === $location->value ? 'selected' : '' }}>
+                                {{ __('messages.' . $location->value) }}
+                            </option>
+                        @endforeach
+                    </select>
+
 
 
                     {{-- ✅ الحالة بالألوان --}}

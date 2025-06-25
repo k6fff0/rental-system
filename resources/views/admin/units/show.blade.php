@@ -222,7 +222,8 @@
                                         <h3 class="text-sm font-medium text-indigo-700 dark:text-indigo-300 mb-1">
                                             {{ __('messages.unit_location') }}</h3>
                                         <p class="text-xl font-bold text-indigo-900 dark:text-indigo-100">
-                                            {{ __('messages.' . $unit->location) }}
+                                            {{ $unit->location ? __('messages.' . $unit->location) : __('messages.not_specified') }}
+
                                         </p>
                                     </div>
                                 </div>
