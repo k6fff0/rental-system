@@ -59,6 +59,9 @@ class BuildingController extends Controller
         $totalUnits = $fullBuildings->sum(function ($building) {
             return $building->units->count();
         });
+        if ($request->filled('families_only')) {
+            $query->where('families_only', $request->families_only);
+        }
 
         // القائمة المنسدلة لكل المباني
         $allBuildings = Building::select('id', 'name')->orderBy('name')->get();

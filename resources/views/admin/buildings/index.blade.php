@@ -116,45 +116,48 @@
                     $generalBuildings = $generalBuildings ?? 0;
                     $totalUnits = $totalUnits ?? 0;
                 @endphp
-
-
-                <!-- Total Buildings -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">إجمالي المباني</h3>
-                            <p class="text-3xl font-bold text-green-600 mt-2">{{ $totalBuildings }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">مبنى مسجل</p>
-                        </div>
-                        <div
-                            class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Family Buildings -->
-                <div
-                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">مباني العائلات</h3>
-                            <p class="text-3xl font-bold text-pink-600 mt-2">{{ $familyOnlyBuildings }}</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">عائلات فقط</p>
-                        </div>
-                        <div class="w-16 h-16 bg-pink-100 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
+                <a href="{{ route('admin.buildings.index') }}" class="block group">
+                    <!-- Total Buildings Card -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 group-hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">إجمالي المباني</h3>
+                                <p class="text-3xl font-bold text-green-600 mt-2">{{ $totalBuildings }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">مبنى مسجل</p>
+                            </div>
+                            <div
+                                class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-2xl flex items-center justify-center">
+                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </a>
+                <a href="{{ route('admin.buildings.index', ['families_only' => 1]) }}" class="block group">
+                    <!-- Family Buildings Card -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 group-hover:shadow-xl transition-all duration-300">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">مباني العائلات</h3>
+                                <p class="text-3xl font-bold text-pink-600 mt-2">{{ $familyOnlyBuildings }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">عائلات فقط</p>
+                            </div>
+                            <div
+                                class="w-16 h-16 bg-pink-100 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center">
+                                <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </a>
                 <!-- General Buildings -->
                 <div
                     class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
@@ -173,7 +176,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Total Units -->
                 <div
                     class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl transition-all duration-300">
