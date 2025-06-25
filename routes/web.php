@@ -52,7 +52,9 @@ Route::get('lang/{lang}', function ($lang) {
 })->name('lang.switch');
 
 
-Route::get('/', function () {return view('welcome');});
+Route::get('/', function () {
+    return view('welcome');
+});
 
 
 Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
@@ -92,10 +94,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('units', UnitController::class);
     Route::patch('units/{unit}/status', [UnitController::class, 'updateStatus'])->name('units.updateStatus');
     Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
-    Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');    
+    Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
     Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])->name('buildings.toggleFamiliesOnly')->middleware('can:edit buildings');
-	Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
-	Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
+    Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
+    Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
 
 
 
@@ -111,7 +113,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/specialties/{id}/edit', [TechnicianController::class, 'editSpecialty'])->name('specialties.edit');
         Route::put('/specialties/{id}', [TechnicianController::class, 'updateSpecialty'])->name('specialties.update');
         Route::delete('/specialties/{id}', [TechnicianController::class, 'destroySpecialty'])->name('specialties.destroy');
-		Route::get('{id}/report', [TechnicianController::class, 'report'])->name('report');
+        Route::get('{id}/report', [TechnicianController::class, 'report'])->name('report');
 
 
 
@@ -121,10 +123,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/{user}/edit', [TechnicianController::class, 'edit'])->name('edit');
         Route::put('/{user}', [TechnicianController::class, 'update'])->name('update');
     });
-Route::get('/technician/maintenance', [MaintenanceRequestController::class, 'myRequests'])
-    ->name('technician.maintenance')
-    ->middleware('auth'); // أو middleware خاص بالفنيين لو عندك
-Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show'])->name('admin.maintenance.show');
+    Route::get('/technician/maintenance', [MaintenanceRequestController::class, 'myRequests'])
+        ->name('technician.maintenance')
+        ->middleware('auth'); // أو middleware خاص بالفنيين لو عندك
+    Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show'])->name('admin.maintenance.show');
 
 
 
@@ -148,7 +150,7 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
 
     Route::get('maintenance-requests/archive/export/excel', [MaintenanceRequestController::class, 'exportExcel'])
         ->name('maintenance_requests.exportExcel');
-   // Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
+    // Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
     Route::get('technicians/search', [TechnicianController::class, 'search'])->name('technicians.search');
 
 
@@ -160,9 +162,9 @@ Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show
     Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
     Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
-	//Route::put('maintenance-requests/{id}', [MaintenanceRequestController::class, 'update'])->name('maintenance_requests.update');
+    //Route::put('maintenance-requests/{id}', [MaintenanceRequestController::class, 'update'])->name('maintenance_requests.update');
     Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
-	
+
 
 
 
@@ -350,22 +352,21 @@ Route::post('units/{unit}/upload-image', [UnitController::class, 'uploadImage'])
 Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
 
 Route::prefix('technician/maintenance')
-    ->middleware('auth') // أو middleware خاص بالفنيين لو عندك
+    ->middleware('auth') //  خاص بالفنيين لو عندك
     ->name('maintenance.')
     ->group(function () {
 
-    // بدء العمل
-    Route::post('/{id}/start', [MaintenanceRequestController::class, 'start'])->whereNumber('id')->name('start');
+        // بدء العمل
+        Route::post('/{id}/start', [MaintenanceRequestController::class, 'start'])->whereNumber('id')->name('start');
 
-    // إنهاء العمل
-    Route::post('/{id}/complete', [MaintenanceRequestController::class, 'complete'])->whereNumber('id')->name('complete');
+        // إنهاء العمل
+        Route::post('/{id}/complete', [MaintenanceRequestController::class, 'complete'])->whereNumber('id')->name('complete');
 
-    // رفض الطلب
-    Route::post('/{id}/reject', [MaintenanceRequestController::class, 'reject'])->whereNumber('id')->name('reject');
-		
-	Route::post('/{id}/delay', [MaintenanceRequestController::class, 'updateStatus'])->name('delay');
+        // رفض الطلب
+        Route::post('/{id}/reject', [MaintenanceRequestController::class, 'reject'])->whereNumber('id')->name('reject');
 
-});
+        Route::post('/{id}/delay', [MaintenanceRequestController::class, 'updateStatus'])->name('delay');
+    });
 
 
 //Cars
@@ -391,25 +392,25 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     })->name('vehicles.violations.destroy');
 
     // ✅ إضافة مصروف ومخالفة (خليهم جوا الجروب)
-   Route::post('vehicles/{vehicle}/expenses', function (Request $request, $vehicleId) {
-    $request->validate([
-        'type'          => 'required|string|max:255',
-        'expense_date'  => 'required|date',
-        'amount'        => 'required|numeric|min:0',
-        'description'   => 'nullable|string',
-    ]);
+    Route::post('vehicles/{vehicle}/expenses', function (Request $request, $vehicleId) {
+        $request->validate([
+            'type'          => 'required|string|max:255',
+            'expense_date'  => 'required|date',
+            'amount'        => 'required|numeric|min:0',
+            'description'   => 'nullable|string',
+        ]);
 
-    $vehicle = \App\Models\Vehicle::findOrFail($vehicleId);
+        $vehicle = \App\Models\Vehicle::findOrFail($vehicleId);
 
-    $vehicle->expenses()->create([
-        'type'          => $request->type,
-        'expense_date'  => $request->expense_date,
-        'amount'        => $request->amount,
-        'description'   => $request->description,
-    ]);
+        $vehicle->expenses()->create([
+            'type'          => $request->type,
+            'expense_date'  => $request->expense_date,
+            'amount'        => $request->amount,
+            'description'   => $request->description,
+        ]);
 
-    return back()->with('success', '✅ تمت إضافة المصروف للعربية بنجاح');
-})->name('vehicles.expenses.store');
+        return back()->with('success', '✅ تمت إضافة المصروف للعربية بنجاح');
+    })->name('vehicles.expenses.store');
 
 
     Route::post('vehicles/{vehicle}/violations', function (Request $request, $vehicleId) {
@@ -449,7 +450,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('admin.notifications.show');
-   
 });
 Route::get('/install', [InstallController::class, 'showForm'])->name('install.form');
 Route::post('/install', [InstallController::class, 'submit'])->name('install.submit');
