@@ -26,14 +26,22 @@ class Building extends Model
         'rent_amount',
         'initial_renovation_cost',
         'families_only',
+        'contract_start_date',
+        'contract_end_date',
+        'guarantee_cheque_amount',
+        'grace_period_months',
     ];
+
 
 
 
     protected $casts = [
-        'electric_meters' => 'array',
-        'internet_lines'  => 'array',
+        'electric_meters'        => 'array',
+        'internet_lines'         => 'array',
+        'contract_start_date'    => 'date',
+        'contract_end_date'      => 'date',
     ];
+
 
     protected static function booted()
     {

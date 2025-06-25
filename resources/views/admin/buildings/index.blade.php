@@ -387,7 +387,7 @@
                                 </th>
                                 <th
                                     class="px-6 py-4 text-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    {{ __('messages.created_at') }}
+                                    {{ __('messages.contract_end_date') }}
                                 </th>
                                 <th
                                     class="px-6 py-4 text-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -462,11 +462,11 @@
                                     </td>
 
                                     <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                        <div class="max-w-xs truncate" title="{{ $building->address }}">
-                                            {{ $building->address }}
+                                        <div class="truncate" style="max-width: 120px;"
+                                            title="{{ $building->address }}">
+                                            {{ Str::limit($building->address, 50) }}
                                         </div>
                                     </td>
-
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                         <div class="flex items-center">
                                             <svg class="w-4 h-4 mr-1 rtl:ml-1 text-purple-500" fill="none"
@@ -478,10 +478,23 @@
                                         </div>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                        {{ $building->created_at->format('Y-m-d') }}
-                                    </td>
+                                    @php
+                                        $endDate = $building->contract_end_date;
+                                        $isExpiringSoon =
+                                            $endDate && $endDate->isFuture() && $endDate->lte(now()->addMonths(2));
+                                    @endphp
 
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        @if ($endDate)
+                                            <div
+                                                class="inline-flex items-center justify-center w-24 px-3 py-1 rounded-full text-xs font-semibold
+                    {{ $isExpiringSoon ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' }}">
+                                                {{ $endDate->format('Y-m-d') }}
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">—</span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         @if ($building->location_url)
                                             <a href="{{ $building->location_url }}" target="_blank"

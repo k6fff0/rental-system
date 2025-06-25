@@ -52,6 +52,11 @@ class AdminDashboardController extends Controller
 
     // 6. العقود القريبة من الانتهاء (خلال 30 يوم)
     $expiringContracts = Contract::whereBetween('end_date', [$now, $now->copy()->addDays(30)])->get();
+	
+	$soonExpiringBuildings = Building::whereNotNull('contract_end_date')
+    ->whereDate('contract_end_date', '>', now())
+    ->whereDate('contract_end_date', '<=', now()->addMonths(2))
+    ->get();
 
     // 7. أحدث الأنشطة
     $recentActivities = ActivityLog::latest()->paginate(5);
@@ -104,7 +109,8 @@ class AdminDashboardController extends Controller
         'totalExpenses',
         'totalIncome',
         'monthlyExpenses',
-        'monthlyIncome'
+        'monthlyIncome',
+		'soonExpiringBuildings'
     ));
 }
 }

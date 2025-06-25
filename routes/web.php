@@ -449,7 +449,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('admin.notifications.show');
-    Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+   
 });
 Route::get('/install', [InstallController::class, 'showForm'])->name('install.form');
 Route::post('/install', [InstallController::class, 'submit'])->name('install.submit');

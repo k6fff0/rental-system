@@ -58,6 +58,21 @@
                                 </div>
                             </div>
                         @endif
+                        @if ($soonExpiringBuildings->count() > 0)
+                            <div class="relative">
+                                <div
+                                    class="bg-gradient-to-r from-red-500 to-orange-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 rtl:space-x-reverse animate-pulse">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <span class="font-medium text-sm">
+                                        {{ __('messages.buildings_near_expiry_alert', ['count' => $soonExpiringBuildings->count()]) }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -135,7 +150,7 @@
                                     <div class="flex items-center space-x-1 rtl:space-x-reverse">
                                         <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                                         <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                                         +{{ $newBuildingsCount }} {{ __('messages.new_buildings') }}
+                                            +{{ $newBuildingsCount }} {{ __('messages.new_buildings') }}
                                         </span>
                                     </div>
                                     <a href="{{ route('admin.buildings.index') }}"
@@ -182,14 +197,14 @@
                                             <div class="w-2 h-2 bg-green-500 rounded-full mr-1 rtl:ml-1"></div>
                                             {{ $availableUnitsCount }} متاحة
                                         </span>
-										<span class="flex items-center text-purple-600 dark:text-purple-400">
+                                        <span class="flex items-center text-purple-600 dark:text-purple-400">
                                             <div class="w-2 h-2 bg-purple-500 rounded-full mr-1 rtl:ml-1"></div>
                                             {{ $bookedUnitsCount }} محجوزة
                                         </span>
                                         <span class="flex items-center text-red-600 dark:text-red-400">
                                             <div class="w-2 h-2 bg-red-500 rounded-full mr-1 rtl:ml-1"></div>
                                             {{ $occupiedUnitsCount }} مؤجرة
-                                        </span>										
+                                        </span>
                                     </div>
                                     <a href="{{ route('admin.units.index') }}"
                                         class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform text-purple-600 dark:text-purple-400">
@@ -233,7 +248,8 @@
                                     <div class="flex items-center space-x-1 rtl:space-x-reverse">
                                         <div class="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
                                         <span class="text-xs text-orange-600 dark:text-orange-400 font-medium">
-                                            {{ $unitsCount > 0 ? number_format(($occupiedUnitsCount / $unitsCount) * 100, 1) : '0.0' }}% إشغال
+                                            {{ $unitsCount > 0 ? number_format(($occupiedUnitsCount / $unitsCount) * 100, 1) : '0.0' }}%
+                                            إشغال
                                         </span>
                                     </div>
                                     <a href="{{ route('admin.tenants.index') }}"
@@ -253,22 +269,22 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">الإجراءات السريعة</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    
+
 
                     <!-- units.available -->
-<a href="{{ route('units.available') }}"
-    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
-    <div
-        class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-4a2 2 0 01-2-2V12H9v8a2 2 0 01-2 2H5a2 2 0 01-2-2V10z" />
-        </svg>
-    </div>
-    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الغرف المتاحة</span>
-</a>
+                    <a href="{{ route('units.available') }}"
+                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 hover:from-green-100 hover:to-green-200 dark:hover:from-green-800/30 dark:hover:to-green-700/30 transition-all duration-200 border border-green-200 dark:border-green-700">
+                        <div
+                            class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10l9-7 9 7v10a2 2 0 01-2 2h-4a2 2 0 01-2-2V12H9v8a2 2 0 01-2 2H5a2 2 0 01-2-2V10z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الغرف المتاحة</span>
+                    </a>
 
-					<!-- room_bookings -->
+                    <!-- room_bookings -->
                     <a href="{{ route('admin.bookings.create') }}"
                         class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-sky-50 to-sky-100 dark:from-sky-900/20 dark:to-sky-800/20 hover:from-sky-100 hover:to-sky-200 dark:hover:from-sky-800/30 dark:hover:to-sky-700/30 transition-all duration-200 border border-sky-200 dark:border-sky-700">
                         <div
@@ -280,18 +296,18 @@
                         </div>
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">حجز غرفة</span>
                     </a>
-					<!-- bookings.section -->
-<a href="{{ route('admin.bookings.index') }}"
-    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
-    <div
-        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-    </div>
-    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">قسم الحجوزات</span>
-</a>
+                    <!-- bookings.section -->
+                    <a href="{{ route('admin.bookings.index') }}"
+                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+                        <div
+                            class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">قسم الحجوزات</span>
+                    </a>
 
                     <!-- Add New Tenant -->
                     <a href="{{ route('admin.tenants.create') }}"
@@ -330,19 +346,19 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">المصروفات</span>
                     </a>
                     <!-- maintenance -->
-<a href="{{ route('admin.maintenance_requests.index') }}"
-    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
-    <div
-        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M14.828 9.172a4 4 0 010 5.656l-2.828 2.828a4 4 0 01-5.656-5.656l2.828-2.828a4 4 0 015.656 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M16 7l-1.5 1.5" />
-        </svg>
-    </div>
-    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">طلبات الصيانة</span>
-</a>
+                    <a href="{{ route('admin.maintenance_requests.index') }}"
+                        class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+                        <div
+                            class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14.828 9.172a4 4 0 010 5.656l-2.828 2.828a4 4 0 01-5.656-5.656l2.828-2.828a4 4 0 015.656 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7l-1.5 1.5" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">طلبات الصيانة</span>
+                    </a>
 
                     <!-- role_manager -->
                     @role("Admin's")
@@ -358,19 +374,20 @@
                             <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">الصلاحيات</span>
                         </a>
                     @endrole
-					@role("Admin's")
-<a href="{{ route('admin.settings.edit') }}"
-    class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
-    <div
-        class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M11.25 3a.75.75 0 011.5 0v1.136a7.5 7.5 0 012.45.999l.804-.804a.75.75 0 111.06 1.06l-.804.804a7.5 7.5 0 01.999 2.45h1.136a.75.75 0 010 1.5h-1.136a7.5 7.5 0 01-.999 2.45l.804.804a.75.75 0 11-1.06 1.06l-.804-.804a7.5 7.5 0 01-2.45.999v1.136a.75.75 0 01-1.5 0v-1.136a7.5 7.5 0 01-2.45-.999l-.804.804a.75.75 0 11-1.06-1.06l.804-.804a7.5 7.5 0 01-.999-2.45H3.75a.75.75 0 010-1.5h1.136a7.5 7.5 0 01.999-2.45l-.804-.804a.75.75 0 011.06-1.06l.804.804a7.5 7.5 0 012.45-.999V3zM12 15a3 3 0 100-6 3 3 0 000 6z" />
-        </svg>
-    </div>
-    <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إعدادات النظام</span>
-</a>
-@endrole
+                    @role("Admin's")
+                        <a href="{{ route('admin.settings.edit') }}"
+                            class="group flex flex-col items-center p-4 rounded-xl bg-gradient-to-b from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 hover:from-yellow-100 hover:to-yellow-200 dark:hover:from-yellow-800/30 dark:hover:to-yellow-700/30 transition-all duration-200 border border-yellow-200 dark:border-yellow-700">
+                            <div
+                                class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11.25 3a.75.75 0 011.5 0v1.136a7.5 7.5 0 012.45.999l.804-.804a.75.75 0 111.06 1.06l-.804.804a7.5 7.5 0 01.999 2.45h1.136a.75.75 0 010 1.5h-1.136a7.5 7.5 0 01-.999 2.45l.804.804a.75.75 0 11-1.06 1.06l-.804-.804a7.5 7.5 0 01-2.45.999v1.136a.75.75 0 01-1.5 0v-1.136a7.5 7.5 0 01-2.45-.999l-.804.804a.75.75 0 11-1.06-1.06l.804-.804a7.5 7.5 0 01-.999-2.45H3.75a.75.75 0 010-1.5h1.136a7.5 7.5 0 01.999-2.45l-.804-.804a.75.75 0 011.06-1.06l.804.804a7.5 7.5 0 012.45-.999V3zM12 15a3 3 0 100-6 3 3 0 000 6z" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">إعدادات
+                                النظام</span>
+                        </a>
+                    @endrole
 
 
                     <!-- maintenance archive -->
@@ -552,79 +569,79 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <!-- Total Income -->
                 <!--  <div
-                        class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
-                        <div class="relative">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="text-lg font-semibold opacity-90">{{ __('messages.total_income') }}</h3>
-                                    <p class="text-3xl font-bold mt-2">{{ number_format($totalIncome, 2) }}
-                                        {{ __('messages.currency') }}</p>
+                            class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold opacity-90">{{ __('messages.total_income') }}</h3>
+                                        <p class="text-3xl font-bold mt-2">{{ number_format($totalIncome, 2) }}
+                                            {{ __('messages.currency') }}</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                                    </svg>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                        <svg class="w-4 h-4 text-green-200" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                        <span class="text-sm opacity-90">+15.3% من الشهر الماضي</span>
+                                    </div>
+                                    <a href="{{ route('admin.payments.due_report') }}"
+                                        class="text-white hover:text-green-200 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                    <svg class="w-4 h-4 text-green-200" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                                    </svg>
-                                    <span class="text-sm opacity-90">+15.3% من الشهر الماضي</span>
-                                </div>
-                                <a href="{{ route('admin.payments.due_report') }}"
-                                    class="text-white hover:text-green-200 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>-->
+                        </div>-->
 
                 <!-- Total Expenses -->
                 <!--    <div
-                        class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
-                        <div class="relative">
-                            <div class="flex items-center justify-between mb-4">
-                                <div>
-                                    <h3 class="text-lg font-semibold opacity-90">{{ __('messages.total_expenses') }}</h3>
-                                    <p class="text-3xl font-bold mt-2">{{ number_format($totalExpenses, 2) }}
-                                        {{ __('messages.currency') }}</p>
+                            class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-lg text-white p-6 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold opacity-90">{{ __('messages.total_expenses') }}</h3>
+                                        <p class="text-3xl font-bold mt-2">{{ number_format($totalExpenses, 2) }}
+                                            {{ __('messages.currency') }}</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                                        <svg class="w-4 h-4 text-red-200" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                        </svg>
+                                        <span class="text-sm opacity-90">-8.2% من الشهر الماضي</span>
+                                    </div>
+                                    <a href="{{ route('admin.expenses.index') }}"
+                                        class="text-white hover:text-red-200 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                    <svg class="w-4 h-4 text-red-200" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                    </svg>
-                                    <span class="text-sm opacity-90">-8.2% من الشهر الماضي</span>
-                                </div>
-                                <a href="{{ route('admin.expenses.index') }}"
-                                    class="text-white hover:text-red-200 transition-colors">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>-->
+                        </div>-->
             </div>
 
         </div>

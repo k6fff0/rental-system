@@ -9,6 +9,8 @@ use App\Enums\UnitType;
 use App\Enums\UnitStatus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 
 class BuildingController extends Controller
 
@@ -69,9 +71,12 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
+            'guarantee_cheque_amount' => 'nullable|numeric|min:0',
+            'grace_period_months' => 'nullable|integer|min:0',
+            'contract_start_date' => 'nullable|date',
+            'contract_end_date' => 'nullable|date|after_or_equal:contract_start_date',
             'image' => 'nullable|image|max:22048',
         ]);
-
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('buildings', 'public');
@@ -79,11 +84,11 @@ class BuildingController extends Controller
 
         $building = Building::create($data);
 
-
         log_action("🏢 تم إضافة مبنى جديد: {$building->name}");
 
         return redirect()->route('admin.buildings.index')->with('success', 'تم إضافة المبنى بنجاح.');
     }
+
 
     //--------------------------------------------------------------------------------------------------------------
 
@@ -117,16 +122,17 @@ class BuildingController extends Controller
             'municipality_number' => 'nullable|string|max:255',
             'rent_amount' => 'nullable|numeric',
             'initial_renovation_cost' => 'nullable|numeric',
+            'guarantee_cheque_amount' => 'nullable|numeric|min:0',
+            'grace_period_months' => 'nullable|integer|min:0',
+            'contract_start_date' => 'nullable|date',
+            'contract_end_date' => 'nullable|date|after_or_equal:contract_start_date',
             'image' => 'nullable|image|max:2048',
         ]);
 
-
         if ($request->hasFile('image')) {
-
             if ($building->image) {
                 Storage::disk('public')->delete($building->image);
             }
-
 
             $data['image'] = $request->file('image')->store('buildings', 'public');
         }
