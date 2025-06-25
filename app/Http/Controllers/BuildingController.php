@@ -33,23 +33,49 @@ class BuildingController extends Controller
     {
         $query = Building::query();
 
+        // فلتر الاسم أو الرقم
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('building_number', 'like', '%' . $search . '%');
+            });
         }
 
+        // فلتر ID المبنى
         if ($request->filled('building_id')) {
             $query->where('id', $request->building_id);
         }
 
+        // نسخة للإحصائيات
+        $statsQuery = clone $query;
+
+        // ✅ احسب الإحصائيات من الكويري الكامل (بدون paginate)
+        $fullBuildings = $statsQuery->with('units')->get();
+
+        $totalBuildings = $fullBuildings->count();
+        $familyOnlyBuildings = $fullBuildings->where('families_only', true)->count();
+        $generalBuildings = $fullBuildings->where('families_only', false)->count();
+        $totalUnits = $fullBuildings->sum(function ($building) {
+            return $building->units->count();
+        });
+
+        // القائمة المنسدلة لكل المباني
+        $allBuildings = Building::select('id', 'name')->orderBy('name')->get();
+
+        // النتيجة المعروضة في الجدول
         $buildings = $query->withCount('units')->paginate(10);
 
-        return view('admin.buildings.index', compact('buildings'));
+        return view('admin.buildings.index', compact(
+            'buildings',
+            'allBuildings',
+            'totalBuildings',
+            'familyOnlyBuildings',
+            'generalBuildings',
+            'totalUnits'
+        ));
     }
 
-    public function create()
-    {
-        return view('admin.buildings.create');
-    }
 
 
 

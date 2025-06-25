@@ -41,74 +41,82 @@
                 </div>
             </div>
 
-            {{-- Search & Filter Section --}}
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Dropdown Filter -->
-                    <div class="lg:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <svg class="w-4 h-4 inline mr-1 rtl:ml-1" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
-                            </svg>
-                            {{ __('messages.select_from_list') }}
-                        </label>
-                        <div class="relative">
-                            <select id="buildingSelect"
-                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200">
-                                <option value="">{{ __('messages.all_buildings') }}</option>
-                                @foreach ($buildings as $b)
-                                    <option value="{{ $b->id }}">{{ $b->name }}</option>
-                                @endforeach
-                            </select>
-                            <div
-                                class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-3' : 'right-3' }} flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <form method="GET" action="{{ route('admin.buildings.index') }}" id="filtersForm">
+                {{-- Search & Filter Section --}}
+                <div
+                    class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Dropdown Filter -->
+                        <div class="lg:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <svg class="w-4 h-4 inline mr-1 rtl:ml-1" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7" />
+                                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z" />
                                 </svg>
+                                {{ __('messages.select_from_list') }}
+                            </label>
+                            <div class="relative">
+                                <select name="building_id" id="buildingSelect"
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                    onchange="document.getElementById('filtersForm').submit();">
+                                    <option value="">{{ __('messages.all_buildings') }}</option>
+                                    @foreach ($allBuildings as $b)
+                                        <option value="{{ $b->id }}"
+                                            {{ request('building_id') == $b->id ? 'selected' : '' }}>
+                                            {{ $b->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div
+                                    class="absolute inset-y-0 {{ app()->getLocale() == 'ar' ? 'left-3' : 'right-3' }} flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Search Input -->
-                    <div class="lg:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <svg class="w-4 h-4 inline mr-1 rtl:ml-1" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            {{ __('messages.search_by_name') }}
-                        </label>
-                        <div class="relative">
-                            <input type="text" id="smartSearch"
-                                placeholder="{{ __('messages.type_building_name_or_number') }}"
-                                class="w-full py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 {{ app()->getLocale() === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-4' }}">
-                            <div
-                                class="absolute inset-y-0 flex items-center pointer-events-none {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }}">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Search Input -->
+                        <div class="lg:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <svg class="w-4 h-4 inline mr-1 rtl:ml-1" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
+                                {{ __('messages.search_by_name') }}
+                            </label>
+                            <div class="relative">
+                                <input type="text" name="search" id="smartSearch" value="{{ request('search') }}"
+                                    placeholder="{{ __('messages.type_building_name_or_number') }}"
+                                    class="w-full py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200 {{ app()->getLocale() === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-4' }}">
+                                <div
+                                    class="absolute inset-y-0 flex items-center pointer-events-none {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }}">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+
 
             {{-- Statistics Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 @php
-                    $totalBuildings = $buildings->count();
-                    $familyOnlyBuildings = $buildings->where('families_only', true)->count();
-                    $generalBuildings = $buildings->where('families_only', false)->count();
-                    $totalUnits = $buildings->sum(function ($building) {
-                        return $building->units->count();
-                    });
+                    $totalBuildings = $totalBuildings ?? 0;
+                    $familyOnlyBuildings = $familyOnlyBuildings ?? 0;
+                    $generalBuildings = $generalBuildings ?? 0;
+                    $totalUnits = $totalUnits ?? 0;
                 @endphp
+
 
                 <!-- Total Buildings -->
                 <div
@@ -676,6 +684,14 @@
             @endif
         </div>
     </div>
+    <script>
+        document.getElementById('smartSearch').addEventListener('input', function() {
+            clearTimeout(this.delayTimer);
+            this.delayTimer = setTimeout(function() {
+                document.getElementById('filtersForm').submit();
+            }, 500); // نص ثانية تأخير
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
