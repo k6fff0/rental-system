@@ -1643,6 +1643,7 @@ return [
     'fourth' => 'Fourth Floor',
     'fifth' => 'Fifth Floor',
     'sixth' => 'Sixth Floor',
+    'first_tenant_badge' => 'First Tenant',
     'select_floor'     => '— Select Floor —',
     'floor_ground'     => 'Ground Floor',
     'floor_first'      => 'First Floor',

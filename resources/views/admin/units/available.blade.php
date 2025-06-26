@@ -106,17 +106,20 @@
                                     </svg>
                                 </div>
                             @endif
-
-                            <!-- Status Badge -->
-                            <div class="absolute top-3 right-3">
-                                <span class="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
-                                    {{ __('messages.available') }}
-                                </span>
-                            </div>
-
-
+                          <!-- Status + First Tenant Badges -->
+                        <div class="absolute top-3 right-3 flex items-center gap-2">
+                               {{-- شارة الحالة --}}
+                           <span class="bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                {{ __('messages.available') }}
+                           </span>
+                            {{-- ✅ شارة أول ساكن --}}
+                            @if ($unit->is_first_tenant)
+                           <span class="bg-yellow-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                {{ __('messages.first_tenant_badge') }}
+                           </span>
+                           @endif
+                         </div>
                         </div>
-
                         <!-- Unit Details -->
                         <div class="p-4">
                             <!-- Unit Number & Rating -->

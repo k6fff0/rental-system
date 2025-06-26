@@ -1689,6 +1689,7 @@ return [
     'not_specified'    => 'غير محدد',
     'ground' => 'الدور الأرضي',
     'all_roles' => 'بحث حسب المجموعة',
+    'first_tenant_badge' => 'أول ساكن',
     'first' => 'الدور الأول',
     'second' => 'الدور الثاني',
     'third' => 'الدور الثالث',

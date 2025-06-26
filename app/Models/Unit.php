@@ -21,6 +21,7 @@ class Unit extends Model
         'notes',
         'rent_price',
 		'location',
+		'is_first_tenant',
     ];
 
     // ✅ حماية تلقائية عند التعديل لمنع تغيير الحالة أثناء وجود عقد نشط
@@ -131,4 +132,21 @@ class Unit extends Model
     {
         return $this->belongsTo(User::class);
     }
+	
+	    // ✅ العلاقة مع الحجوزات
+  public function bookings()
+{
+    return $this->hasMany(RoomBooking::class);
+}
+
+public function activeBookingExists(): bool
+{
+    return $this->bookings()
+        ->whereNull('cancelled_at')
+        ->whereNull('expires_at')
+        ->whereNull('auto_expire_at')
+        ->exists();
+}
+
+
 }

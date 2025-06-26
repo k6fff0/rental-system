@@ -65,34 +65,35 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
             @php
                 $filters = [
-                    'all' => ['color' => 'blue', 'icon' => '📊', 'count' => $units->total()],
+                    'all' => ['color' => 'blue', 'icon' => '📊', 'count' => $allUnits->count()],
                     'available' => [
                         'color' => 'green',
                         'icon' => '✅',
-                        'count' => $units->getCollection()->filter(fn($u) => $u->status === 'available')->count(),
+                        'count' => $allUnits->where('status', 'available')->count(),
                     ],
                     'occupied' => [
                         'color' => 'red',
                         'icon' => '🛌',
-                        'count' => $units->getCollection()->filter(fn($u) => $u->status === 'occupied')->count(),
+                        'count' => $allUnits->where('status', 'occupied')->count(),
                     ],
                     'booked' => [
                         'color' => 'purple',
                         'icon' => '🔒',
-                        'count' => $units->getCollection()->filter(fn($u) => $u->status === 'booked')->count(),
+                        'count' => $allUnits->where('status', 'booked')->count(),
                     ],
                     'maintenance' => [
                         'color' => 'yellow',
                         'icon' => '🛠️',
-                        'count' => $units->getCollection()->filter(fn($u) => $u->status === 'maintenance')->count(),
+                        'count' => $allUnits->where('status', 'maintenance')->count(),
                     ],
                     'cleaning' => [
                         'color' => 'indigo',
                         'icon' => '🧹',
-                        'count' => $units->getCollection()->filter(fn($u) => $u->status === 'cleaning')->count(),
+                        'count' => $allUnits->where('status', 'cleaning')->count(),
                     ],
                 ];
             @endphp
+
 
             @foreach ($filters as $key => $filter)
                 <div onclick="filterBy('{{ $key }}')"

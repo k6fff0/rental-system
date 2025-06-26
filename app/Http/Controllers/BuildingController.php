@@ -24,7 +24,11 @@ class BuildingController extends Controller
         $this->middleware('permission:edit buildings')->only(['edit', 'update']);
         $this->middleware('permission:delete buildings')->only(['destroy']);
     }
-
+//--------------------------------------------------------------------------------------------------------------
+public function create()
+{
+    return view('admin.buildings.create');
+}
 
     //--------------------------------------------------------------------------------------------------------------
 
@@ -155,7 +159,7 @@ class BuildingController extends Controller
             'grace_period_months' => 'nullable|integer|min:0',
             'contract_start_date' => 'nullable|date',
             'contract_end_date' => 'nullable|date|after_or_equal:contract_start_date',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:22048',
         ]);
 
         if ($request->hasFile('image')) {

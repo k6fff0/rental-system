@@ -45,7 +45,7 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $query = Unit::with(['building', 'contracts.tenant', 'latestContract'])
-            ->orderByDesc('updated_at'); // ✅ الترتيب حسب آخر تحديث
+            ->orderByDesc('updated_at');
 
         // ✅ فلترة لو المستخدم اختارها
         if ($request->filled('building_id')) {
@@ -60,6 +60,11 @@ class UnitController extends Controller
             $query->where('unit_type', $request->unit_type);
         }
 
+        // 🔁 انسخ الكويري الكامل قبل الباجينيشن لحساب الإحصائيات
+        $statsQuery = clone $query;
+        $allUnits = $statsQuery->get(); // جميع النتائج بدون paginate
+
+        // ✅ الباجينيشن
         $units = $query->paginate(10);
 
         $units->getCollection()->transform(function ($unit) {
@@ -79,8 +84,9 @@ class UnitController extends Controller
         $buildings = Building::all();
         $unitTypes = UnitType::values();
 
-        return view('admin.units.index', compact('units', 'buildings', 'unitTypes'));
+        return view('admin.units.index', compact('units', 'allUnits', 'buildings', 'unitTypes'));
     }
+
 
     //-----------------------------------------------------------------------------------------------------------------------
 
@@ -95,40 +101,43 @@ class UnitController extends Controller
     //-----------------------------------------------------------------------------------------------------------------------
 
     public function store(Request $request)
-{
-    $request->validate([
-        'building_id'   => 'required|exists:buildings,id',
-        'unit_number'   => 'required|string|max:50|unique:units,unit_number,NULL,id,building_id,' . $request->building_id,
-        'floor'         => 'nullable|string|in:ground,first,second,third,fourth,fifth',
-        'unit_type'     => 'required|string|in:' . implode(',', UnitType::values()),
-        'status'        => 'required|string|in:' . implode(',', UnitStatus::values()),
-        'notes'         => 'nullable|string|max:1000',
-        'rent_price'    => 'required|numeric|min:0',
-        'location'      => 'nullable|string|max:100', // ✅ اسم العامود الحقيقي
-        'image'         => 'nullable|image|max:20480',
-    ]);
+    {
+        $request->validate([
+            'building_id'       => 'required|exists:buildings,id',
+            'unit_number'       => 'required|string|max:50|unique:units,unit_number,NULL,id,building_id,' . $request->building_id,
+            'floor'             => 'nullable|string|in:ground,first,second,third,fourth,fifth',
+            'unit_type'         => 'required|string|in:' . implode(',', UnitType::values()),
+            'status'            => 'required|string|in:' . implode(',', UnitStatus::values()),
+            'notes'             => 'nullable|string|max:1000',
+            'rent_price'        => 'required|numeric|min:0',
+            'location'          => 'nullable|string|max:100',
+            'image'             => 'nullable|image|max:20480',
+            'is_first_tenant'   => 'nullable|boolean',
+        ]);
 
-    $unit = Unit::create($request->only([
-        'building_id',
-        'unit_number',
-        'floor',
-        'unit_type',
-        'status',
-        'notes',
-        'rent_price',
-        'location', // ✅ الاسم الصحيح هنا كمان
-    ]));
+        $unit = Unit::create($request->only([
+            'building_id',
+            'unit_number',
+            'floor',
+            'unit_type',
+            'status',
+            'notes',
+            'rent_price',
+            'location',
+        ]) + [
+            'is_first_tenant' => $request->has('is_first_tenant'),
+        ]);
 
-    // ✅ لو فيه صورة، اضغط وخزنها
-    if ($request->hasFile('image')) {
-        $filename = ImageService::uploadAndOptimize($request->file('image'), 'units');
-        $unit->images()->create(['image_path' => $filename]);
+        if ($request->hasFile('image')) {
+            $filename = ImageService::uploadAndOptimize($request->file('image'), 'units');
+            $unit->images()->create(['image_path' => $filename]);
+        }
+
+        log_action("🏠 تم إضافة وحدة جديدة رقم {$unit->unit_number} في مبنى: {$unit->building->name}");
+
+        return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
     }
 
-    log_action("🏠 تم إضافة وحدة جديدة رقم {$unit->unit_number} في مبنى: {$unit->building->name}");
-
-    return redirect()->route('admin.units.index')->with('success', __('messages.created_successfully'));
-}
 
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -151,44 +160,53 @@ class UnitController extends Controller
     //-----------------------------------------------------------------------------------------------------------------------
 
 
-   public function update(Request $request, Unit $unit)
-{
-    $unit->load('latestContract');
+    public function update(Request $request, Unit $unit)
+    {
+        $unit->load('latestContract');
 
-    // ✅ لو الوحدة حالياً مشغولة وفيه عقد نشط، امنع التغيير إلا لو الحالة هتفضل "occupied"
-    if (
-        $unit->status === 'occupied' &&
-        $unit->latestContract &&
-        $unit->latestContract->isActive()
-    ) {
-        if ($request->has('status') && $request->status !== 'occupied') {
+        if (
+            $unit->status === 'occupied' &&
+            $unit->latestContract &&
+            $unit->latestContract->isActive()
+        ) {
+            if ($request->has('status') && $request->status !== 'occupied') {
+                return back()->withErrors([
+                    'status' => 'لا يمكن تعديل حالة الوحدة لأنها مرتبطة بعقد نشط رقم ' . $unit->latestContract->contract_number,
+                ])->withInput();
+            }
+        }
+
+        if (
+            $request->has('status') &&
+            $request->status === 'available' &&
+            $unit->activeBookingExists()
+        ) {
             return back()->withErrors([
-                'status' => 'لا يمكن تعديل حالة الوحدة لأنها مرتبطة بعقد نشط رقم ' . $unit->latestContract->contract_number,
+                'status' => 'لا يمكن تحويل الغرفة إلى متاحة لأنها مرتبطة بحجز قائم، يجب أولاً إلغاء الحجز.',
             ])->withInput();
         }
+
+        $validated = $request->validate([
+            'unit_number'      => 'required|string|max:255',
+            'floor'            => 'nullable|string|in:ground,first,second,third,fourth,fifth',
+            'rent_price'       => 'required|numeric',
+            'status'           => 'required|in:' . implode(',', UnitStatus::values()),
+            'unit_type'        => 'required|string|in:' . implode(',', UnitType::values()),
+            'location'         => 'nullable|string|max:100',
+            'notes'            => 'nullable|string',
+            'is_first_tenant'  => 'nullable|boolean',
+        ]);
+
+        $unit->update($validated + [
+            'is_first_tenant' => $request->has('is_first_tenant'),
+        ]);
+
+        log_action('🏠 تم تعديل بيانات الغرفة: ' . $unit->unit_number . ' - ' . $unit->building->name);
+
+        return redirect()
+            ->route('admin.units.index')
+            ->with('success', 'تم تحديث بيانات الوحدة بنجاح');
     }
-
-    // ✅ التحقق من البيانات
-    $validated = $request->validate([
-        'unit_number' => 'required|string|max:255',
-        'floor'       => 'nullable|string|in:ground,first,second,third,fourth,fifth',
-        'rent_price'  => 'required|numeric',
-        'status'      => 'required|in:' . implode(',', UnitStatus::values()),
-        'unit_type'   => 'required|string|in:' . implode(',', UnitType::values()),
-        'location'    => 'nullable|string|max:100', // ✅ أضفنا التحقق من الموقع
-        'notes'       => 'nullable|string',
-    ]);
-
-
-    // ✅ التحديث
-    $unit->update($validated);
-
-    log_action('🏠 تم تعديل بيانات الغرفة: ' . $unit->unit_number . ' - ' . $unit->building->name);
-
-    return redirect()
-        ->route('admin.units.index')
-        ->with('success', 'تم تحديث بيانات الوحدة بنجاح');
-}
 
 
     //-----------------------------------------------------------------------------------------------------------------------

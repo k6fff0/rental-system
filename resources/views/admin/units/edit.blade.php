@@ -176,7 +176,15 @@
                         </svg>
                         {{ __('messages.unit_details') }}
                     </h3>
-
+                    {{-- ✅ أول ساكن --}}
+                    <label for="is_first_tenant" class="flex items-center space-x-2 rtl:space-x-reverse">
+                        <input type="checkbox" name="is_first_tenant" id="is_first_tenant" value="1"
+                            {{ old('is_first_tenant', $unit->is_first_tenant ?? false) ? 'checked' : '' }}
+                            class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">
+                            {{ __('messages.first_tenant_badge') }}
+                        </span>
+                    </label>
                     {{-- نوع الوحدة --}}
                     <div class="mb-6">
                         <label for="unit_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

@@ -304,7 +304,15 @@
                                     <p class="text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
-
+                            {{-- ✅ أول ساكن --}}
+                            <label for="is_first_tenant" class="flex items-center space-x-2 rtl:space-x-reverse">
+                                <input type="checkbox" name="is_first_tenant" id="is_first_tenant" value="1"
+                                    {{ old('is_first_tenant', $unit->is_first_tenant ?? false) ? 'checked' : '' }}
+                                    class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">
+                                    {{ __('messages.first_tenant_badge') }}
+                                </span>
+                            </label>
                         </div>
                     </div>
 
