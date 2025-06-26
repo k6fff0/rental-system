@@ -99,7 +99,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
     Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
 
-
+    // روتات الزون 
+    Route::resource('zones', \App\Http\Controllers\Admin\ZoneController::class);
 
 
 

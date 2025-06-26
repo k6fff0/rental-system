@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-//use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
 
     use HasRoles {
         HasRoles::hasRole as protected traitHasRole;
@@ -67,8 +65,15 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Building::class)->withTimestamps();
     }
+	
+	
 
     public function assignedMaintenanceRequests(): HasMany
+    {
+        return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
+    }
+
+    public function technicianRequests(): HasMany
     {
         return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
     }
@@ -82,6 +87,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Violation::class);
     }
+
+public function technicianZones(): BelongsToMany
+{
+    return $this->belongsToMany(Zone::class, 'technician_zone', 'user_id', 'zone_id');
+}
+
+public function supervisedZones(): HasMany
+{
+    return $this->hasMany(Zone::class, 'supervisor_id');
+}
+
 
     /*
     |--------------------------------------------------------------------------
@@ -160,28 +176,18 @@ class User extends Authenticatable
         return asset('images/default-user.png');
     }
 
-
-    public function technicianRequests()
+    public function syncRolesAndDetachBuildings(array|string $roles)
     {
-        return $this->hasMany(MaintenanceRequest::class, 'assigned_worker_id');
+        $roles = is_array($roles) ? $roles : [$roles];
+
+        $hadSupervisorRole = $this->hasRole('Building Supervisor');
+
+        // نفّذ التعديل الفعلي
+        $this->syncRoles($roles);
+
+        // لو اتشال منه الدور بعد التعديل → افصل المباني
+        if ($hadSupervisorRole && !in_array('Building Supervisor', $roles)) {
+            $this->buildings()->detach();
+        }
     }
-	
-	
-	
-public function syncRolesAndDetachBuildings(array|string $roles)
-{
-    $roles = is_array($roles) ? $roles : [$roles];
-
-    $hadSupervisorRole = $this->hasRole('Building Supervisor');
-
-    // نفّذ التعديل الفعلي
-    $this->syncRoles($roles);
-
-    // لو اتشال منه الدور بعد التعديل → افصل المباني
-    if ($hadSupervisorRole && !in_array('Building Supervisor', $roles)) {
-        $this->buildings()->detach();
-    }
-}
-
-
 }

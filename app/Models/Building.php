@@ -79,4 +79,10 @@ class Building extends Model
     {
         return $this->belongsToMany(User::class, 'building_user');
     }
+	
+	public function zone()
+{
+    return $this->belongsTo(Zone::class);
+}
+
 }

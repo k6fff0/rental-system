@@ -222,9 +222,11 @@ class UnitController extends Controller
 
     public function available(Request $request)
     {
+
         $query = Unit::with(['building', 'images'])
             ->where('status', 'available');
 
+        // فلتر البحث
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -236,10 +238,34 @@ class UnitController extends Controller
             });
         }
 
-        $units = $query->latest()->paginate(20);
+        // ✅ فلتر المنطقة
+        if ($request->filled('zone_id')) {
+            $query->whereHas('building', function ($q) use ($request) {
+                $q->where('zone_id', $request->zone_id);
+            });
+        }
+        // ✅ فلتر حسب الحد الأدنى للسعر
+        if ($request->filled('min_price')) {
+            $query->where('rent_price', '>=', $request->min_price);
+        }
 
-        return view('admin.units.available', compact('units'));
+        // ✅ فلتر حسب الحد الأقصى للسعر
+        if ($request->filled('max_price')) {
+            $query->where('rent_price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('unit_type')) {
+            $query->where('unit_type', $request->unit_type);
+        }
+
+        $zones = \App\Models\Zone::all();
+        $units = $query->latest()->paginate(20);
+        $unitTypes = \App\Models\Unit::select('unit_type')->distinct()->pluck('unit_type');
+
+
+        return view('admin.units.available', compact('units', 'zones', 'unitTypes'));
     }
+
 
     //-----------------------------------------------------------------------------------------------------------------------
 

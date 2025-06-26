@@ -110,9 +110,9 @@ class MaintenanceRequestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'request_type' => 'required|in:unit,building',
-            'unit_id'      => 'required_if:request_type,unit|nullable|exists:units,id',
-            'building_id'  => 'required_if:request_type,building|nullable|exists:buildings,id',
+            'request_type'     => 'required|in:unit,building',
+            'unit_id'          => 'required_if:request_type,unit|nullable|exists:units,id',
+            'building_id'      => 'required_if:request_type,building|nullable|exists:buildings,id',
             'sub_specialty_id' => 'required|exists:specialties,id',
             'description'      => 'nullable|string',
             'image'            => 'nullable|image|max:20480',
@@ -146,12 +146,12 @@ class MaintenanceRequestController extends Controller
             'tenant_id'        => $unit?->latestContract?->tenant?->id,
         ];
 
-        // رفع الصورة إن وُجدت
+        // 📷 رفع الصورة
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('maintenance_images', 'public');
         }
 
-        // 🔊 تسجيل صوتي
+        // 🔊 رفع الملاحظة الصوتية
         if ($request->filled('audio_data')) {
             try {
                 $base64Data = $request->input('audio_data');
@@ -165,7 +165,7 @@ class MaintenanceRequestController extends Controller
             }
         }
 
-        // 👨‍🔧 تعيين فني
+        // 👨‍🔧 التوزيع اليدوي
         if ($request->filled('technician_id')) {
             $technician = User::find($request->technician_id);
             if ($technician->technician_status === 'unavailable') {
@@ -174,18 +174,39 @@ class MaintenanceRequestController extends Controller
             $data['assigned_worker_id'] = $technician->id;
             $data['assigned_manually'] = true;
         } else {
+            // 👨‍🔧 التوزيع التلقائي حسب المنطقة
             $subSpecialty = Specialty::find($request->sub_specialty_id);
             if ($subSpecialty && $subSpecialty->parent_id) {
                 $mainSpecialtyId = $subSpecialty->parent_id;
+
+                $building = Building::find($data['building_id']);
+                $zoneId = $building?->zone_id;
+
+                // فني من نفس المنطقة
                 $technician = User::role('technician')
                     ->where('main_specialty_id', $mainSpecialtyId)
                     ->whereIn('technician_status', ['available', 'busy'])
+                    ->whereHas('technicianZones', fn($q) => $q->where('zone_id', $zoneId))
                     ->withCount(['assignedMaintenanceRequests as active_requests_count' => function ($q) {
                         $q->whereNotIn('status', ['completed', 'cancelled']);
                     }])
                     ->orderBy('active_requests_count')
                     ->inRandomOrder()
                     ->first();
+
+                // fallback لفني عالمي مش مرتبط بمنطقة
+                if (! $technician) {
+                    $technician = User::role('technician')
+                        ->where('main_specialty_id', $mainSpecialtyId)
+                        ->whereIn('technician_status', ['available', 'busy'])
+                        ->doesntHave('technicianZones') // بدون منطقة
+                        ->withCount(['assignedMaintenanceRequests as active_requests_count' => function ($q) {
+                            $q->whereNotIn('status', ['completed', 'cancelled']);
+                        }])
+                        ->orderBy('active_requests_count')
+                        ->inRandomOrder()
+                        ->first();
+                }
 
                 if ($technician) {
                     $data['assigned_worker_id'] = $technician->id;
@@ -194,10 +215,10 @@ class MaintenanceRequestController extends Controller
             }
         }
 
-        // 💾 إنشاء البلاغ بعد جمع كل البيانات
+        // 💾 إنشاء البلاغ
         $maintenanceRequest = MaintenanceRequest::create($data);
 
-        // ✅ تحديث حالة الفني
+        // ✅ تحديث حالة الفني حسب عدد المهام
         if ($maintenanceRequest->technician) {
             $maintenanceRequest->technician->updateTechnicianBusyStatus();
         }
@@ -205,6 +226,7 @@ class MaintenanceRequestController extends Controller
         return redirect()->route('admin.maintenance_requests.index')
             ->with('success', 'تم تسجيل البلاغ بنجاح');
     }
+
 
 
     //-------------------------------------------------------------------------------------------------------------------------------------

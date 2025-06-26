@@ -99,6 +99,11 @@
                     'icon' => 'heroicon-o-user-circle',
                 ],
                 [
+                    'route' => 'admin.zones.index',
+                    'label' => __('messages.zones_mang'),
+                    'icon' => 'heroicon-o-map',
+                ],
+                [
                     'route' => 'admin.building-supervisors.index',
                     'label' => __('messages.building_supervisors'),
                     'icon' => 'heroicon-o-user',

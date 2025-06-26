@@ -1697,13 +1697,52 @@ return [
     'fifth' => 'الدور الخامس',
     'sixth' => 'الدور السادس',
     'not_specified' => 'غير محدد',
-
+    'zones_mang' => 'أدارة المناطق',
+    'all_zones' => ' أختر علي حسب المنطقة',
+    'view_building_photo' => 'صورة المبنى',
     'private_entrance' => 'مدخل خاص',
     'unit_location' => 'موقع الوحدة',
     'select_location' => '— اختر الموقع —',
     'logout' => 'تسجيل الخروج',
     'no_units_available' => 'لا توجد وحدات متاحة حالياً',
     'back_to_dashboard' => 'العودة إلى لوحة التحكم',
+    'filters' => 'الفلاتر',
+    'search' => 'بحث',
+    'price_range' => 'نطاق السعر',
+    'from' => 'من',
+    'to' => 'إلى',
+    'unit_type' => 'نوع الوحدة',
+    'all_types' => 'جميع الأنواع',
+    'apartment' => 'شقة',
+    'villa' => 'فيلا',
+    'studio' => 'استوديو',
+    'zone' => 'المنطقة',
+    'clear_filters' => 'مسح الفلاتر',
+    'additional_details' => 'تفاصيل إضافية',
+    'more_details' => 'تفاصيل أكثر',
+    'loading' => 'جاري التحميل',
+    'images' => 'صور',
+    'add_to_favorites' => 'إضافة للمفضلة',
+    'remove_from_favorites' => 'إزالة من المفضلة',
+    'call' => 'اتصال',
+    'whatsapp' => 'واتساب',
+    'nearby_services' => 'الخدمات المجاورة',
+    'school_nearby' => 'مدرسة قريبة',
+    'hospital_nearby' => 'مستشفى قريب',
+    'mall_nearby' => 'مول قريب',
+    'meters' => 'متر',
+    'km' => 'كم',
+    'additional_costs' => 'الرسوم الإضافية',
+    'security_deposit' => 'الأمانة',
+    'commission' => 'العمولة',
+    'utilities' => 'الكهرباء والماء',
+    'as_per_usage' => 'حسب الاستهلاك',
+    'building_amenities' => 'مرافق المبنى',
+    'elevator' => 'مصعد',
+    'parking' => 'موقف سيارات',
+    'security' => 'أمن',
+    'internet_ready' => 'جاهز للإنترنت',
+    'special_offer' => 'عرض خاص',
     'no_units_message' => 'لم يتم العثور على أي وحدات تطابق معايير البحث الخاصة بك.',
     'privacy_terms_note' => 'هذا النظام مملوك حصريًا لشركة Smart Step، ولا يجوز نسخه أو استخدامه أو تعديله بأي شكل من الأشكال دون الرجوع إلى المطور يمكن التواصل عبر الواتساب.',
 
@@ -1719,5 +1758,292 @@ return [
     ],
 
 
+    'zones' => 'المناطق',
+    'zone_name' => 'اسم المنطقة',
+    'add_zone' => 'إضافة منطقة',
+    'edit_zone' => 'تعديل المنطقة',
+    'view_zone' => 'عرض المنطقة',
+    'delete_zone' => 'حذف المنطقة',
+    'zones_list' => 'قائمة المناطق',
+    'total_zones' => 'إجمالي المناطق',
+    'manage_zones_description' => 'إدارة وتنظيم المناطق والإشراف عليها',
+    'no_zones_found' => 'لا توجد مناطق',
+    'no_zones_description' => 'لم يتم العثور على أي مناطق. ابدأ بإضافة منطقة جديدة.',
+    'add_first_zone' => 'إضافة أول منطقة',
+
+    // Buildings & Technicians
+    'total_buildings' => 'إجمالي المباني',
+    'total_technicians' => 'إجمالي الفنيين',
+    'buildings_count' => 'عدد المباني',
+    'technicians_count' => 'عدد الفنيين',
+
+    // Supervisor
+    'supervisor' => 'المشرف',
+    'not_assigned' => 'غير محدد',
+    'assign_supervisor' => 'تعيين مشرف',
+
+    // Actions
+    'actions' => 'الإجراءات',
+    'view' => 'عرض',
+    'edit' => 'تعديل',
+    'delete' => 'حذف',
+    'save' => 'حفظ',
+    'cancel' => 'إلغاء',
+    'create' => 'إنشاء',
+    'update' => 'تحديث',
+    'confirm_delete' => 'هل أنت متأكد من أنك تريد حذف هذه المنطقة؟',
+    'back' => 'رجوع',
+
+    // Status Messages
+    'created_successfully' => 'تم الإنشاء بنجاح',
+    'updated_successfully' => 'تم التحديث بنجاح',
+    'deleted_successfully' => 'تم الحذف بنجاح',
+    'operation_failed' => 'فشلت العملية',
+
+    // Form Fields
+    'name' => 'الاسم',
+    'description' => 'الوصف',
+    'status' => 'الحالة',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'required_field' => 'هذا الحقل مطلوب',
+
+    // General
+    'dashboard' => 'لوحة التحكم',
+    'home' => 'الرئيسية',
+    'settings' => 'الإعدادات',
+    'profile' => 'الملف الشخصي',
+    'logout' => 'تسجيل الخروج',
+    'search' => 'بحث',
+    'filter' => 'تصنيف',
+    'export' => 'تصدير',
+    'import' => 'استيراد',
+    'print' => 'طباعة',
+    'refresh' => 'تحديث',
+    'loading' => 'جاري التحميل...',
+    'no_data' => 'لا توجد بيانات',
+    'select_option' => 'اختر خياراً',
+    'all' => 'الكل',
+    'yes' => 'نعم',
+    'no' => 'لا',
+    'submit' => 'إرسال',
+    'reset' => 'إعادة تعيين',
+    'close' => 'إغلاق',
+    'open' => 'فتح',
+    'show' => 'إظهار',
+    'hide' => 'إخفاء',
+    'more' => 'المزيد',
+    'less' => 'أقل',
+    'expand' => 'توسيع',
+    'collapse' => 'طي',
+
+    // Date & Time
+    'date' => 'التاريخ',
+    'time' => 'الوقت',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'تاريخ التحديث',
+    'today' => 'اليوم',
+    'yesterday' => 'أمس',
+    'tomorrow' => 'غداً',
+    'this_week' => 'هذا الأسبوع',
+    'this_month' => 'هذا الشهر',
+    'this_year' => 'هذا العام',
+
+    // Permissions & Roles
+    'permissions' => 'الصلاحيات',
+    'roles' => 'الأدوار',
+    'admin' => 'مدير',
+    'user' => 'مستخدم',
+    'guest' => 'زائر',
+    'access_denied' => 'تم رفض الوصول',
+    'unauthorized' => 'غير مصرح',
+
+    // Notifications
+    'notifications' => 'الإشعارات',
+    'new_notification' => 'إشعار جديد',
+    'mark_as_read' => 'تعليم كمقروء',
+    'mark_all_as_read' => 'تعليم الكل كمقروء',
+    'no_notifications' => 'لا توجد إشعارات',
+
+    // Validation Messages
+    'validation_required' => 'هذا الحقل مطلوب',
+    'validation_email' => 'يجب أن يكون البريد الإلكتروني صحيحاً',
+    'validation_min' => 'يجب أن يكون الطول الأدنى :min أحرف',
+    'validation_max' => 'يجب أن لا يتجاوز الطول :max حرف',
+    'validation_unique' => 'هذه القيمة موجودة مسبقاً',
+    'validation_confirmed' => 'تأكيد كلمة المرور غير متطابق',
+
+    // Error Messages
+    'error_404' => 'الصفحة غير موجودة',
+    'error_500' => 'خطأ في الخادم',
+    'something_went_wrong' => 'حدث خطأ ما',
+    'try_again' => 'حاول مرة أخرى',
+    'contact_support' => 'اتصل بالدعم الفني',
+    'edit_zone' => 'تعديل المنطقة',
+    'edit_zone_description' => 'تعديل وتحديث بيانات المنطقة والمباني والفنيين المرتبطين بها',
+    'back_to_zones' => 'العودة للمناطق',
+    'zone_information' => 'معلومات المنطقة',
+
+    // Form Fields
+    'zone_name' => 'اسم المنطقة',
+    'select_buildings' => 'اختر المباني',
+    'select_technicians' => 'اختر الفنيين',
+    'select_supervisor' => 'اختر المشرف',
+    'select_from_list' => 'اختر من القائمة',
+
+    // Counters
+    'selected' => 'المحدد',
+
+    // Empty States
+    'no_buildings_available' => 'لا توجد مباني متاحة',
+    'no_technicians_available' => 'لا يوجد فنيين متاحين',
+
+    // Actions
+    'update_zone' => 'تحديث المنطقة',
+    'cancel' => 'إلغاء',
+    'add_new_zone' => 'إضافة منطقة جديدة',
+    'add_zone_description' => 'إنشاء منطقة جديدة وربطها بالمباني والفنيين والمشرفين المناسبين',
+    'new_zone_information' => 'معلومات المنطقة الجديدة',
+
+    // Form Fields
+    'enter_zone_name' => 'أدخل اسم المنطقة',
+    'select_zone_supervisors' => 'اختر مشرفين المنطقة',
+
+    // Empty State Messages
+    'add_buildings_first' => 'يجب إضافة المباني أولاً من قسم إدارة المباني',
+    'add_technicians_first' => 'يجب إضافة الفنيين أولاً من قسم إدارة الفنيين',
+    'add_supervisors_first' => 'يجب إضافة المشرفين أولاً من قسم إدارة المشرفين',
+    'no_supervisors_available' => 'لا يوجد مشرفين متاحين',
+
+    // Actions
+    'save_zone' => 'حفظ المنطقة',
+    'zone_details' => 'تفاصيل المنطقة',
+    'zone_details_description' => 'عرض تفصيلي لمعلومات المنطقة والمباني والفنيين والمشرفين المرتبطين بها',
+
+    // Stats Cards
+    'supervisor_status' => 'حالة المشرف',
+    'assigned' => 'معين',
+
+    // Section Headers
+    'associated_buildings' => 'المباني المرتبطة',
+    'associated_technicians' => 'الفنيين المرتبطين',
+    'zone_supervisor' => 'مشرف المنطقة',
+    'zone_information' => 'معلومات المنطقة',
+
+    // Empty States
+    'no_buildings_associated' => 'لا توجد مباني مرتبطة بهذه المنطقة',
+    'no_technicians_associated' => 'لا يوجد فنيين مرتبطين بهذه المنطقة',
+    'no_supervisor_assigned' => 'لا يوجد مشرف معين لهذه المنطقة',
+
+    // Date & Time
+    'created_at' => 'تاريخ الإنشاء',
+    'last_updated' => 'آخر تحديث',
+
+    // Actions
+    'confirm_delete_zone' => 'هل أنت متأكد من حذف هذه المنطقة؟ سيتم حذف جميع الارتباطات المرتبطة بها.',
+    'building_supervisors_section' => 'قسم مشرفي المباني',
+    'manage_building_supervisors_description' => 'إدارة وتنظيم مشرفي المباني ومراقبة المناطق المخصصة لهم',
+    'add_supervisor' => 'إضافة مشرف',
+    'supervisors_list' => 'قائمة المشرفين',
+
+    // Search & Filter
+    'search_name_phone' => 'ابحث بالاسم أو الهاتف',
+    'search' => 'بحث',
+
+    // Stats
+    'total_supervisors' => 'إجمالي المشرفين',
+
+    // Table Headers
+    'name' => 'الاسم',
+    'phone_number' => 'رقم الهاتف',
+    'zones_count' => 'عدد المناطق',
+
+    // Data
+    'not_available' => 'غير متوفر',
+
+    // Empty States
+    'no_supervisors_found' => 'لا يوجد مشرفين حالياً',
+    'no_supervisors_description' => 'لم يتم العثور على أي مشرفين. ابدأ بإضافة مشرف جديد.',
+    'add_first_supervisor' => 'إضافة أول مشرف',
+    // Page Headers
+    'supervisor_data' => 'بيانات المشرف',
+    'supervisor_details_description' => 'عرض تفصيلي لمعلومات المشرف والمناطق والمباني المرتبطة به',
+    'back_to_supervisors' => 'العودة للمشرفين',
+
+    // Sections
+    'personal_information' => 'المعلومات الشخصية',
+    'buildings_by_zones' => 'المباني حسب المناطق',
+    'account_information' => 'معلومات الحساب',
+
+    // Fields
+    'phone' => 'الهاتف',
+    'email' => 'البريد الإلكتروني',
+    'supervised_zones' => 'المناطق المشرف عليها',
+    'buildings' => 'المباني',
+    'zone' => 'المنطقة',
+
+    // Empty States
+    'no_buildings_in_zone' => 'لا توجد مباني مرتبطة بهذه المنطقة',
+    'no_zones_assigned' => 'لا توجد مناطق مخصصة',
+    'no_zones_assigned_description' => 'لم يتم تخصيص أي مناطق لهذا المشرف بعد',
+    'manage_zones' => 'إدارة المناطق',
+
+    // Actions
+    'edit_supervisor' => 'تعديل المشرف',
+    'edit_supervisor_data' => 'تعديل بيانات المشرف',
+    'edit_supervisor_description' => 'تعديل وتحديث المناطق المخصصة للمشرف',
+    'back_to_supervisor' => 'العودة للمشرف',
+    'supervisor_assignment' => 'تخصيص المناطق للمشرف',
+
+    // Form Fields
+    'supervisor_name' => 'اسم المشرف',
+    'responsible_zones' => 'المناطق المسؤول عنها',
+    'name_cannot_be_changed' => 'لا يمكن تغيير الاسم من هذه الصفحة',
+
+    // Zone Assignment
+    'assignment_note' => 'ملاحظة مهمة',
+    'assignment_note_description' => 'يمكن للمشرف الواحد أن يكون مسؤولاً عن عدة مناطق، ويمكن إلغاء التخصيص في أي وقت.',
+
+    // Current Status
+    'current_assignments' => 'التخصيصات الحالية',
+    'currently_supervising' => 'يشرف حالياً على',
+    'with_total_buildings' => 'تحتوي على إجمالي :count مبنى',
+
+    // Empty States
+    'no_zones_available' => 'لا توجد مناطق متاحة حالياً',
+    'create_zones_first' => 'يجب إنشاء المناطق أولاً من قسم إدارة المناطق',
+
+    // Actions
+    'update_assignments' => 'تحديث التخصيصات',
+    // Main Headers
+    'building_supervisors_section' => 'قسم مشرفي المباني',
+    'manage_building_supervisors_description' => 'إدارة وتنظيم مشرفي المباني ومراقبة المناطق المخصصة لهم والتحكم في صلاحياتهم بكفاءة عالية',
+    'supervisors_list' => 'قائمة المشرفين',
+    'manage_supervisor_assignments' => 'إدارة تخصيصات المشرفين',
+
+    // Statistics
+    'total_supervisors' => 'إجمالي المشرفين',
+    'active_supervisors' => 'المشرفين النشطين',
+    'total_zones_supervised' => 'إجمالي المناطق المُشرف عليها',
+    'unassigned_supervisors' => 'المشرفين غير المخصصين',
+
+    // Search & Filter
+    'search_name_phone' => 'ابحث بالاسم أو رقم الهاتف...',
+    'search' => 'بحث',
+    'all_supervisors' => 'جميع المشرفين',
+    'active_only' => 'النشطين فقط',
+    'unassigned_only' => 'غير المخصصين فقط',
+    'showing_results' => 'عرض :count من أصل :total نتيجة',
+
+    // Status & Info
+    'active' => 'نشط',
+    'unassigned' => 'غير مخصص',
+    'building_supervisor' => 'مشرف مباني',
+    'phone' => 'الهاتف',
+    'email' => 'البريد الإلكتروني',
+    'not_available' => 'غير متوفر',
+
+    // Actions
+    'view' => 'عرض',
 
 ];

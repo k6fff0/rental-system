@@ -1,332 +1,220 @@
 @extends('layouts.app')
-@section('title', __('messages.edit_assigned_buildings'))
-
-@push('styles')
-    <style>
-        .building-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .building-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .building-card.locked {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-        }
-
-        .building-card.assigned {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            border-color: #3b82f6;
-        }
-
-        .checkbox-custom {
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #d1d5db;
-            border-radius: 4px;
-            background: white;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .checkbox-custom:checked {
-            background: #3b82f6;
-            border-color: #3b82f6;
-        }
-
-        .checkbox-custom:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .checkbox-custom:disabled {
-            background: #f3f4f6;
-            border-color: #d1d5db;
-            cursor: not-allowed;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-    </style>
-@endpush
 
 @section('content')
-    <div class="min-h-screen bg-gray-50 py-8" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            {{-- Header Section --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 fade-in">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-building text-blue-600 text-xl"></i>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-900">{{ __('messages.edit_assigned_buildings') }}</h1>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('messages.manage_supervisor_buildings') }}</p>
-                        </div>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-4xl">
+            <!-- Header Section -->
+            <div class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                            {{ __('messages.edit_supervisor_data') }}: {{ $user->name }}
+                        </h1>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            {{ __('messages.edit_supervisor_description') }}
+                        </p>
                     </div>
-
-                    {{-- Back Button --}}
-                    <a href="{{ route('admin.building-supervisors.index') }}"
-                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors space-x-2 rtl:space-x-reverse">
-                        <i class="fas fa-arrow-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }} text-xs"></i>
-                        <span>{{ __('messages.back') }}</span>
+                    <a href="{{ route('admin.building-supervisors.show', $user) }}"
+                        class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 
+                          text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        {{ __('messages.back_to_supervisor') }}
                     </a>
-                </div>
-
-                {{-- Progress Indicator --}}
-                <div class="w-full bg-gray-200 rounded-full h-1 mb-4">
-                    <div class="progress-bar w-1/3" id="progressBar"></div>
                 </div>
             </div>
 
-            <form action="{{ route('admin.building-supervisors.update', $user->id) }}" method="POST" id="buildingForm">
-                @csrf
-                @method('PUT')
+            <!-- Form Section -->
+            <div
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        {{ __('messages.supervisor_assignment') }}
+                    </h3>
+                </div>
 
-                {{-- Supervisor Info Card --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 fade-in">
-                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                        <div
-                            class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-user-tie text-white text-xl"></i>
-                        </div>
-                        <div class="flex-1">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                <form action="{{ route('admin.building-supervisors.update', $user) }}" method="POST" class="p-6">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="space-y-8">
+                        <!-- Supervisor Name (Read Only) -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {{ __('messages.supervisor_name') }}
                             </label>
                             <div class="relative">
-                                <input type="text" value="{{ $user->name }}" disabled
-                                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-medium focus:outline-none">
-                                <div
-                                    class="absolute inset-y-0 {{ app()->getLocale() === 'ar' ? 'left-0 pl-3' : 'right-0 pr-3' }} flex items-center">
-                                    <i class="fas fa-lock text-gray-400"></i>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
                                 </div>
+                                <input type="text" value="{{ $user->name }}" disabled
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                                          bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300
+                                          cursor-not-allowed opacity-75">
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Buildings Selection --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 fade-in">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">{{ __('messages.select_buildings') }}</h2>
-                            <p class="text-sm text-gray-600 mt-1">{{ __('messages.assign_buildings_description') }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.name_cannot_be_changed') }}
+                            </p>
                         </div>
 
-                        {{-- Selection Counter --}}
-                        <div class="bg-blue-50 px-4 py-2 rounded-lg">
-                            <span class="text-sm font-medium text-blue-700">
-                                <span id="selectedCount">0</span> {{ __('messages.selected') }}
-                            </span>
-                        </div>
-                    </div>
+                        <!-- Zones Assignment -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                    {{ __('messages.responsible_zones') }}
+                                </label>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ __('messages.selected') }}: <span id="zones-count">{{ count($assigned) }}</span>
+                                </span>
+                            </div>
 
-                    {{-- Buildings Grid --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        @foreach ($buildings as $building)
-                            @php
-                                $isAssigned = in_array($building->id, $assigned);
-                                $isLocked = in_array($building->id, $assignedToOthers) && !$isAssigned;
-                            @endphp
+                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 max-h-64 overflow-y-auto">
+                                @forelse($zones as $zone)
+                                    @if ($loop->first)
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    @endif
 
-                            <div
-                                class="building-card {{ $isLocked ? 'locked' : ($isAssigned ? 'assigned' : '') }} 
-                                    border-2 {{ $isAssigned ? 'border-blue-300' : 'border-gray-200' }} 
-                                    rounded-xl p-4 {{ $isLocked ? 'opacity-60' : '' }}">
-                                <label class="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
-                                    <input type="checkbox" name="buildings[]" value="{{ $building->id }}"
-                                        {{ $isAssigned ? 'checked' : '' }} {{ $isLocked ? 'disabled' : '' }}
-                                        class="checkbox-custom building-checkbox" onchange="updateCounter()">
-
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between">
-                                            <h3
-                                                class="font-semibold text-gray-900 {{ $isLocked ? 'line-through text-gray-500' : '' }}">
-                                                {{ $building->name }}
-                                            </h3>
-
-                                            @if ($isLocked)
-                                                <span
-                                                    class="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">
-                                                    <i class="fas fa-lock mr-1 rtl:mr-0 rtl:ml-1"></i>
-                                                    {{ __('messages.assigned_to_other') }}
-                                                </span>
-                                            @elseif($isAssigned)
-                                                <span
-                                                    class="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-                                                    <i class="fas fa-check mr-1 rtl:mr-0 rtl:ml-1"></i>
-                                                    {{ __('messages.assigned') }}
+                                    <label
+                                        class="flex items-center gap-3 p-3 rounded-lg bg-white dark:bg-gray-600 
+                                              hover:bg-purple-50 dark:hover:bg-gray-550 cursor-pointer transition-colors
+                                              border border-gray-200 dark:border-gray-500">
+                                        <input type="checkbox" name="zones[]" value="{{ $zone->id }}"
+                                            {{ in_array($zone->id, $assigned) ? 'checked' : '' }}
+                                            class="w-4 h-4 text-purple-600 bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 
+                                                  rounded focus:ring-purple-500 dark:focus:ring-purple-600 focus:ring-2
+                                                  zones-checkbox">
+                                        <div class="flex-1 min-w-0">
+                                            <span
+                                                class="text-sm font-medium text-gray-700 dark:text-gray-300 block truncate">
+                                                {{ $zone->name }}
+                                            </span>
+                                            @if ($zone->buildings_count > 0)
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {{ $zone->buildings_count }} {{ __('messages.buildings') }}
                                                 </span>
                                             @endif
                                         </div>
+                                        <div class="flex-shrink-0">
+                                            <svg class="w-5 h-5 text-purple-500 dark:text-purple-400" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            </svg>
+                                        </div>
+                                    </label>
 
-                                        @if ($building->address)
-                                            <p class="text-sm text-gray-600 mt-1">
-                                                <i class="fas fa-map-marker-alt mr-1 rtl:mr-0 rtl:ml-1"></i>
-                                                {{ $building->address }}
-                                            </p>
-                                        @endif
+                                    @if ($loop->last)
+                            </div>
+                            @endif
+                        @empty
+                            <div class="text-center py-8">
+                                <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-3" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                </svg>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">{{ __('messages.no_zones_available') }}
+                                </p>
+                                <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">
+                                    {{ __('messages.create_zones_first') }}</p>
+                            </div>
+                            @endforelse
+                        </div>
 
-                                        @if (isset($building->units_count))
-                                            <p class="text-xs text-gray-500 mt-2">
-                                                {{ $building->units_count }} {{ __('messages.units') }}
-                                            </p>
-                                        @endif
+                        @if ($zones->count() > 0)
+                            <div
+                                class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div class="text-sm text-blue-800 dark:text-blue-200">
+                                        <p class="font-medium mb-1">{{ __('messages.assignment_note') }}</p>
+                                        <p>{{ __('messages.assignment_note_description') }}</p>
                                     </div>
-                                </label>
+                                </div>
                             </div>
-                        @endforeach
+                        @endif
                     </div>
 
-                    {{-- Legend --}}
-                    <div class="bg-gray-50 rounded-xl p-4 mb-6">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">{{ __('messages.legend') }}</h3>
-                        <div class="flex flex-wrap gap-4 text-xs">
-                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                <div class="w-4 h-4 bg-blue-500 border-2 border-blue-300 rounded"></div>
-                                <span class="text-gray-600">{{ __('messages.currently_assigned') }}</span>
-                            </div>
-                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                <div class="w-4 h-4 bg-gray-400 border-2 border-gray-300 rounded opacity-60"></div>
-                                <span class="text-gray-600">{{ __('messages.assigned_to_others') }}</span>
-                            </div>
-                            <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                                <div class="w-4 h-4 bg-white border-2 border-gray-300 rounded"></div>
-                                <span class="text-gray-600">{{ __('messages.available') }}</span>
-                            </div>
+                    <!-- Current Assignment Summary -->
+                    @if (count($assigned) > 0)
+                        <div
+                            class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-green-800 dark:text-green-200 mb-2 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ __('messages.current_assignments') }}
+                            </h4>
+                            <p class="text-sm text-green-700 dark:text-green-300">
+                                {{ __('messages.currently_supervising') }} {{ count($assigned) }}
+                                {{ __('messages.zones') }}
+                                {{ __('messages.with_total_buildings', ['count' => $zones->whereIn('id', $assigned)->sum('buildings_count')]) }}
+                            </p>
                         </div>
-                    </div>
+                    @endif
 
-                    {{-- Action Buttons --}}
-                    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                        <div class="flex space-x-3 rtl:space-x-reverse">
-                            <button type="button" onclick="selectAll()"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
-                                <i class="fas fa-check-double mr-2 rtl:mr-0 rtl:ml-2"></i>
-                                {{ __('messages.select_all') }}
-                            </button>
-
-                            <button type="button" onclick="deselectAll()"
-                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-times mr-2 rtl:mr-0 rtl:ml-2"></i>
-                                {{ __('messages.deselect_all') }}
-                            </button>
-                        </div>
-
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <button type="submit"
-                            class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl">
-                            <i class="fas fa-save mr-2 rtl:mr-0 rtl:ml-2"></i>
-                            {{ __('messages.save_changes') }}
+                            class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 
+                                       bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 
+                                       text-white font-semibold rounded-lg shadow-lg hover:shadow-xl 
+                                       transform hover:scale-105 transition-all duration-200
+                                       focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 focus:outline-none">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                            {{ __('messages.update_assignments') }}
                         </button>
+
+                        <a href="{{ route('admin.building-supervisors.show', $user) }}"
+                            class="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 
+                                  bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 
+                                  text-gray-700 dark:text-gray-300 font-semibold rounded-lg 
+                                  transition-colors duration-200 border border-gray-300 dark:border-gray-600">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            {{ __('messages.cancel') }}
+                        </a>
                     </div>
-                </div>
+            </div>
             </form>
         </div>
     </div>
+    </div>
 
-    @push('scripts')
-        <script>
-            function updateCounter() {
-                const checkboxes = document.querySelectorAll('.building-checkbox:checked:not(:disabled)');
-                const count = checkboxes.length;
-                document.getElementById('selectedCount').textContent = count;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update zones count
+            const zonesCheckboxes = document.querySelectorAll('.zones-checkbox');
+            const zonesCount = document.getElementById('zones-count');
 
-                // Update progress bar
-                const total = document.querySelectorAll('.building-checkbox:not(:disabled)').length;
-                const percentage = total > 0 ? (count / total) * 100 : 0;
-                document.getElementById('progressBar').style.width = percentage + '%';
+            function updateZonesCount() {
+                const checked = document.querySelectorAll('.zones-checkbox:checked').length;
+                zonesCount.textContent = checked;
             }
 
-            function selectAll() {
-                const checkboxes = document.querySelectorAll('.building-checkbox:not(:disabled)');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = true;
-                    checkbox.closest('.building-card').classList.add('assigned');
-                });
-                updateCounter();
-            }
-
-            function deselectAll() {
-                const checkboxes = document.querySelectorAll('.building-checkbox:not(:disabled)');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.closest('.building-card').classList.remove('assigned');
-                });
-                updateCounter();
-            }
-
-            // Initialize counter on page load
-            document.addEventListener('DOMContentLoaded', function() {
-                updateCounter();
-
-                // Add change event listeners
-                document.querySelectorAll('.building-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        const card = this.closest('.building-card');
-                        if (this.checked) {
-                            card.classList.add('assigned');
-                        } else {
-                            card.classList.remove('assigned');
-                        }
-                    });
-                });
+            zonesCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateZonesCount);
             });
-
-            // Form validation
-            document.getElementById('buildingForm').addEventListener('submit', function(e) {
-                const selectedBuildings = document.querySelectorAll('.building-checkbox:checked:not(:disabled)').length;
-
-                if (selectedBuildings === 0) {
-                    e.preventDefault();
-                    alert('{{ __('messages.please_select_at_least_one_building') }}');
-                    return false;
-                }
-
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>{{ __('messages.saving') }}...';
-                submitBtn.disabled = true;
-
-                // Re-enable button after 5 seconds (fallback)
-                setTimeout(() => {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 5000);
-            });
-        </script>
-    @endpush
+        });
+    </script>
 @endsection

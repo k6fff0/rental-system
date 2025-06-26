@@ -4,22 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Building;
-use Illuminate\Support\Facades\DB;
+use App\Models\Zone;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-
 
 class BuildingSupervisorController extends Controller
 {
     public function index(Request $request)
     {
-        // فقط المستخدمين اللي عندهم دور Building Supervisor
         $query = User::whereHas('roles', function ($q) {
             $q->where('name', 'Building Supervisor');
         });
 
-        // 🔍 فلترة بالاسم أو رقم الهاتف
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -28,10 +23,7 @@ class BuildingSupervisorController extends Controller
             });
         }
 
-        // جلب البيانات مع عدد المباني
-        $users = $query->withCount('buildings')
-            ->orderByDesc('id')
-            ->paginate(10);
+        $users = $query->withCount('supervisedZones')->orderByDesc('id')->paginate(10);
 
         return view('admin.building_supervisors.index', compact('users'));
     }
@@ -40,34 +32,39 @@ class BuildingSupervisorController extends Controller
     {
         $this->authorize('edit users');
 
-        $buildings = Building::all();
-        $assigned = $user->buildings->pluck('id')->toArray();
+        // نحضر المناطق اللي ملهاش مشرف أو المشرف الحالي هو المستخدم ده
+        $zones = Zone::where(function ($q) use ($user) {
+            $q->whereNull('supervisor_id')
+                ->orWhere('supervisor_id', $user->id);
+        })->get();
 
-        // جِيب IDs المباني اللي مسندة لأي حد غير المستخدم الحالي
-        $assignedToOthers = \DB::table('building_user')
-            ->where('user_id', '!=', $user->id)
-            ->pluck('building_id')
-            ->unique()
-            ->toArray();
+        $assigned = $user->supervisedZones->pluck('id')->toArray();
 
-
-        return view('admin.building_supervisors.edit', compact('user', 'buildings', 'assigned', 'assignedToOthers'));
+        return view('admin.building_supervisors.edit', compact('user', 'zones', 'assigned'));
     }
 
     public function update(Request $request, User $user)
     {
         $this->authorize('edit users');
 
-        $buildingIds = $request->input('buildings', []);
+        $zoneIds = $request->input('zones', []);
 
-        // Sync المباني المحددة
-        $user->buildings()->sync($buildingIds);
+        // أول حاجة نفصل المستخدم ده من كل المناطق اللي كان مشرف عليها
+        Zone::where('supervisor_id', $user->id)->update(['supervisor_id' => null]);
 
-        return redirect()->route('admin.building-supervisors.index')->with('success', __('messages.updated_successfully'));
+        // وبعدين نربطه بالمناطق المختارة
+        Zone::whereIn('id', $zoneIds)->update(['supervisor_id' => $user->id]);
+
+        return redirect()->route('admin.building-supervisors.index')
+            ->with('success', __('messages.updated_successfully'));
     }
+
     public function show(User $user)
     {
-        $buildings = $user->buildings()->paginate(10); // أو العدد اللي تحبه
-        return view('admin.building_supervisors.show', compact('user', 'buildings'));
+        $zones = $user->supervisedZones()->with('buildings')->get();
+
+        $buildings = $zones->flatMap(fn($zone) => $zone->buildings);
+
+        return view('admin.building_supervisors.show', compact('user', 'zones', 'buildings'));
     }
 }

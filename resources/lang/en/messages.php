@@ -1681,6 +1681,46 @@ return [
     'password_reset_sent' => 'Password reset link has been sent',
     'privacy_terms_note' => 'This system is exclusively owned by Smart Step and may not be copied, used, or modified in any form without prior permission from the developer Contact via WhatsApp.',
     'home' => 'Home',
+    'zones' => 'Zones',
+    'filters' => 'Filters',
+    'search' => 'Search',
+    'price_range' => 'Price Range',
+    'from' => 'From',
+    'to' => 'To',
+    'unit_type' => 'Unit Type',
+    'all_types' => 'All Types',
+    'apartment' => 'Apartment',
+    'villa' => 'Villa',
+    'studio' => 'Studio',
+    'zone' => 'Zone',
+    'clear_filters' => 'Clear Filters',
+    'additional_details' => 'Additional Details',
+    'more_details' => 'More Details',
+    'loading' => 'Loading',
+    'images' => 'Images',
+    'add_to_favorites' => 'Add to Favorites',
+    'remove_from_favorites' => 'Remove from Favorites',
+    'call' => 'Call',
+    'whatsapp' => 'WhatsApp',
+    'nearby_services' => 'Nearby Services',
+    'school_nearby' => 'School Nearby',
+    'hospital_nearby' => 'Hospital Nearby',
+    'mall_nearby' => 'Mall Nearby',
+    'meters' => 'm',
+    'km' => 'km',
+    'additional_costs' => 'Additional Costs',
+    'security_deposit' => 'Security Deposit',
+    'commission' => 'Commission',
+    'utilities' => 'Electricity & Water',
+    'as_per_usage' => 'As per Usage',
+    'building_amenities' => 'Building Amenities',
+    'elevator' => 'Elevator',
+    'parking' => 'Parking',
+    'security' => 'Security',
+    'internet_ready' => 'Internet Ready',
+    'special_offer' => 'Special Offer',
+    'view_building_photo' => 'View Building Photo',
+    'all_zones' => 'Filter by zone',
     'dashboard' => 'Dashboard',
     'profile' => 'Profile',
     'settings' => 'Settings',
@@ -1699,5 +1739,206 @@ return [
         'other' => 'Other',
     ],
 
+    'zones' => 'Zones',
+    'manage_zones_description' => 'Manage and organize zones and supervise them',
+    'add_zone' => 'Add Zone',
+
+    // Stats & Lists
+    'total_zones' => 'Total Zones',
+    'zones_list' => 'Zones List',
+
+    // Table Headers
+    'zone_name' => 'Zone Name',
+    'total_buildings' => 'Total Buildings',
+    'total_technicians' => 'Total Technicians',
+    'supervisor' => 'Supervisor',
+    'actions' => 'Actions',
+
+    // Actions
+    'view' => 'View',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'confirm_delete' => 'Are you sure you want to delete this zone?',
+
+    // Status
+    'not_assigned' => 'Not Assigned',
+
+    // Empty States
+    'no_zones_found' => 'No zones found',
+    'no_zones_description' => 'No zones were found. Start by adding a new zone.',
+    'add_first_zone' => 'Add First Zone',
+    // Page Headers
+    'edit_zone' => 'Edit Zone',
+    'edit_zone_description' => 'Edit and update zone information along with associated buildings and technicians',
+    'back_to_zones' => 'Back to Zones',
+    'zone_information' => 'Zone Information',
+
+    // Form Fields
+    'zone_name' => 'Zone Name',
+    'select_buildings' => 'Select Buildings',
+    'select_technicians' => 'Select Technicians',
+    'select_supervisor' => 'Select Supervisor',
+    'select_from_list' => 'Select from list',
+
+    // Counters
+    'selected' => 'Selected',
+
+    // Empty States
+    'no_buildings_available' => 'No buildings available',
+    'no_technicians_available' => 'No technicians available',
+
+    // Actions
+    'update_zone' => 'Update Zone',
+    'cancel' => 'Cancel',
+    'add_new_zone' => 'Add New Zone',
+    'add_zone_description' => 'Create a new zone and associate it with appropriate buildings, technicians, and supervisors',
+    'new_zone_information' => 'New Zone Information',
+
+    // Form Fields
+    'enter_zone_name' => 'Enter zone name',
+    'select_zone_supervisors' => 'Select Zone Supervisors',
+
+    // Empty State Messages
+    'add_buildings_first' => 'You need to add buildings first from the Buildings Management section',
+    'add_technicians_first' => 'You need to add technicians first from the Technicians Management section',
+    'add_supervisors_first' => 'You need to add supervisors first from the Supervisors Management section',
+    'no_supervisors_available' => 'No supervisors available',
+
+    // Actions
+    'save_zone' => 'Save Zone',
+    'zone_details' => 'Zone Details',
+    'zone_details_description' => 'Detailed view of zone information along with associated buildings, technicians, and supervisors',
+
+    // Stats Cards
+    'supervisor_status' => 'Supervisor Status',
+    'assigned' => 'Assigned',
+
+    // Section Headers
+    'associated_buildings' => 'Associated Buildings',
+    'associated_technicians' => 'Associated Technicians',
+    'zone_supervisor' => 'Zone Supervisor',
+    'zone_information' => 'Zone Information',
+
+    // Empty States
+    'no_buildings_associated' => 'No buildings are associated with this zone',
+    'no_technicians_associated' => 'No technicians are associated with this zone',
+    'no_supervisor_assigned' => 'No supervisor is assigned to this zone',
+
+    // Date & Time
+    'created_at' => 'Created At',
+    'last_updated' => 'Last Updated',
+
+    // Actions
+    'confirm_delete_zone' => 'Are you sure you want to delete this zone? All associated relationships will be removed.',
+    'building_supervisors_section' => 'Building Supervisors Section',
+    'manage_building_supervisors_description' => 'Manage and organize building supervisors and monitor their assigned zones',
+    'add_supervisor' => 'Add Supervisor',
+    'supervisors_list' => 'Supervisors List',
+
+    // Search & Filter
+    'search_name_phone' => 'Search by name or phone',
+    'search' => 'Search',
+
+    // Stats
+    'total_supervisors' => 'Total Supervisors',
+
+    // Table Headers
+    'name' => 'Name',
+    'phone_number' => 'Phone Number',
+    'zones_count' => 'Zones Count',
+
+    // Data
+    'not_available' => 'Not Available',
+
+    // Empty States
+    'no_supervisors_found' => 'No supervisors found',
+    'no_supervisors_description' => 'No supervisors were found. Start by adding a new supervisor.',
+    'add_first_supervisor' => 'Add First Supervisor',
+    'supervisor_data' => 'Supervisor Data',
+    'supervisor_details_description' => 'Detailed view of supervisor information along with associated zones and buildings',
+    'back_to_supervisors' => 'Back to Supervisors',
+
+    // Sections
+    'personal_information' => 'Personal Information',
+    'buildings_by_zones' => 'Buildings by Zones',
+    'account_information' => 'Account Information',
+
+    // Fields
+    'phone' => 'Phone',
+    'email' => 'Email',
+    'supervised_zones' => 'Supervised Zones',
+    'buildings' => 'Buildings',
+    'zone' => 'Zone',
+
+    // Empty States
+    'no_buildings_in_zone' => 'No buildings associated with this zone',
+    'no_zones_assigned' => 'No zones assigned',
+    'no_zones_assigned_description' => 'No zones have been assigned to this supervisor yet',
+    'manage_zones' => 'Manage Zones',
+
+    // Actions
+    'edit_supervisor' => 'Edit Supervisor',
+    'edit_supervisor_data' => 'Edit Supervisor Data',
+    'edit_supervisor_description' => 'Edit and update zones assigned to the supervisor',
+    'back_to_supervisor' => 'Back to Supervisor',
+    'supervisor_assignment' => 'Supervisor Zone Assignment',
+
+    // Form Fields
+    'supervisor_name' => 'Supervisor Name',
+    'responsible_zones' => 'Responsible Zones',
+    'name_cannot_be_changed' => 'Name cannot be changed from this page',
+
+    // Zone Assignment
+    'assignment_note' => 'Important Note',
+    'assignment_note_description' => 'A supervisor can be responsible for multiple zones, and assignments can be removed at any time.',
+
+    // Current Status
+    'current_assignments' => 'Current Assignments',
+    'currently_supervising' => 'Currently supervising',
+    'with_total_buildings' => 'containing a total of :count buildings',
+
+    // Empty States
+    'no_zones_available' => 'No zones available currently',
+    'create_zones_first' => 'You need to create zones first from the Zones Management section',
+
+    // Actions
+    'update_assignments' => 'Update Assignments',
+    'building_supervisors_section' => 'Building Supervisors Section',
+    'manage_building_supervisors_description' => 'Manage and organize building supervisors, monitor their assigned zones and efficiently control their permissions',
+    'supervisors_list' => 'Supervisors List',
+    'manage_supervisor_assignments' => 'Manage Supervisor Assignments',
+
+    // Statistics
+    'total_supervisors' => 'Total Supervisors',
+    'active_supervisors' => 'Active Supervisors',
+    'total_zones_supervised' => 'Total Zones Supervised',
+    'unassigned_supervisors' => 'Unassigned Supervisors',
+
+    // Search & Filter
+    'search_name_phone' => 'Search by name or phone number...',
+    'search' => 'Search',
+    'all_supervisors' => 'All Supervisors',
+    'active_only' => 'Active Only',
+    'unassigned_only' => 'Unassigned Only',
+    'showing_results' => 'Showing :count of :total results',
+
+    // Status & Info
+    'active' => 'Active',
+    'unassigned' => 'Unassigned',
+    'building_supervisor' => 'Building Supervisor',
+    'phone' => 'Phone',
+    'email' => 'Email',
+    'zones' => 'Zones',
+    'not_available' => 'Not Available',
+
+    // Actions
+    'view' => 'View',
+    'manage_zones' => 'Manage Zones',
+
+    // Empty State
+    'no_supervisors_found' => 'No Supervisors Found',
+    'no_supervisors_description' => 'No building supervisors found in the system. Supervisors are automatically added when their role is assigned in group management.',
+    'supervisor_note' => 'Important Note',
+    'supervisor_note_description' => 'Building supervisors are automatically added to the system when their role is assigned in user and group management. They cannot be added manually from this page.',
 
 ];
