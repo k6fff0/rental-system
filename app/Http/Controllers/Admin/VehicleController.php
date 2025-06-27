@@ -216,4 +216,59 @@ class VehicleController extends Controller
     {
         return Excel::download(new VehicleReportExport($request), 'vehicle-report.xlsx');
     }
+	
+	
+	public function storeExpense(Request $request, Vehicle $vehicle)
+{
+    $request->validate([
+        'type'         => 'required|string|max:255',
+        'expense_date' => 'required|date',
+        'amount'       => 'required|numeric|min:0',
+        'description'  => 'nullable|string',
+    ]);
+
+    $vehicle->expenses()->create([
+        'type'         => $request->type,
+        'expense_date' => $request->expense_date,
+        'amount'       => $request->amount,
+        'description'  => $request->description,
+    ]);
+
+    return back()->with('success', '✅ تمت إضافة المصروف للعربية بنجاح');
+}
+
+public function destroyExpense(Expense $expense)
+{
+    $expense->delete();
+    return back()->with('success', '✅ تم حذف المصروف بنجاح');
+}
+
+public function storeViolation(Request $request, Vehicle $vehicle)
+{
+    $request->validate([
+        'violation_type' => 'required|string|max:255',
+        'cost'           => 'required|numeric|min:0',
+        'date'           => 'required|date',
+        'notes'          => 'nullable|string',
+        'user_id'        => 'nullable|exists:users,id',
+    ]);
+
+    Violation::create([
+        'vehicle_id'     => $vehicle->id,
+        'user_id'        => $request->user_id,
+        'violation_type' => $request->violation_type,
+        'cost'           => $request->cost,
+        'date'           => $request->date,
+        'notes'          => $request->notes,
+    ]);
+
+    return back()->with('success', '✅ تمت إضافة المخالفة بنجاح');
+}
+
+public function destroyViolation(Violation $violation)
+{
+    $violation->delete();
+    return back()->with('success', '✅ تم حذف المخالفة بنجاح');
+}
+
 }

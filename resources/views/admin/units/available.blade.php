@@ -220,27 +220,27 @@
                             <!-- Action Buttons -->
                             <div class="absolute top-3 left-3 flex flex-col gap-2">
                                 <!-- Favorite Button -->
-                                <button onclick="toggleFavorite({{ $unit->id }})"
-                                    class="favorite-btn w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md group/fav"
-                                    title="{{ __('messages.add_to_favorites') }}">
-                                    <svg class="w-4 h-4 text-gray-400 group-hover/fav:text-red-500 transition-colors duration-200"
-                                        fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                    </svg>
-                                </button>
+                                <!-- <button onclick="toggleFavorite({{ $unit->id }})"
+                                        class="favorite-btn w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md group/fav"
+                                        title="{{ __('messages.add_to_favorites') }}">
+                                        <svg class="w-4 h-4 text-gray-400 group-hover/fav:text-red-500 transition-colors duration-200"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                        </svg>
+                                    </button>-->
 
                                 <!-- Info Button -->
-                                <button onclick="showUnitDetails({{ $unit->id }})"
-                                    class="info-btn w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md group/info"
-                                    title="{{ __('messages.more_details') }}">
-                                    <svg class="w-4 h-4 text-gray-400 group-hover/info:text-blue-500 transition-colors duration-200"
-                                        fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </button>
+                                <!--<button onclick="showUnitDetails({{ $unit->id }})"
+                                                class="info-btn w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md group/info"
+                                                title="{{ __('messages.more_details') }}">
+                                                <svg class="w-4 h-4 text-gray-400 group-hover/info:text-blue-500 transition-colors duration-200"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>-->
                             </div>
                         </div>
 

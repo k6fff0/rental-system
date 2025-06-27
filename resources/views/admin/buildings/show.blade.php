@@ -397,7 +397,8 @@
                                         class="w-full h-64 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300" />
                                     <div
                                         class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">
-                                        <a href="{{ asset('storage/' . $building->image) }}" target="_blank"
+                                        <a href="{{ asset('storage/' . $building->image) }}" data-fancybox="building"
+                                            data-caption="{{ __('messages.building_image') }}"
                                             class="opacity-0 group-hover:opacity-100 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 transform scale-75 group-hover:scale-100">
                                             <svg class="w-5 h-5 inline mr-2 rtl:ml-2" fill="none"
                                                 stroke="currentColor" viewBox="0 0 24 24">

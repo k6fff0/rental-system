@@ -1,24 +1,60 @@
-/.phpunit.cache
+# Laravel specific
+/vendor
 /node_modules
-/public/build
-/public/hot
 /public/storage
 /storage/*.key
-/storage/pail
-/vendor
+/storage/app/public
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/views
+/storage/logs
+
+# Ignore environment files
 .env
-config/database.php
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-/auth.json
-/.fleet
+.env.*    # This ignores any .env.backup or .env.production etc
+
+
+
+# Ignore IDE/editor folders
 /.idea
-/.nova
 /.vscode
+/.phpstorm.meta.php
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore NPM/Yarn logs
+npm-debug.log*
+yarn-error.log*
+
+# Ignore PHPUnit cache
+.phpunit.result.cache
+.phpunit.cache
+
+# Ignore Homestead files if تستخدمها
+Homestead.yaml
+Homestead.json
+
+# Ignore misc
+/.phpactor.json
+/.auth.json
+
+
+
+# Ignore build files
+/public/hot
+/public/build
+/public/mix-manifest.json
+
+# Ignore Laravel Telescope (if used)
+/storage/telescope
+
+# Ignore deployment artifacts
+/deploy.sh
+
+# Ignore fleet files
+/.fleet
+
+# Ignore zed files
 /.zed

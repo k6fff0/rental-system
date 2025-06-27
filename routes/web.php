@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -24,21 +30,17 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\BuildingUtilityController;
 use App\Http\Controllers\Admin\BuildingSupervisorController;
 use App\Http\Controllers\Admin\RoomBookingController;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Admin\SystemOwnerController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\ComplaintController;
-//use App\Http\Controllers\UnitImageController;
 use App\Settings\SystemSettings;
 use App\Http\Controllers\Admin\VehicleController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\ZoneController;
 
 
 
 
+//راوت اللغه 
 Route::get('lang/{lang}', function ($lang) {
     $availableLocales = ['en', 'ar', 'ur'];
 
@@ -51,63 +53,70 @@ Route::get('lang/{lang}', function ($lang) {
     return Redirect::to($redirectTo);
 })->name('lang.switch');
 
-
+//الرئيسيه
 Route::get('/', function () {
     return view('welcome');
 });
 
-
+// الغرف المتاحه بدون تسجيل دخول
 Route::get('/available-units', [UnitController::class, 'available'])->name('units.available');
 
 
 
+// ✅ إعادة التوجيه من /admin إلى /admin/dashboard
 Route::redirect('/admin', '/admin/dashboard');
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/api/buildings/{building}/available-units', [\App\Http\Controllers\ContractController::class, 'getAvailableUnits']);
-    Route::get('/api/tenants/search', [\App\Http\Controllers\TenantController::class, 'search']);
+// ✅ مجموعة الـ admin routes
+Route::middleware(['auth', 'verified'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('contracts/{contract}/print', [\App\Http\Controllers\ContractController::class, 'print'])
-        ->name('contracts.print');
+        // ✅ لوحة التحكم
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('building-utilities', BuildingUtilityController::class);
+        // ✅ API
+        Route::prefix('api')->group(function () {
+            Route::get('/buildings/{building}/available-units', [\App\Http\Controllers\ContractController::class, 'getAvailableUnits'])->name('api.buildings.available_units');
+            Route::get('/tenants/search', [\App\Http\Controllers\TenantController::class, 'search'])->name('api.tenants.search');
+            Route::get('/tenant/{id}', [\App\Http\Controllers\TenantController::class, 'getTenantData'])->name('api.tenant.data');
+            Route::get('/units-by-building/{building}', [\App\Http\Controllers\ContractController::class, 'getUnitsByBuilding'])->name('api.units.by_building');
+        });
+
+        // ✅ المباني والوحدات والمرافق والمناطق
+        Route::resource('buildings', BuildingController::class);
+        Route::resource('units', UnitController::class);
+        Route::resource('building-utilities', BuildingUtilityController::class);
+		Route::resource('zones', ZoneController::class);
+
+        // ✅ عمليات إضافية على المباني
+        Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])
+            ->name('buildings.toggleFamiliesOnly')
+            ->middleware('can:edit buildings');
+        Route::delete('buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
+        Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
+
+        // ✅ عمليات إضافية على الوحدات
+        Route::patch('units/{unit}/status', [UnitController::class, 'updateStatus'])->name('units.updateStatus');
+        Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
+        Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
+        Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
+
+        // ✅ building-utilities إضافية
+        Route::delete('building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
+
+        // ✅ العقود
+        Route::get('contracts/{contract}/print', [\App\Http\Controllers\ContractController::class, 'print'])->name('contracts.print');
+
+        // ✅ المستخدمين
+        Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])
+            ->name('users.toggle-active')
+            ->middleware('permission:edit users');
 
 
-    //Route::delete('admin/unit-images/{id}', [UnitImageController::class, 'destroy'])->name('admin.units.delete_image');
-    Route::delete('/building-utilities/{id}/delete-image', [BuildingUtilityController::class, 'deleteImage'])->name('building-utilities.image.delete');
 
-
-    Route::post('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active')->middleware('permission:edit users');
-
-    Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
-
-
-    // ✅ API للمستأجر
-    Route::get('/api/tenant/{id}', [TenantController::class, 'getTenantData']);
-
-    // ✅ API للوحدات حسب المبنى
-    Route::get('/api/units-by-building/{building}', [ContractController::class, 'getUnitsByBuilding']);
-
-    // ✅ المباني والوحدات
-    Route::resource('buildings', BuildingController::class);
-    Route::resource('units', UnitController::class);
-    Route::patch('units/{unit}/status', [UnitController::class, 'updateStatus'])->name('units.updateStatus');
-    Route::get('buildings/{building}', [BuildingController::class, 'show'])->name('buildings.show');
-    Route::get('units/{unit}', [UnitController::class, 'show'])->name('units.show');
-    Route::patch('buildings/{building}/toggle-families-only', [BuildingController::class, 'toggleFamiliesOnly'])->name('buildings.toggleFamiliesOnly')->middleware('can:edit buildings');
-    Route::delete('/buildings/{building}/image', [BuildingController::class, 'deleteImage'])->name('buildings.deleteImage');
-    Route::get('units-available-text', [UnitController::class, 'availableText'])->name('units.available.text');
-
-    // روتات الزون 
-    Route::resource('zones', \App\Http\Controllers\Admin\ZoneController::class);
-
-
-
-
+    // الفنيين والتخصصات
     Route::prefix('technicians')->name('technicians.')->group(function () {
-
-        // ✅ التخصصات أولاً
         Route::get('/specialties', [TechnicianController::class, 'specialtiesIndex'])->name('specialties.index');
         Route::get('/specialties/create', [TechnicianController::class, 'createSpecialty'])->name('specialties.create');
         Route::post('/specialties', [TechnicianController::class, 'storeSpecialty'])->name('specialties.store');
@@ -115,10 +124,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::put('/specialties/{id}', [TechnicianController::class, 'updateSpecialty'])->name('specialties.update');
         Route::delete('/specialties/{id}', [TechnicianController::class, 'destroySpecialty'])->name('specialties.destroy');
         Route::get('{id}/report', [TechnicianController::class, 'report'])->name('report');
-
-
-
-        // ✅ الفنيين بعد التخصصات
         Route::get('/', [TechnicianController::class, 'index'])->name('index');
         Route::get('/{id}', [TechnicianController::class, 'show'])->name('show');
         Route::get('/{user}/edit', [TechnicianController::class, 'edit'])->name('edit');
@@ -126,12 +131,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     });
     Route::get('/technician/maintenance', [MaintenanceRequestController::class, 'myRequests'])
         ->name('technician.maintenance')
-        ->middleware('auth'); // أو middleware خاص بالفنيين لو عندك
+        ->middleware('auth'); 
     Route::get('/maintenance/{request}', [MaintenanceRequestController::class, 'show'])->name('admin.maintenance.show');
-
-
-
-
 
 
 
@@ -144,50 +145,33 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
 
 
-
-    Route::get('maintenance-requests/archive', [MaintenanceRequestController::class, 'archive'])->name('maintenance_requests.archive');
-    Route::get('maintenance-requests/archive/export/pdf', [MaintenanceRequestController::class, 'exportPdf'])
-        ->name('maintenance_requests.exportPdf');
-
-    Route::get('maintenance-requests/archive/export/excel', [MaintenanceRequestController::class, 'exportExcel'])
-        ->name('maintenance_requests.exportExcel');
-    // Route::get('units/search', [UnitController::class, 'search'])->name('units.search');
-    Route::get('technicians/search', [TechnicianController::class, 'search'])->name('technicians.search');
-
-
-
-
-
-    // ✅ العقود والدفع والصيانة
-    Route::resource('contracts', ContractController::class);
-    Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');
-    Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
+    //الصيانه
+	Route::resource('maintenance-requests', MaintenanceRequestController::class)->names('maintenance_requests');
+    Route::get('admin/maintenance-requests/archive', [MaintenanceRequestController::class, 'archive'])->name('maintenance_requests.archive');
+    Route::get('maintenance-requests/archive/export/pdf', [MaintenanceRequestController::class, 'exportPdf'])->name('maintenance_requests.exportPdf');
+    Route::get('maintenance-requests/archive/export/excel', [MaintenanceRequestController::class, 'exportExcel'])->name('maintenance_requests.exportExcel');
+    Route::get('technicians/search', [TechnicianController::class, 'search'])->name('technicians.search');   
     Route::put('maintenance-requests/{id}/status', [MaintenanceRequestController::class, 'updateStatus'])->name('maintenance_requests.update_status');
-    //Route::put('maintenance-requests/{id}', [MaintenanceRequestController::class, 'update'])->name('maintenance_requests.update');
+
+
+    // العقود
+    Route::resource('contracts', ContractController::class);
+    Route::patch('contracts/{contract}/end', [ContractController::class, 'end'])->name('contracts.end');       
     Route::patch('/admin/contracts/{contract}/end', [ContractController::class, 'end'])->name('admin.contracts.end');
 
 
-
-
-
-    // ✅ المصروفات والمخزون
+    // المصروفات
     Route::resource('expenses', ExpenseController::class);
-    //Route::resource('inventory-items', InventoryItemController::class);
 
     // ✅ المستخدمين والصلاحيات
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 
-    // ✅ إدارة المجموعات
-    Route::get('/role-manager', [RoleManagerController::class, 'index'])->name('role_manager.index');
-    Route::post('/role-manager', [RoleManagerController::class, 'store'])->name('role_manager.store');
-    Route::get('/role-manager/{role}/edit', [RoleManagerController::class, 'edit'])->name('role_manager.edit');
-    Route::put('/role-manager/{role}', [RoleManagerController::class, 'update'])->name('role_manager.update');
-    Route::delete('/role-manager/{role}', [RoleManagerController::class, 'destroy'])->name('role_manager.destroy');
 
-    // ✅ اختبار PDF
-    Route::get('/test-pdf', [PdfTestController::class, 'testPdf']);
+    // ✅ إدارة المجموعات
+    Route::resource('role-manager', RoleManagerController::class)->names('role_manager')->parameters(['role-manager' => 'role'])->except(['show', 'create']);
+
 
     // ✅ الإشعارات
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -206,96 +190,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     //settings.update
     Route::post('/update', [SettingController::class, 'update'])->name('settings.update');
+	
+
+}); // نهايه روتات الادمن 
 
 
-
-
-
-
-    //clear log
-    Route::post('/logs/clear', function () {
-        $logPath = storage_path('logs/laravel.log');
-        if (file_exists($logPath)) {
-            file_put_contents($logPath, ''); // امسح محتوى اللوج
-        }
-        return back()->with('success', '🧹 تم مسح سجلات النظام بنجاح!');
-    })->name('logs.clear');
-
-    // download log
-    Route::get('/logs/download', function () {
-        $logPath = storage_path('logs/laravel.log');
-
-        if (!file_exists($logPath)) {
-            return back()->with('error', '❌ لا يوجد ملف سجلات حاليًا.');
-        }
-
-        return response()->download($logPath, 'laravel-log-' . now()->format('Y-m-d_H-i-s') . '.log');
-    })->name('logs.download');
-
-    // settings.maintenance
-    Route::post('/settings/maintenance', function () {
-        $value = request()->has('maintenance_mode') ? true : false;
-
-        // مثال لو بتستخدم config أو جدول Settings مخصص
-        if (function_exists('settings')) {
-            $settings = settings(SystemSettings::class);
-            $settings->maintenance_mode = $value;
-            $settings->save();
-        }
-
-        // ممكن كمان تشغل مود الصيانة بتاع لارافيل نفسه:
-        if ($value) {
-            Artisan::call('down');
-        } else {
-            Artisan::call('up');
-        }
-
-        return back()->with('success', '✅ تم تحديث وضع الصيانة.');
-    })->name('settings.maintenance');
-
-    // cache.clear
-    Route::post('/settings/cache-clear', function () {
-        try {
-            Artisan::call('cache:clear');
-            Artisan::call('config:clear');
-            Artisan::call('view:clear');
-            Artisan::call('route:clear');
-            return back()->with('success', '✅ تم تنظيف الكاش بالكامل.');
-        } catch (\Exception $e) {
-            return back()->with('error', '❌ فشل تنظيف الكاش: ' . $e->getMessage());
-        }
-    })->name('cache.clear');
-
-    // database.optimize
-    Route::post('/settings/optimize-database', function () {
-        try {
-            // تحسين لكل الجداول في قاعدة البيانات الحالية
-            $tables = DB::select('SHOW TABLES');
-            $dbName = config('database.connections.mysql.database');
-            $tableKey = "Tables_in_$dbName";
-
-            foreach ($tables as $table) {
-                $tableName = $table->$tableKey;
-                DB::statement("OPTIMIZE TABLE `$tableName`");
-            }
-
-            return back()->with('success', '✅ تم تحسين قاعدة البيانات بنجاح!');
-        } catch (\Exception $e) {
-            return back()->with('error', '❌ فشل في تحسين قاعدة البيانات: ' . $e->getMessage());
-        }
-    })->name('database.optimize');
-
-    // queue.restart
-
-    Route::post('/settings/queue-restart', function () {
-        try {
-            Artisan::call('queue:restart');
-            return back()->with('success', '🔄 تم إعادة تشغيل الـ Queue Workers بنجاح!');
-        } catch (\Exception $e) {
-            return back()->with('error', '❌ فشل في إعادة تشغيل الـ Queue: ' . $e->getMessage());
-        }
-    })->name('queue.restart');
+/// صفحة المالك 
+Route::middleware(['auth', 'permission:super-admin'])->group(function () {Route::get('/admin/system-owner', [SystemOwnerController::class, 'index'])->name('admin.system.owner');});
+	Route::prefix('admin')->name('admin.')->middleware(['auth', 'permission:super-admin'])->group(function () {
+    Route::get('/system-owner', [SystemOwnerController::class, 'index'])->name('system.owner');
+    Route::post('/system-owner/logs/clear', [SystemOwnerController::class, 'clearLog'])->name('logs.clear');
+    Route::get('/system-owner/logs/download', [SystemOwnerController::class, 'downloadLog'])->name('logs.download');
+    Route::post('/system-owner/settings/maintenance', [SystemOwnerController::class, 'toggleMaintenance'])->name('settings.maintenance');
+    Route::post('/system-owner/settings/cache-clear', [SystemOwnerController::class, 'clearCache'])->name('cache.clear');
+    Route::post('/system-owner/settings/optimize-database', [SystemOwnerController::class, 'optimizeDatabase'])->name('database.optimize');
+    Route::post('/system-owner/settings/queue-restart', [SystemOwnerController::class, 'restartQueue'])->name('queue.restart');
 });
+
 
 // ✅ بروفايل المستخدم
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -305,161 +216,79 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'permission:super-admin'])->group(function () {
-    Route::get('/admin/system-owner', [\App\Http\Controllers\Admin\SystemOwnerController::class, 'index'])
-        ->name('admin.system.owner');
-});
 
-// تمييز الإشعارات كمقروء
-Route::post('/notifications/mark-all-read', function () {
-    $user = Auth::user();
-    if ($user) {
-        $user->unreadNotifications->markAsRead();
-    }
-    return back();
-})->middleware('auth')->name('notifications.markAllRead');
-
-
+// المدفوعات 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/payments/create', [PaymentController::class, 'create'])->name('admin.payments.create');
     Route::post('/payments', [PaymentController::class, 'store'])->name('admin.payments.store');
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
-    Route::get('/payments/due-report', [\App\Http\Controllers\Admin\PaymentController::class, 'monthlyDueReport'])->name('admin.payments.due_report');
-    Route::get('/payments/due-report/export-excel', [\App\Http\Controllers\Admin\PaymentController::class, 'exportExcel'])->name('admin.payments.export_excel');
-    Route::get('/payments/due-report/export-pdf', [\App\Http\Controllers\Admin\PaymentController::class, 'exportPDF'])->name('admin.payments.export_pdf');
+    Route::get('/payments/due-report', [PaymentController::class, 'monthlyDueReport'])->name('admin.payments.due_report');
+    Route::get('/payments/due-report/export-excel', [PaymentController::class, 'exportExcel'])->name('admin.payments.export_excel');
+    Route::get('/payments/due-report/export-pdf', [PaymentController::class, 'exportPDF'])->name('admin.payments.export_pdf');
     Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('admin.payments.destroy');
-    // صفحة جميع اللوجات
     Route::get('/payment-logs/all', [PaymentController::class, 'logsIndex'])->name('admin.payments.logs.all');
-    // زر العين بجانب كل دفعة
     Route::get('/payments/{payment}/logs', [PaymentController::class, 'logs'])->name('admin.payments.logs.single');
-
     Route::resource('payments', \App\Http\Controllers\Admin\PaymentController::class)->names('admin.payments');
 });
 
-Route::prefix('admin/building-supervisors')
-    ->name('admin.building-supervisors.')
-    ->middleware(['auth:web'])
-    ->group(function () {
+
+//مشرفين المباني 
+Route::prefix('admin/building-supervisors')->name('admin.building-supervisors.')->middleware(['auth:web'])->group(function () {
         Route::get('/', [BuildingSupervisorController::class, 'index'])->name('index');
-        Route::get('/{user}', [BuildingSupervisorController::class, 'show'])->name('show'); // 🟢 خليه الأول
+        Route::get('/{user}', [BuildingSupervisorController::class, 'show'])->name('show'); 
         Route::get('/{user}/edit', [BuildingSupervisorController::class, 'edit'])->name('edit');
         Route::put('/{user}', [BuildingSupervisorController::class, 'update'])->name('update');
     });
 
-//cleaningDashboard 
-Route::get('cleaning-dashboard', [UnitController::class, 'cleaningDashboard'])->name('admin.cleaning.dashboard');
-Route::post('units/{unit}/mark-cleaned', [UnitController::class, 'markAsCleaned'])->name('admin.units.mark.cleaned');
-Route::post('units/{unit}/upload-image', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
-Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
 
-Route::prefix('technician/maintenance')
-    ->middleware('auth') //  خاص بالفنيين لو عندك
-    ->name('maintenance.')
-    ->group(function () {
+    //cleaningDashboard 
+    Route::get('cleaning-dashboard', [UnitController::class, 'cleaningDashboard'])->name('admin.cleaning.dashboard');
+    Route::post('units/{unit}/mark-cleaned', [UnitController::class, 'markAsCleaned'])->name('admin.units.mark.cleaned');
+    Route::post('units/{unit}/upload-image', [UnitController::class, 'uploadImage'])->name('admin.units.images.upload');
+    Route::delete('units/images/{image}', [UnitController::class, 'deleteImage'])->name('admin.units.images.delete');
 
-        // بدء العمل
+
+//خاص بصفحة الفنيين الخارجيه
+Route::prefix('technician/maintenance')->middleware('auth') ->name('maintenance.')->group(function () {
         Route::post('/{id}/start', [MaintenanceRequestController::class, 'start'])->whereNumber('id')->name('start');
-
-        // إنهاء العمل
         Route::post('/{id}/complete', [MaintenanceRequestController::class, 'complete'])->whereNumber('id')->name('complete');
-
-        // رفض الطلب
         Route::post('/{id}/reject', [MaintenanceRequestController::class, 'reject'])->whereNumber('id')->name('reject');
-
         Route::post('/{id}/delay', [MaintenanceRequestController::class, 'updateStatus'])->name('delay');
     });
 
 
-//Cars
+//السيارات 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    // إدارة السيارات
     Route::resource('vehicles', VehicleController::class);
-
-    // تقرير المصاريف والمخالفات
     Route::get('/admin/vehicles/reports', [VehicleController::class, 'reports'])->name('vehicles.reports');
-
     Route::get('vehicles/reports/pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.reports.pdf');
     Route::get('vehicles/reports/excel', [VehicleController::class, 'exportExcel'])->name('vehicles.reports.excel');
-
-    // حذف مصروف أو مخالفة
-    Route::delete('vehicles/expenses/{expense}', function (VehicleExpense $expense) {
-        $expense->delete();
-        return back()->with('success', 'تم حذف المصروف بنجاح');
-    })->name('vehicles.expenses.destroy');
-
-    Route::delete('vehicles/violations/{violation}', function (Violation $violation) {
-        $violation->delete();
-        return back()->with('success', 'تم حذف المخالفة بنجاح');
-    })->name('vehicles.violations.destroy');
-
-    // ✅ إضافة مصروف ومخالفة (خليهم جوا الجروب)
-    Route::post('vehicles/{vehicle}/expenses', function (Request $request, $vehicleId) {
-        $request->validate([
-            'type'          => 'required|string|max:255',
-            'expense_date'  => 'required|date',
-            'amount'        => 'required|numeric|min:0',
-            'description'   => 'nullable|string',
-        ]);
-
-        $vehicle = \App\Models\Vehicle::findOrFail($vehicleId);
-
-        $vehicle->expenses()->create([
-            'type'          => $request->type,
-            'expense_date'  => $request->expense_date,
-            'amount'        => $request->amount,
-            'description'   => $request->description,
-        ]);
-
-        return back()->with('success', '✅ تمت إضافة المصروف للعربية بنجاح');
-    })->name('vehicles.expenses.store');
-
-
-    Route::post('vehicles/{vehicle}/violations', function (Request $request, $vehicleId) {
-        $request->validate([
-            'violation_type' => 'required|string|max:255',
-            'cost' => 'required|numeric|min:0',
-            'date' => 'required|date',
-            'notes' => 'nullable|string',
-            'user_id' => 'nullable|exists:users,id',
-        ]);
-
-        \App\Models\Violation::create([
-            'vehicle_id' => $vehicleId,
-            'user_id' => $request->user_id,
-            'violation_type' => $request->violation_type,
-            'cost' => $request->cost,
-            'date' => $request->date,
-            'notes' => $request->notes,
-        ]);
-
-        return back()->with('success', 'تمت إضافة المخالفة بنجاح');
-    })->name('vehicles.violations.store');
+    Route::post('vehicles/{vehicle}/expenses', [VehicleController::class, 'storeExpense'])->name('vehicles.expenses.store');
+    Route::delete('vehicles/expenses/{expense}', [VehicleController::class, 'destroyExpense'])->name('vehicles.expenses.destroy');
+    Route::post('vehicles/{vehicle}/violations', [VehicleController::class, 'storeViolation'])->name('vehicles.violations.store');
+    Route::delete('vehicles/violations/{violation}', [VehicleController::class, 'destroyViolation'])->name('vehicles.violations.destroy');
 });
 
 
 
 // booking 
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/bookings', [RoomBookingController::class, 'index'])->name('admin.bookings.index');
-    Route::get('/bookings/create', [RoomBookingController::class, 'create'])->name('admin.bookings.create');
-    Route::post('/bookings', [RoomBookingController::class, 'store'])->name('admin.bookings.store');
-    Route::patch('/bookings/{booking}/cancel', [RoomBookingController::class, 'cancel'])->name('admin.bookings.cancel');
-    Route::post('/bookings/{booking}/confirm', [RoomBookingController::class, 'confirm'])->name('admin.bookings.confirm');
-    Route::get('/bookings/{booking}', [RoomBookingController::class, 'show'])->name('admin.bookings.show');
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+    Route::resource('bookings', RoomBookingController::class)->only(['index', 'create', 'store', 'show'])->names('bookings');
+    Route::patch('bookings/{booking}/cancel', [RoomBookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::post('bookings/{booking}/confirm', [RoomBookingController::class, 'confirm'])->name('bookings.confirm');
 });
+
+
 // notifications
+Route::post('/notifications/mark-all-read', function () {$user = Auth::user();if ($user) {$user->unreadNotifications->markAsRead();}return back();})->middleware('auth')->name('notifications.markAllRead');
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->name('admin.notifications.show');
 });
-Route::get('/install', [InstallController::class, 'showForm'])->name('install.form');
-Route::post('/install', [InstallController::class, 'submit'])->name('install.submit');
-Route::get('/phpinfo', fn() => phpinfo());
 
 
+//الشكاوي
 Route::post('complaints', [ComplaintController::class, 'store'])->name('complaints.store');
-
-// صفحة عرض الشكاوى للإدارة فقط
 Route::get('/complaints', [ComplaintController::class, 'index'])->middleware('auth')->name('admin.complaints');
 
 
